@@ -1,8 +1,9 @@
 plugins {
     id 'com.android.library'
-    id 'kotlin-android'
+    id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'kotlin-android-extensions'
 }
 
 android {
@@ -31,17 +32,26 @@ android {
         // for view binding :
         // viewBinding = true
     }
+
     compileOptions {
         sourceCompatibility = versions.java
         targetCompatibility = versions.java
     }
+
     kotlinOptions {
         jvmTarget = versions.java.toString()
     }
 }
 
 dependencies {
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation project(':libraries:core')
+
+    //appcompat
+    implementation libraries.appcompat
+    implementation libraries.fragment
 
     implementation libraries.hilt
     kapt libraries.hiltSupport
@@ -49,32 +59,24 @@ dependencies {
     //kapt libraries.hiltCompiler
 
     implementation libraries.kotlin
-    implementation libraries.fragment
 
-    //view
-    implementation libraries.material
-    implementation libraries.constraintlayout
-
-    //navigation
-    implementation libraries.navigation
-    implementation libraries.navigationUi
-
-//    implementation libraries.coroutine
-
-    //network
-    implementation libraries.retrofit
-    implementation libraries.gson
-    implementation libraries.interceptor
-
-    //logger
-    implementation libraries.timber
-
+    //    //ViewModel
     implementation libraries.viewmodel
     implementation libraries.lifecycleExt
     kapt libraries.liveData
 
+    //view
+    implementation libraries.material
+    implementation libraries.constraintlayout
+    implementation libraries.timber
+
+    // Loading Image
     implementation libraries.glide
     kapt libraries.glideCompiler
+    // Network
+    implementation libraries.retrofit
+    implementation libraries.gson
+    implementation libraries.interceptor
 
-
+    implementation 'androidx.asynclayoutinflater:asynclayoutinflater:1.0.0'
 }

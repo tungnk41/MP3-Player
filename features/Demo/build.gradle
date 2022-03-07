@@ -53,7 +53,6 @@ dependencies {
     implementation libraries.fragment
 
     implementation libraries.hilt
-    implementation project(path: ':features:MediaPlayerService')
     kapt libraries.hiltSupport
     //implementation libraries.hiltViewModel
     //kapt libraries.hiltCompiler

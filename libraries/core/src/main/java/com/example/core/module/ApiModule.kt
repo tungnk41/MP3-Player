@@ -38,8 +38,31 @@ class ApiModule {
     }
 
     @Provides
-    fun provideGsonClient(): GsonConverterFactory {
-        return GsonConverterFactory.create()
+    @Singleton
+    fun provideApiInterface(gson: Gson, client: OkHttpClient)
+            : ApiInterface {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(Constants.ApiComponents.BASE_URL)
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+        return retrofit.create(ApiInterface::class.java)
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideAuthApiInterface(
+        gson: Gson,
+        client: OkHttpClient
+    ): AuthApiInterface {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(Constants.ApiComponents.BASE_URL)
+            .client(client)
+            .addConverterFactory(NullOnEmptyConverterFactory())
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+        return retrofit.create(AuthApiInterface::class.java)
     }
 
     @Provides
@@ -84,39 +107,8 @@ class ApiModule {
     }
 
     @Provides
-    @Singleton
-    fun provideRetrofit(gson: Gson, okHttpClient: OkHttpClient): Retrofit =
-        Retrofit.Builder()
-            .baseUrl("https://localhost/")
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .client(okHttpClient)
-            .build()
-
-    @Provides
-    @Singleton
-    fun provideApiInterface(gson: Gson, client: OkHttpClient)
-            : ApiInterface {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(Constants.ApiComponents.BASE_URL)
-            .client(client)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
-        return retrofit.create(ApiInterface::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun provideAuthApiInterface(
-        gson: Gson,
-        client: OkHttpClient
-    ): AuthApiInterface {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(Constants.ApiComponents.BASE_URL)
-            .client(client)
-            .addConverterFactory(NullOnEmptyConverterFactory())
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
-        return retrofit.create(AuthApiInterface::class.java)
+    fun provideGsonClient(): GsonConverterFactory {
+        return GsonConverterFactory.create()
     }
 }
 
