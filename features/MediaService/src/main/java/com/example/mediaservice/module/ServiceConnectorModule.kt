@@ -1,9 +1,9 @@
-package com.example.mediaplayerservice.module
+package com.example.mediaservice.module
 
 import android.content.ComponentName
 import android.content.Context
-import com.example.mediaplayerservice.MediaPlayerService
-import com.example.mediaplayerservice.MediaServiceConnection
+import com.example.mediaservice.MediaPlayerService
+import com.example.mediaservice.MediaServiceConnection
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -1,6 +1,6 @@
 plugins {
     id 'com.android.library'
-    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id 'kotlin-android-extensions'
@@ -51,17 +51,19 @@ dependencies {
 
     //appcompat
     implementation libraries.appcompat
+    implementation libraries.fragment
 
     implementation libraries.hilt
     kapt libraries.hiltSupport
-//    //implementation libraries.hiltViewModel
-////    kapt libraries.hiltCompiler
-
-
+    //implementation libraries.hiltViewModel
+    //kapt libraries.hiltCompiler
 
     implementation libraries.kotlin
 
-    implementation libraries.coroutine
+    //    //ViewModel
+    implementation libraries.viewmodel
+    implementation libraries.lifecycleExt
+    kapt libraries.liveData
 
     //view
     implementation libraries.material
@@ -70,11 +72,13 @@ dependencies {
 
     // Loading Image
     implementation libraries.glide
-    annotationProcessor libraries.glideCompiler
+    kapt libraries.glideCompiler
     // Network
     implementation libraries.retrofit
     implementation libraries.gson
     implementation libraries.interceptor
+
+    implementation libraries.coroutine
 
     //Exoplayer
     def exoplayer_version = "2.17.0"

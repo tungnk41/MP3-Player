@@ -1,15 +1,16 @@
-package com.example.musicplayer.repository.GenreRepository.datasource
+package com.example.mediaservice.repository.GenreRepository.datasource
 
 import android.content.ContentResolver
 import android.content.Context
 import android.database.Cursor
 import android.provider.MediaStore
-import com.example.musicplayer.repository.GenreRepository.GenreDataSource
-import com.example.musicplayer.repository.models.Genre
+import com.example.mediaservice.repository.GenreRepository.GenreDataSource
+import com.example.mediaservice.repository.models.Genre
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-class GenreLocalDataSource @Inject constructor(@ApplicationContext val context: Context) : GenreDataSource {
+class GenreLocalDataSource @Inject constructor(@ApplicationContext val context: Context) :
+    GenreDataSource {
     override suspend fun getAllGenre(): List<Genre> {
         val listGenre = mutableListOf<Genre>()
 

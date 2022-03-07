@@ -1,4 +1,4 @@
-package com.example.mediaplayerservice.notification
+package com.example.mediaservice.notification
 
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -8,14 +8,10 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
-import android.util.Log
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.example.mediaplayerservice.const.NOTIFICATION_CHANNEL_ID
-import com.example.mediaplayerservice.const.NOTIFICATION_ID
 import com.example.mediaservice.R
+import com.example.mediaservice.const.NOTIFICATION_CHANNEL_ID
+import com.example.mediaservice.const.NOTIFICATION_ID
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import kotlinx.coroutines.*
@@ -42,7 +38,7 @@ class MediaNotification (private val context: Context, sessionToken: MediaSessio
         }
         notificationManager = builder.build()
         notificationManager.setMediaSessionToken(sessionToken)
-        notificationManager.setSmallIcon(R.drawable.ic_default_art_24)
+//        notificationManager.setSmallIcon(R.drawable.ic_default_art_24)
         notificationManager.setUsePreviousActionInCompactView(true)
         notificationManager.setUseNextActionInCompactView(true)
         notificationManager.setUseFastForwardAction(false)
@@ -86,7 +82,8 @@ class MediaNotification (private val context: Context, sessionToken: MediaSessio
                         try {
                             resolveUriAsBitmap(it)
                         }catch (e: Exception) {
-                            BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_default_art_24)
+//                            BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_default_art_24)
+                            null
                         }
 
                     }

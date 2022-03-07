@@ -1,4 +1,4 @@
-package com.example.mediaplayerservice
+package com.example.mediaservice
 
 import android.app.Notification
 import android.app.PendingIntent
@@ -13,17 +13,18 @@ import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
+import androidx.core.app.ServiceCompat.stopForeground
 import androidx.core.content.ContextCompat
 import androidx.media.MediaBrowserServiceCompat
-import com.example.mediaplayerservice.const.*
-import com.example.mediaplayerservice.extensions.toBrowserMediaItem
-import com.example.mediaplayerservice.media.MediaPlayer
-import com.example.mediaplayerservice.notification.MediaNotification
-import com.example.musicplayer.repository.AlbumRepository.AlbumRepository
-import com.example.musicplayer.repository.ArtistRepository.ArtistRepository
-import com.example.musicplayer.repository.GenreRepository.GenreRepository
-import com.example.musicplayer.repository.SongRepository.SongRepository
-import com.example.musicplayer.repository.models.MediaIdExtra
+import com.example.mediaservice.const.*
+import com.example.mediaservice.extensions.toBrowserMediaItem
+import com.example.mediaservice.notification.MediaNotification
+import com.example.mediaservice.player.MediaPlayer
+import com.example.mediaservice.repository.AlbumRepository.AlbumRepository
+import com.example.mediaservice.repository.ArtistRepository.ArtistRepository
+import com.example.mediaservice.repository.GenreRepository.GenreRepository
+import com.example.mediaservice.repository.SongRepository.SongRepository
+import com.example.mediaservice.repository.models.MediaIdExtra
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator

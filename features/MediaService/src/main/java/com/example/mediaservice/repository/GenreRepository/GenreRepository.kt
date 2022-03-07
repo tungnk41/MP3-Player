@@ -1,10 +1,10 @@
-package com.example.musicplayer.repository.GenreRepository
+package com.example.mediaservice.repository.GenreRepository
 
 import android.support.v4.media.MediaMetadataCompat
-import com.example.mediaplayerservice.const.LOCAL_DATA
-import com.example.musicplayer.di.LocalDataSource
-import com.example.musicplayer.di.RemoteDataSource
-import com.example.musicplayer.repository.models.Genre
+import com.example.mediaservice.const.LOCAL_DATA
+import com.example.mediaservice.module.LocalDataSource
+import com.example.mediaservice.module.RemoteDataSource
+import com.example.mediaservice.repository.models.Genre
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -13,7 +13,6 @@ class GenreRepository @Inject constructor(
     @LocalDataSource private val localDataSource: GenreDataSource,
     @RemoteDataSource private val remoteDataSource: GenreDataSource
 ) {
-
     suspend fun getAllGenre(dataType : Int) : List<MediaMetadataCompat>{
         return withContext(Dispatchers.Default){
             if(dataType == LOCAL_DATA) {

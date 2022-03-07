@@ -1,9 +1,9 @@
-package com.example.mediaplayerservice.network
+package com.example.mediaservice.network
 
-import com.example.musicplayer.repository.models.Album
-import com.example.musicplayer.repository.models.Artist
-import com.example.musicplayer.repository.models.Genre
-import com.example.musicplayer.repository.models.Song
+import com.example.mediaservice.repository.models.Album
+import com.example.mediaservice.repository.models.Artist
+import com.example.mediaservice.repository.models.Genre
+import com.example.mediaservice.repository.models.Song
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Url

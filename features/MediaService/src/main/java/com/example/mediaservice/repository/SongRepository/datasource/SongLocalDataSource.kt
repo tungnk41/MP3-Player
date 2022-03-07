@@ -1,4 +1,4 @@
-package com.example.musicplayer.repository.SongRepository.datasource
+package com.example.mediaservice.repository.SongRepository.datasource
 
 import android.content.ContentResolver
 import android.content.ContentUris
@@ -7,15 +7,15 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import android.support.v4.media.MediaBrowserCompat
-import com.example.musicplayer.repository.SongRepository.SongDataSource
-import com.example.musicplayer.repository.models.Song
+import com.example.mediaservice.repository.SongRepository.SongDataSource
+import com.example.mediaservice.repository.models.Song
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class SongLocalDataSource @Inject constructor(@ApplicationContext val context: Context) : SongDataSource {
+class SongLocalDataSource @Inject constructor(@ApplicationContext val context: Context) :
+    SongDataSource {
 
 
     override suspend fun getAllSong() : List<Song>  = withContext(Dispatchers.IO){

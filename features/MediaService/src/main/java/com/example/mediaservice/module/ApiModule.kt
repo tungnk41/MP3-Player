@@ -1,6 +1,6 @@
-package com.example.musicplayer.di
+package com.example.mediaservice.module
 
-import com.example.mediaplayerservice.network.MediaApiInterface
+import com.example.mediaservice.network.MediaApiInterface
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

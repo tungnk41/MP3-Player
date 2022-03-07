@@ -1,17 +1,18 @@
-package com.example.musicplayer.repository.AlbumRepository.datasource
+package com.example.mediaservice.repository.AlbumRepository.datasource
 
 import android.content.ContentResolver
 import android.content.Context
 import android.database.Cursor
 import android.provider.MediaStore
-import com.example.musicplayer.repository.AlbumRepository.AlbumDataSource
-import com.example.musicplayer.repository.models.Album
+import com.example.mediaservice.repository.AlbumRepository.AlbumDataSource
+import com.example.mediaservice.repository.models.Album
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class AlbumLocalDataSource @Inject constructor(@ApplicationContext val context: Context) : AlbumDataSource {
+class AlbumLocalDataSource @Inject constructor(@ApplicationContext val context: Context) :
+    AlbumDataSource {
     override suspend fun getAllAlbum(): List<Album> = withContext(Dispatchers.IO){
         val listAlbum = mutableListOf<Album>()
         val contentResolver: ContentResolver = context.contentResolver

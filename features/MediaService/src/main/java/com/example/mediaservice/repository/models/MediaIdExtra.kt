@@ -1,7 +1,6 @@
-package com.example.musicplayer.repository.models
+package com.example.mediaservice.repository.models
 
-import android.support.v4.media.MediaBrowserCompat
-import com.example.mediaplayerservice.const.LOCAL_DATA
+import com.example.mediaservice.const.LOCAL_DATA
 import com.google.gson.Gson
 
 data class MediaIdExtra(var mediaType: Int? = null, var id: String? = null, var dataType : Int = LOCAL_DATA) {

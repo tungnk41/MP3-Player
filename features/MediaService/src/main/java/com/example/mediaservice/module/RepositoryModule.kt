@@ -1,19 +1,18 @@
-package com.example.musicplayer.di
+package com.example.mediaservice.module
 
-import com.example.musicplayer.repository.AlbumRepository.AlbumDataSource
-import com.example.musicplayer.repository.AlbumRepository.AlbumRepository
-import com.example.musicplayer.repository.ArtistRepository.ArtistDataSource
-import com.example.musicplayer.repository.ArtistRepository.ArtistRepository
-import com.example.musicplayer.repository.GenreRepository.GenreDataSource
-import com.example.musicplayer.repository.GenreRepository.GenreRepository
-import com.example.musicplayer.repository.SongRepository.SongDataSource
-import com.example.musicplayer.repository.SongRepository.SongRepository
+import com.example.mediaservice.repository.AlbumRepository.AlbumDataSource
+import com.example.mediaservice.repository.AlbumRepository.AlbumRepository
+import com.example.mediaservice.repository.ArtistRepository.ArtistDataSource
+import com.example.mediaservice.repository.ArtistRepository.ArtistRepository
+import com.example.mediaservice.repository.GenreRepository.GenreDataSource
+import com.example.mediaservice.repository.GenreRepository.GenreRepository
+import com.example.mediaservice.repository.SongRepository.SongDataSource
+import com.example.mediaservice.repository.SongRepository.SongRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
-
 
 @Module
 @InstallIn(SingletonComponent::class)

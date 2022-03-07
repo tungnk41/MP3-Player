@@ -1,4 +1,4 @@
-package com.example.mediaplayerservice.extensions
+package com.example.mediaservice.extensions
 
 import android.os.SystemClock
 import android.support.v4.media.session.PlaybackStateCompat

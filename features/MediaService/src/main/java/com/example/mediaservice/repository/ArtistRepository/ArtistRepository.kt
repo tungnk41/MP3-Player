@@ -1,10 +1,10 @@
-package com.example.musicplayer.repository.ArtistRepository
+package com.example.mediaservice.repository.ArtistRepository
 
 import android.support.v4.media.MediaMetadataCompat
-import com.example.mediaplayerservice.const.LOCAL_DATA
-import com.example.musicplayer.di.LocalDataSource
-import com.example.musicplayer.di.RemoteDataSource
-import com.example.musicplayer.repository.models.Artist
+import com.example.mediaservice.const.LOCAL_DATA
+import com.example.mediaservice.module.LocalDataSource
+import com.example.mediaservice.module.RemoteDataSource
+import com.example.mediaservice.repository.models.Artist
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject

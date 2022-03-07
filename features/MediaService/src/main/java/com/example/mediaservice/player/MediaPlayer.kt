@@ -1,11 +1,11 @@
-package com.example.mediaplayerservice.media
+package com.example.mediaservice.player
 
 import android.content.Context
 import android.net.Uri
 import android.support.v4.media.MediaMetadataCompat
 import android.util.Log
-import com.example.mediaplayerservice.extensions.mediaUri
-import com.example.mediaplayerservice.extensions.toExoPlayerMediaItem
+import com.example.mediaservice.extensions.mediaUri
+import com.example.mediaservice.extensions.toExoPlayerMediaItem
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
@@ -163,5 +163,4 @@ class MediaPlayer(private val context : Context) {
             }
         }
     }
-
 }

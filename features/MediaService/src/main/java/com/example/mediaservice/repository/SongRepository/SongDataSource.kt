@@ -1,7 +1,6 @@
-package com.example.musicplayer.repository.SongRepository
+package com.example.mediaservice.repository.SongRepository
 
-import com.example.musicplayer.repository.models.Song
-
+import com.example.mediaservice.repository.models.Song
 
 interface SongDataSource {
     suspend fun getAllSong() : List<Song>

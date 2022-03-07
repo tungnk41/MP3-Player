@@ -1,15 +1,12 @@
-package com.example.musicplayer.repository.models
+package com.example.mediaservice.repository.models
 
-import android.net.Uri
-import android.os.Bundle
 import android.os.Parcelable
 import android.support.v4.media.MediaBrowserCompat
-import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
-import com.example.mediaplayerservice.extensions.displayIconUri
-import com.example.mediaplayerservice.extensions.flag
-import com.example.mediaplayerservice.extensions.id
-import com.example.mediaplayerservice.extensions.title
+import com.example.mediaservice.extensions.displayIconUri
+import com.example.mediaservice.extensions.flag
+import com.example.mediaservice.extensions.id
+import com.example.mediaservice.extensions.title
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize

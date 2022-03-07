@@ -3,7 +3,7 @@ ext {
             // For project configuration
             java            : JavaVersion.VERSION_1_8,
             minSdk          : 21,
-            compileSdk      : 31,
+            compileSdk      : 30,
             targetSdk       : 30,
             buildTools      : '30.0.3',
             versionCode     : 1,
@@ -18,7 +18,7 @@ ext {
             constraintlayout: '2.0.4',
             navigation      : '2.4.0-alpha05',
             retrofit        : '2.9.0',
-            hilt            : '2.38.1',
+            hilt            : '2.35.1',
             gson            : '2.9.0',
             jackson         : '2.8.1',
             interceptor     : '5.0.0-alpha.2',

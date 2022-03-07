@@ -1,22 +1,23 @@
-package com.example.musicplayer.di
+package com.example.mediaservice.module
 
-import com.example.musicplayer.repository.AlbumRepository.AlbumDataSource
-import com.example.musicplayer.repository.AlbumRepository.datasource.AlbumLocalDataSource
-import com.example.musicplayer.repository.AlbumRepository.datasource.AlbumRemoteDataSource
-import com.example.musicplayer.repository.ArtistRepository.ArtistDataSource
-import com.example.musicplayer.repository.ArtistRepository.datasource.ArtistLocalDataSource
-import com.example.musicplayer.repository.ArtistRepository.datasource.ArtistRemoteDataSource
-import com.example.musicplayer.repository.GenreRepository.GenreDataSource
-import com.example.musicplayer.repository.GenreRepository.datasource.GenreLocalDataSource
-import com.example.musicplayer.repository.GenreRepository.datasource.GenreRemoteDataSource
-import com.example.musicplayer.repository.SongRepository.SongDataSource
-import com.example.musicplayer.repository.SongRepository.datasource.SongLocalDataSource
-import com.example.musicplayer.repository.SongRepository.datasource.SongRemoteDataSource
+import com.example.mediaservice.repository.AlbumRepository.AlbumDataSource
+import com.example.mediaservice.repository.AlbumRepository.datasource.AlbumLocalDataSource
+import com.example.mediaservice.repository.AlbumRepository.datasource.AlbumRemoteDataSource
+import com.example.mediaservice.repository.ArtistRepository.ArtistDataSource
+import com.example.mediaservice.repository.ArtistRepository.datasource.ArtistLocalDataSource
+import com.example.mediaservice.repository.ArtistRepository.datasource.ArtistRemoteDataSource
+import com.example.mediaservice.repository.GenreRepository.GenreDataSource
+import com.example.mediaservice.repository.GenreRepository.datasource.GenreLocalDataSource
+import com.example.mediaservice.repository.GenreRepository.datasource.GenreRemoteDataSource
+import com.example.mediaservice.repository.SongRepository.SongDataSource
+import com.example.mediaservice.repository.SongRepository.datasource.SongLocalDataSource
+import com.example.mediaservice.repository.SongRepository.datasource.SongRemoteDataSource
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Qualifier
+
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)

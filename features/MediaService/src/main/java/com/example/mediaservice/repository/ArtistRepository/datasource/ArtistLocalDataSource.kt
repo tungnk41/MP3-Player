@@ -1,15 +1,16 @@
-package com.example.musicplayer.repository.ArtistRepository.datasource
+package com.example.mediaservice.repository.ArtistRepository.datasource
 
 import android.content.ContentResolver
 import android.content.Context
 import android.database.Cursor
 import android.provider.MediaStore
-import com.example.musicplayer.repository.ArtistRepository.ArtistDataSource
-import com.example.musicplayer.repository.models.Artist
+import com.example.mediaservice.repository.ArtistRepository.ArtistDataSource
+import com.example.mediaservice.repository.models.Artist
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-class ArtistLocalDataSource @Inject constructor(@ApplicationContext val context: Context) : ArtistDataSource {
+class ArtistLocalDataSource @Inject constructor(@ApplicationContext val context: Context) :
+    ArtistDataSource {
     override suspend fun getAllArtist(): List<Artist> {
         val listArtist = mutableListOf<Artist>()
         val contentResolver: ContentResolver = context.contentResolver
@@ -37,5 +38,4 @@ class ArtistLocalDataSource @Inject constructor(@ApplicationContext val context:
         }
         return listArtist
     }
-
 }

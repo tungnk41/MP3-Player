@@ -1,17 +1,15 @@
-package com.example.musicplayer.repository.SongRepository
+package com.example.mediaservice.repository.SongRepository
 
-import android.database.Cursor
 import android.support.v4.media.MediaMetadataCompat
-import com.example.mediaplayerservice.const.LOCAL_DATA
-import com.example.musicplayer.di.LocalDataSource
-import com.example.musicplayer.di.RemoteDataSource
-import com.example.musicplayer.repository.models.Song
+import com.example.mediaservice.const.LOCAL_DATA
+import com.example.mediaservice.module.LocalDataSource
+import com.example.mediaservice.module.RemoteDataSource
+import com.example.mediaservice.repository.models.Song
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class SongRepository @Inject constructor(@LocalDataSource private val localDataSource: SongDataSource,@RemoteDataSource private val remoteDataSource: SongDataSource) {
-
+class SongRepository @Inject constructor(@LocalDataSource private val localDataSource: SongDataSource, @RemoteDataSource private val remoteDataSource: SongDataSource) {
 
     suspend fun getAllSong(dataType : Int) : List<MediaMetadataCompat>{
         return withContext(Dispatchers.Default){

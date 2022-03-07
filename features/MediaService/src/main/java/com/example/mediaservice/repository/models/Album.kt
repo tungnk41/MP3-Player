@@ -1,14 +1,10 @@
-package com.example.musicplayer.repository.models
+package com.example.mediaservice.repository.models
 
-import android.net.Uri
-import android.os.Bundle
 import android.os.Parcelable
 import android.support.v4.media.MediaBrowserCompat
-import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
-import com.example.mediaplayerservice.extensions.*
+import com.example.mediaservice.extensions.*
 import kotlinx.android.parcel.Parcelize
-import java.util.concurrent.TimeUnit
 
 @Parcelize
 data class Album(

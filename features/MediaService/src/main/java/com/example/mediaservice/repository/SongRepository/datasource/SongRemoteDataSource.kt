@@ -1,15 +1,14 @@
-package com.example.musicplayer.repository.SongRepository.datasource
+package com.example.mediaservice.repository.SongRepository.datasource
 
-import android.os.Build
-import androidx.annotation.RequiresApi
-import com.example.mediaplayerservice.network.MediaApiInterface
-import com.example.musicplayer.repository.SongRepository.SongDataSource
-import com.example.musicplayer.repository.models.Song
+import com.example.mediaservice.network.MediaApiInterface
+import com.example.mediaservice.repository.SongRepository.SongDataSource
+import com.example.mediaservice.repository.models.Song
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class SongRemoteDataSource @Inject constructor(private val musicServiceApi: MediaApiInterface) : SongDataSource{
+class SongRemoteDataSource @Inject constructor(private val musicServiceApi: MediaApiInterface) :
+    SongDataSource {
     override suspend fun getAllSong(): List<Song> = withContext(Dispatchers.IO){
         getAllSongHasArtist()
     }
@@ -28,7 +27,6 @@ class SongRemoteDataSource @Inject constructor(private val musicServiceApi: Medi
 
     //#############################################
 
-    @RequiresApi(Build.VERSION_CODES.N)
     private suspend fun getAllSongHasArtist(): List<Song> {
         val allSong = musicServiceApi.getAllSong()?.body() ?: listOf()
         val allArtist = musicServiceApi.getAllArtist()?.body() ?: listOf()
@@ -41,7 +39,7 @@ class SongRemoteDataSource @Inject constructor(private val musicServiceApi: Medi
             }
 
             allSong.forEach { song ->
-                song.artist = mapArtist.getOrDefault(song.artistId,"")
+                song.artist = mapArtist.get(song.artistId).toString()
             }
         }
 
