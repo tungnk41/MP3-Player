@@ -3,7 +3,7 @@ ext {
             // For project configuration
             java            : JavaVersion.VERSION_1_8,
             minSdk          : 21,
-            compileSdk      : 30,
+            compileSdk      : 31,
             targetSdk       : 30,
             buildTools      : '30.0.3',
             versionCode     : 1,

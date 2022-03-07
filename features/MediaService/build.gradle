@@ -51,19 +51,17 @@ dependencies {
 
     //appcompat
     implementation libraries.appcompat
-    implementation libraries.fragment
 
     implementation libraries.hilt
     kapt libraries.hiltSupport
-    //implementation libraries.hiltViewModel
-    //kapt libraries.hiltCompiler
+//    //implementation libraries.hiltViewModel
+////    kapt libraries.hiltCompiler
+
+
 
     implementation libraries.kotlin
 
-    //    //ViewModel
-    implementation libraries.viewmodel
-    implementation libraries.lifecycleExt
-    kapt libraries.liveData
+    implementation libraries.coroutine
 
     //view
     implementation libraries.material
@@ -72,11 +70,16 @@ dependencies {
 
     // Loading Image
     implementation libraries.glide
-    kapt libraries.glideCompiler
+    annotationProcessor libraries.glideCompiler
     // Network
     implementation libraries.retrofit
     implementation libraries.gson
     implementation libraries.interceptor
+
+    //Exoplayer
+    def exoplayer_version = "2.17.0"
+    implementation "com.google.android.exoplayer:exoplayer:$exoplayer_version"
+    implementation "com.google.android.exoplayer:extension-mediasession:$exoplayer_version"
 
     implementation 'androidx.asynclayoutinflater:asynclayoutinflater:1.0.0'
 }

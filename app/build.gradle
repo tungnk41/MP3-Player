@@ -43,15 +43,20 @@ dependencies {
 
     implementation project(':libraries:core')
     implementation project(':features:Demo')
+    implementation project(':features:MediaService')
 
     //appcompat
     implementation libraries.appcompat
     implementation libraries.fragment
 
-    implementation libraries.hilt
-    kapt libraries.hiltSupport
-    //implementation libraries.hiltViewModel
-    //kapt libraries.hiltCompiler
+//    implementation libraries.hilt
+//    kapt libraries.hiltSupport
+//    //implementation libraries.hiltViewModel
+//    kapt libraries.hiltCompiler
+
+    def hilt_version = "2.38.1"
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-compiler:$hilt_version"
 
     //kotlin
     implementation libraries.kotlin
@@ -72,10 +77,6 @@ dependencies {
     //logger
     implementation libraries.timber
 
-//    //ViewModel
-    implementation libraries.viewmodel
-    implementation libraries.lifecycleExt
-    kapt libraries.liveData
 
     // Loading Image
     implementation libraries.glide
