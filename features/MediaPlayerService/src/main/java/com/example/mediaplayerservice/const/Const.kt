@@ -1,0 +1,25 @@
+package com.example.mediaplayerservice.const
+
+const val APP_PACKAGE_NAME = "com.example.mp3player"
+
+// 0 -> 100
+const val TYPE_MEDIA_ROOT = 0
+const val TYPE_ALL_SONGS = 1
+const val TYPE_ALL_ALBUMS = 2
+const val TYPE_ALL_ARTISTS = 3
+const val TYPE_ALL_GENRES = 4
+const val TYPE_ALL_PLAYLISTS = 5
+const val TYPE_SONG = 6
+const val TYPE_ALBUM = 7
+const val TYPE_ARTIST = 8
+const val TYPE_GENRE = 9
+const val TYPE_PLAYLIST = 10
+
+const val LOCAL_DATA = 11
+const val REMOTE_DATA = 12
+
+//101 -> 200
+const val NOTIFICATION_ID = 101
+
+const val NOTIFICATION_CHANNEL_ID = "media_channel_01"
+const val NETWORK_FAILURE = "NETWORK_FAILURE"

@@ -1,0 +1,5 @@
+include ':features:Demo'
+include ':libraries:core'
+include ':app'
+rootProject.name = "MP3Player"
+include ':features:MediaPlayerService'
