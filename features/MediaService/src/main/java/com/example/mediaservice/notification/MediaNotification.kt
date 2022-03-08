@@ -33,12 +33,12 @@ class MediaNotification (private val context: Context, sessionToken: MediaSessio
         with (builder) {
             setMediaDescriptionAdapter(DescriptionAdapter(mediaController))
             setNotificationListener(notificationListener)
-            setChannelNameResourceId(0)
-            setChannelDescriptionResourceId(0)
+            setChannelNameResourceId(R.string.notification_channel_name)
+            setChannelDescriptionResourceId(R.string.notification_channel_desc)
         }
         notificationManager = builder.build()
         notificationManager.setMediaSessionToken(sessionToken)
-//        notificationManager.setSmallIcon(R.drawable.ic_default_art_24)
+        notificationManager.setSmallIcon(R.drawable.ic_default_art_24)
         notificationManager.setUsePreviousActionInCompactView(true)
         notificationManager.setUseNextActionInCompactView(true)
         notificationManager.setUseFastForwardAction(false)
@@ -73,19 +73,15 @@ class MediaNotification (private val context: Context, sessionToken: MediaSessio
         ): Bitmap? {
             val iconUri = controller.metadata.description.iconUri
             return if (currentIconUri != iconUri || currentBitmap == null) {
-
-                // Cache the bitmap for the current song so that successive calls to
-                // `getCurrentLargeIcon` don't cause the bitmap to be recreated.
                 currentIconUri = iconUri
+                if(serviceJob.isCancelled) serviceJob.cancel()
                 serviceScope.launch {
                     currentBitmap = iconUri?.let {
                         try {
                             resolveUriAsBitmap(it)
                         }catch (e: Exception) {
-//                            BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_default_art_24)
-                            null
+                             null
                         }
-
                     }
                     currentBitmap?.let { callback.onBitmap(it) }
                 }
@@ -105,7 +101,6 @@ class MediaNotification (private val context: Context, sessionToken: MediaSessio
                     .get()
             }
         }
-
     }
 }
 

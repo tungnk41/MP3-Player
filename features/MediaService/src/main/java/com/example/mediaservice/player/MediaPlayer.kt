@@ -102,7 +102,6 @@ class MediaPlayer(private val context : Context) {
         playerStateListener?.let { currentPlayer.removeListener(it) }
         currentPlayer.release()
         databaseProvider.close()
-
     }
 
     fun stop() {

@@ -42,5 +42,9 @@ class CommonFragment :
         binding.btnNext.setOnClickListener {
             viewModel.next()
         }
+
+        binding.btnSearch.setOnClickListener {
+            viewModel.search()
+        }
     }
 }

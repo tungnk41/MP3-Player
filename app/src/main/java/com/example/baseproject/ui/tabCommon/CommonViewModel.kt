@@ -5,6 +5,7 @@ import android.util.Log
 import com.example.core.base.BaseViewModel
 import com.example.mediaservice.MediaServiceConnection
 import com.example.mediaservice.const.LOCAL_DATA
+import com.example.mediaservice.const.REMOTE_DATA
 import com.example.mediaservice.const.TYPE_ALL_SONGS
 import com.example.mediaservice.repository.models.MediaIdExtra
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CommonViewModel @Inject constructor(val mediaServiceConnection: MediaServiceConnection) : BaseViewModel() {
 
-    val mediaIdExtra = MediaIdExtra(TYPE_ALL_SONGS,null, LOCAL_DATA)
+    val mediaIdExtra = MediaIdExtra(TYPE_ALL_SONGS,null, REMOTE_DATA)
 
     fun connect() {
         mediaServiceConnection.subscribe(mediaIdExtra.toString(),object : MediaBrowserCompat.SubscriptionCallback(){
@@ -36,5 +37,10 @@ class CommonViewModel @Inject constructor(val mediaServiceConnection: MediaServi
 
     fun next() {
 
+    }
+
+    fun search() {
+        mediaServiceConnection.transportControls.prepareFromSearch("abc",null)
+        mediaServiceConnection.transportControls.seekTo(80000)
     }
 }

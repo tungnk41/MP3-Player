@@ -2,5 +2,4 @@ include ':features:Demo'
 include ':libraries:core'
 include ':app'
 rootProject.name = "BaseProject"
-include ':features:mylibrary'
 include ':features:MediaService'

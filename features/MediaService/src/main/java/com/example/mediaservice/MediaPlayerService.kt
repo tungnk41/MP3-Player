@@ -120,6 +120,14 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
     }
 
 
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        super.onTaskRemoved(rootIntent)
+        Log.d(TAG, "onTaskRemoved: ")
+        if(!currentPlayer.isPlaying()) {
+            currentPlayer.stop()
+        }
+    }
+
     private fun reload(parentId: String) {
         this.notifyChildrenChanged(parentId)
     }
@@ -186,13 +194,6 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
 //                            TYPE_ALL_PLAYLISTS -> {
 //                                 songRepository.getLocalListSong().map { it.toMediaMetaItem() }.toMutableList()
 //                            }
-//                            TYPE_SONG -> {
-//                                if (mediaParentDataType == LOCAL_DATA) {
-//
-//                                } else {
-//
-//                                }
-//                            }
                         TYPE_ALBUM -> {
                             mediaItems = songRepository.getAllSongFromAlbum(mediaParentId?.toLong() ?: -1, mediaParentDataType).map { it.toBrowserMediaItem(TYPE_SONG,mediaParentDataType) }
                         }
@@ -248,7 +249,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
             if (ongoing && !isForegroundService) {
                 ContextCompat.startForegroundService(
                     applicationContext,
-                    Intent(applicationContext, this@MediaPlayerService.javaClass)
+                    Intent(applicationContext, MediaPlayerService::class.java)
                 )
 
                 startForeground(notificationId, notification)
@@ -263,13 +264,17 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
         }
     }
 
+
     private inner class MediaPlaybackPreparer : MediaSessionConnector.PlaybackPreparer {
 
         override fun getSupportedPrepareActions(): Long =
-            PlaybackStateCompat.ACTION_PREPARE_FROM_MEDIA_ID or
-                    PlaybackStateCompat.ACTION_PLAY_FROM_MEDIA_ID or
-                    PlaybackStateCompat.ACTION_PREPARE_FROM_SEARCH or
-                    PlaybackStateCompat.ACTION_PLAY_FROM_SEARCH
+                            PlaybackStateCompat.ACTION_PREPARE or
+                            PlaybackStateCompat.ACTION_PREPARE_FROM_MEDIA_ID or
+                            PlaybackStateCompat.ACTION_PREPARE_FROM_SEARCH or
+                            PlaybackStateCompat.ACTION_PREPARE_FROM_URI or
+                            PlaybackStateCompat.ACTION_PLAY_FROM_MEDIA_ID or
+                            PlaybackStateCompat.ACTION_PLAY_FROM_SEARCH or
+                            PlaybackStateCompat.ACTION_PLAY_FROM_URI
 
         override fun onPrepare(playWhenReady: Boolean) {
 //            return onPrepareFromMediaId(
@@ -286,42 +291,13 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
         ) {
             Log.d(TAG, "onPrepareFromMediaId: ")
             currentPlayer.playAtIndex(2)
-//            mediaSource.whenReady {
-//                val itemToPlay: MediaMetadataCompat? = mediaSource.find { item ->
-//                    item.id == mediaId
-//                }
-//                if (itemToPlay == null) {
-//                    Log.w(TAG, "Content not found: MediaID=$mediaId")
-//
-//                } else {
-//
-//                    val playbackStartPositionMs =
-//                        extras?.getLong(MEDIA_DESCRIPTION_EXTRAS_START_PLAYBACK_POSITION_MS, C.TIME_UNSET)
-//                            ?: C.TIME_UNSET
-//
-//                    preparePlaylist(
-//                        buildPlaylist(itemToPlay),
-//                        itemToPlay,
-//                        playWhenReady,
-//                        playbackStartPositionMs
-//                    )
-//                }
-//            }
+
         }
 
 
         override fun onPrepareFromSearch(query: String, playWhenReady: Boolean, extras: Bundle?) {
-//            mediaSource.whenReady {
-//                val metadataList = mediaSource.search(query, extras ?: Bundle.EMPTY)
-//                if (metadataList.isNotEmpty()) {
-//                    preparePlaylist(
-//                        metadataList,
-//                        metadataList[0],
-//                        playWhenReady,
-//                        playbackStartPositionMs = C.TIME_UNSET
-//                    )
-//                }
-//            }
+            Log.d(TAG, "onPrepareFromSearch: " + query)
+
         }
 
         override fun onPrepareFromUri(uri: Uri, playWhenReady: Boolean, extras: Bundle?) = Unit
@@ -338,22 +314,13 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
     private val playerStateListener = object : Player.Listener {
         override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
             when (playbackState) {
-                Player.STATE_IDLE -> {
-
-                }
-                Player.STATE_BUFFERING -> {
-
-                }
                 Player.STATE_READY -> {
-//                    mediaNotification.showNotificationForPlayer(currentPlayer.getExoPlayerInstance())
+                    mediaNotification.showNotificationForPlayer(currentPlayer.getExoPlayerInstance())
 
                     if(!playWhenReady) {
                         stopForeground(false)
                         isForegroundService = false
                     }
-                }
-                Player.STATE_ENDED -> {
-//
                 }
                 else -> {
                     mediaNotification.hideNotification()

@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit
 
 @Parcelize
 data class Song(
+    var _id: Long? = null, //This id is used for combine data between local and remote source
     var id: Long = -1,
     val title: String = "",
     var album: String = "",

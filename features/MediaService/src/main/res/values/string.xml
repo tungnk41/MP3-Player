@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="notification_channel_name">Media Notification</string>
+    <string name="notification_channel_desc">Media Notification Desc</string>
+
+</resources>
