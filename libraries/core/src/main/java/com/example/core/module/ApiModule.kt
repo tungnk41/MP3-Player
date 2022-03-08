@@ -67,6 +67,15 @@ class ApiModule {
 
     @Provides
     @Singleton
+    fun provideRetrofit(gson: Gson,okHttpClient: OkHttpClient): Retrofit =
+        Retrofit.Builder()
+            .baseUrl("http://localhost/")
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+
+    @Provides
+    @Singleton
     fun provideHttpClient(cache: Cache?, rxPreferences: RxPreferences): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY

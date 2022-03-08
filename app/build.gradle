@@ -43,6 +43,7 @@ dependencies {
 
     implementation project(':libraries:core')
     implementation project(':features:Demo')
+    implementation project(':features:MediaService')
 
     //appcompat
     implementation libraries.appcompat
@@ -80,4 +81,8 @@ dependencies {
     // Loading Image
     implementation libraries.glide
     kapt libraries.glideCompiler
+
+    def exoplayer_version = "2.16.0"
+    implementation "com.google.android.exoplayer:exoplayer:$exoplayer_version"
+    implementation "com.google.android.exoplayer:extension-mediasession:$exoplayer_version"
 }
