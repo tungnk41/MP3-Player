@@ -31,6 +31,7 @@ import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
+import java.util.jar.Manifest
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -142,7 +143,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
         clientUid: Int,
         rootHints: Bundle?
     ): BrowserRoot? {
-        if (clientPackageName == APP_PACKAGE_NAME) {
+        if (clientPackageName == CLIENT_PACKAGE_NAME) {
             return BrowserRoot(MediaIdExtra(TYPE_MEDIA_ROOT, null).toString(), null)
         }
         return null
@@ -157,6 +158,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
         val mediaParentType = mediaIdExtra.mediaType //TYPE_SONG,TYPE_ALBUM ...
         val mediaParentDataType = mediaIdExtra.dataType //LOCAL_DATA or REMOTE_DATA
 
+        Log.d(TAG, "onLoadChildren: Service")
         //allow calling result.sendResult from another thread
         result.detach()
         serviceScope.launch {
@@ -343,7 +345,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
 
                 }
                 Player.STATE_READY -> {
-                    mediaNotification.showNotificationForPlayer(currentPlayer.getExoPlayerInstance())
+//                    mediaNotification.showNotificationForPlayer(currentPlayer.getExoPlayerInstance())
 
                     if(!playWhenReady) {
                         stopForeground(false)

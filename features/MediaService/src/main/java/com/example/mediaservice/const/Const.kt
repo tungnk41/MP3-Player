@@ -1,6 +1,6 @@
 package com.example.mediaservice.const
 
-const val APP_PACKAGE_NAME = "com.example.mediaservice"
+const val CLIENT_PACKAGE_NAME = "com.example.baseproject"
 
 // 0 -> 100
 const val TYPE_MEDIA_ROOT = 0
