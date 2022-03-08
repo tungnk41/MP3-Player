@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 class GenreLocalDataSource @Inject constructor(@ApplicationContext val context: Context) :
     GenreDataSource {
-    override suspend fun getAllGenre(): List<Genre> {
+    override suspend fun findAll(): List<Genre> {
         val listGenre = mutableListOf<Genre>()
 
         val contentResolver: ContentResolver = context.contentResolver

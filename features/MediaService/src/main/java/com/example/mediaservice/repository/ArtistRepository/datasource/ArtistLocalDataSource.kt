@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 class ArtistLocalDataSource @Inject constructor(@ApplicationContext val context: Context) :
     ArtistDataSource {
-    override suspend fun getAllArtist(): List<Artist> {
+    override suspend fun findAll(): List<Artist> {
         val listArtist = mutableListOf<Artist>()
         val contentResolver: ContentResolver = context.contentResolver
         val contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI

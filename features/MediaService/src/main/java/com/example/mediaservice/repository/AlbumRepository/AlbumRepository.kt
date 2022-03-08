@@ -13,16 +13,16 @@ class AlbumRepository @Inject constructor(
     @LocalDataSource private val localDataSource: AlbumDataSource,
     @RemoteDataSource private val remoteDataSource: AlbumDataSource
 ) {
-    suspend fun getAllAlbum(dataType : Int) : List<MediaMetadataCompat>{
+    suspend fun findAll(dataType : Int) : List<MediaMetadataCompat>{
         return withContext(Dispatchers.Default){
             if(dataType == LOCAL_DATA) {
-                getLocalAllAlbum()
+                findAllLocalData()
             } else {
-                getRemoteAllAlbum()
+                findAllRemoteData()
             }.map { it.toMediaMetadataCompat() }
         }
     }
 
-    private suspend fun getRemoteAllAlbum(): List<Album> = remoteDataSource.getAllAlbum()
-    private suspend fun getLocalAllAlbum(): List<Album> = localDataSource.getAllAlbum()
+    private suspend fun findAllRemoteData(): List<Album> = remoteDataSource.findAll()
+    private suspend fun findAllLocalData(): List<Album> = localDataSource.findAll()
 }

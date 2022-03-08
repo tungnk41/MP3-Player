@@ -46,5 +46,18 @@ class CommonFragment :
         binding.btnSearch.setOnClickListener {
             viewModel.search()
         }
+
+        binding.btnCmd.setOnClickListener {
+            viewModel.sendCommand()
+        }
+
+        binding.btnSendPlaylist.setOnClickListener {
+            viewModel.sendPlaylist()
+        }
+
+        binding.btnGetPlaylist.setOnClickListener {
+            viewModel.getPlaylist()
+        }
+
     }
 }

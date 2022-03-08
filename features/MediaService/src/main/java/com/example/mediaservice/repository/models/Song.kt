@@ -4,6 +4,7 @@ import android.os.Parcelable
 import android.support.v4.media.MediaBrowserCompat.MediaItem.FLAG_PLAYABLE
 import android.support.v4.media.MediaMetadataCompat
 import com.example.mediaservice.extensions.*
+import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 import java.util.concurrent.TimeUnit
 
@@ -18,8 +19,10 @@ data class Song(
     val artistId: Long = -1,
     var genre: String = "",
     val genreId: Long = -1,
-    val source: String = "",
-    val image: String = "",
+    @SerializedName("source")
+    val mediaUri: String = "",
+    @SerializedName("image")
+    val iconUri: String = "",
     val duration: Long = 0,
 ) : Parcelable
 {
@@ -31,9 +34,9 @@ data class Song(
         builder.artist = artist
         builder.album = album
         builder.genre = genre
-        builder.mediaUri = source
-        builder.albumArtUri = image
-        builder.displayIconUri = image
+        builder.mediaUri = mediaUri
+        builder.albumArtUri = iconUri
+        builder.displayIconUri = iconUri
         builder.duration = TimeUnit.SECONDS.toMillis(duration)
         builder.flag = FLAG_PLAYABLE
         return builder.build()

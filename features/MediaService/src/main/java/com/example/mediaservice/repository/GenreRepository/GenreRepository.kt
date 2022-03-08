@@ -13,16 +13,16 @@ class GenreRepository @Inject constructor(
     @LocalDataSource private val localDataSource: GenreDataSource,
     @RemoteDataSource private val remoteDataSource: GenreDataSource
 ) {
-    suspend fun getAllGenre(dataType : Int) : List<MediaMetadataCompat>{
+    suspend fun findAll(dataType : Int) : List<MediaMetadataCompat>{
         return withContext(Dispatchers.Default){
             if(dataType == LOCAL_DATA) {
-                getLocalAllGenre()
+                findAllLocalData()
             } else {
-                getRemoteAllGenre()
+                findAllRemoteData()
             }.map { it.toMediaMetadataCompat() }
         }
     }
 
-    private suspend fun getRemoteAllGenre(): List<Genre> = remoteDataSource.getAllGenre()
-    private suspend fun getLocalAllGenre(): List<Genre> = localDataSource.getAllGenre()
+    private suspend fun findAllRemoteData(): List<Genre> = remoteDataSource.findAll()
+    private suspend fun findAllLocalData(): List<Genre> = localDataSource.findAll()
 }

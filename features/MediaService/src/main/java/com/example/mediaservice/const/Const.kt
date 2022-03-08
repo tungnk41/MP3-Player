@@ -23,3 +23,5 @@ const val NOTIFICATION_ID = 101
 
 const val NOTIFICATION_CHANNEL_ID = "media_channel_01"
 const val NETWORK_FAILURE = "NETWORK_FAILURE"
+
+const val DATABASE_NAME = "mediaservice.db"

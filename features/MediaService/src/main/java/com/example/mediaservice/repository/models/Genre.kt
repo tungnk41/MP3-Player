@@ -7,20 +7,23 @@ import com.example.mediaservice.extensions.displayIconUri
 import com.example.mediaservice.extensions.flag
 import com.example.mediaservice.extensions.id
 import com.example.mediaservice.extensions.title
+import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Genre(
     val id: Long = 0,
-    val name: String = "",
-    val image: String = ""
+    @SerializedName("name")
+    val title: String = "",
+    @SerializedName("image")
+    val iconUri: String = ""
 ): Parcelable {
 
     fun toMediaMetadataCompat(): MediaMetadataCompat {
         val builder = MediaMetadataCompat.Builder()
         builder.id = id.toString()
-        builder.title = name
-        builder.displayIconUri = image
+        builder.title = title
+        builder.displayIconUri = iconUri
         builder.flag = MediaBrowserCompat.MediaItem.FLAG_BROWSABLE
         return builder.build()
     }

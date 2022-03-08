@@ -11,56 +11,56 @@ import javax.inject.Inject
 
 class SongRepository @Inject constructor(@LocalDataSource private val localDataSource: SongDataSource, @RemoteDataSource private val remoteDataSource: SongDataSource) {
 
-    suspend fun getAllSong(dataType : Int) : List<MediaMetadataCompat>{
+    suspend fun findAll(dataType : Int) : List<MediaMetadataCompat>{
         return withContext(Dispatchers.Default){
             if(dataType == LOCAL_DATA) {
-                getLocalAllSong()
+                findAllLocalData()
             } else {
-                getRemoteAllSong()
+                findAllRemoteData()
             }.map { it.toMediaMetadataCompat() }
         }
     }
 
-    suspend fun getAllSongFromAlbum(albumId: Long, dataType: Int): List<MediaMetadataCompat> {
+    suspend fun findAllByAlbumId(albumId: Long, dataType: Int): List<MediaMetadataCompat> {
         return withContext(Dispatchers.Default){
             if(dataType == LOCAL_DATA) {
-                getLocalSongFromAlbum(albumId)
+                findAllLocalDataByAlbumId(albumId)
             } else {
-                getRemoteSongFromAlbum(albumId)
+                findAllRemoteDataByAlbumId(albumId)
             }
         }.map { it.toMediaMetadataCompat() }
     }
 
-    suspend fun getAllSongFromArtist(artistId: Long,dataType: Int) : List<MediaMetadataCompat> {
+    suspend fun findAllByArtistId(artistId: Long,dataType: Int) : List<MediaMetadataCompat> {
         return withContext(Dispatchers.Default){
             if(dataType == LOCAL_DATA) {
-                getLocalSongFromArtist(artistId)
+                findAllLocalDataByArtistId(artistId)
             } else {
-                getRemoteSongFromArtist(artistId)
+                findAllRemoteDataByArtistId(artistId)
             }
         }.map { it.toMediaMetadataCompat() }
     }
 
-    suspend fun getAllSongFromGenre(genreId: Long,dataType: Int) : List<MediaMetadataCompat> {
+    suspend fun findAllByGenreId(genreId: Long,dataType: Int) : List<MediaMetadataCompat> {
         return withContext(Dispatchers.Default){
             if(dataType == LOCAL_DATA) {
-                getLocalSongFromGenre(genreId)
+                findAllLocalDataByGenreId(genreId)
             } else {
-                getRemoteSongFromGenre(genreId)
+                findAllRemoteDataByGenreId(genreId)
             }
         }.map { it.toMediaMetadataCompat() }
     }
 
-    private suspend fun getRemoteAllSong() : List<Song> = remoteDataSource.getAllSong()
-    private suspend fun getLocalAllSong() : List<Song> = localDataSource.getAllSong()
+    private suspend fun findAllRemoteData() : List<Song> = remoteDataSource.findAll()
+    private suspend fun findAllLocalData() : List<Song> = localDataSource.findAll()
 
-    private suspend fun getRemoteSongFromAlbum(albumId: Long) : List<Song> = remoteDataSource.getSongFromAlbum(albumId)
-    private suspend fun getLocalSongFromAlbum(albumId: Long) : List<Song> = localDataSource.getSongFromAlbum(albumId)
+    private suspend fun findAllRemoteDataByAlbumId(albumId: Long) : List<Song> = remoteDataSource.findAllByAlbumId(albumId)
+    private suspend fun findAllLocalDataByAlbumId(albumId: Long) : List<Song> = localDataSource.findAllByAlbumId(albumId)
 
-    private suspend fun getRemoteSongFromArtist(artistId: Long) : List<Song> = remoteDataSource.getSongFromArtist(artistId)
-    private suspend fun getLocalSongFromArtist(artistId: Long) : List<Song> = localDataSource.getSongFromArtist(artistId)
+    private suspend fun findAllRemoteDataByArtistId(artistId: Long) : List<Song> = remoteDataSource.findAllByArtistId(artistId)
+    private suspend fun findAllLocalDataByArtistId(artistId: Long) : List<Song> = localDataSource.findAllByArtistId(artistId)
 
-    private suspend fun getRemoteSongFromGenre(genreId: Long) : List<Song> = remoteDataSource.getSongFromGenre(genreId)
-    private suspend fun getLocalSongFromGenre(genreId: Long) : List<Song> = localDataSource.getSongFromGenre(genreId)
+    private suspend fun findAllRemoteDataByGenreId(genreId: Long) : List<Song> = remoteDataSource.findAllByGenreId(genreId)
+    private suspend fun findAllLocalDataByGenreId(genreId: Long) : List<Song> = localDataSource.findAllByGenreId(genreId)
 
 }

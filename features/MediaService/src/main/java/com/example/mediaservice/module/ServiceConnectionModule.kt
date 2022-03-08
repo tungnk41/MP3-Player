@@ -12,7 +12,7 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-object ServiceConnectorModule {
+object ServiceConnectionModule {
 
     @Provides
     fun provideMediaServiceConnection(@ApplicationContext context : Context): MediaServiceConnection =

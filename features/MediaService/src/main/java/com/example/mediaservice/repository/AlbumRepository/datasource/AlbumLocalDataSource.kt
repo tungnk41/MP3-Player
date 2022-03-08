@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 class AlbumLocalDataSource @Inject constructor(@ApplicationContext val context: Context) :
     AlbumDataSource {
-    override suspend fun getAllAlbum(): List<Album> = withContext(Dispatchers.IO){
+    override suspend fun findAll(): List<Album> = withContext(Dispatchers.IO){
         val listAlbum = mutableListOf<Album>()
         val contentResolver: ContentResolver = context.contentResolver
         val contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI

@@ -24,14 +24,13 @@ class MediaServiceConnection @Inject constructor(val context: Context, val servi
     val transportControls : MediaControllerCompat.TransportControls
         get() = mediaController.transportControls
 
-
     //Expose to Viewmodel
     val rootMediaId: String get() = mediaBrowser.root
 
     val playbackState = MutableLiveData<PlaybackStateCompat>()
         .apply { postValue(EMPTY_PLAYBACK_STATE) }
-    val nowPlaying = MutableLiveData<MediaMetadataCompat>()
-        .apply { postValue(NOTHING_PLAYING) }
+    val mediaMetadataCompat = MutableLiveData<MediaMetadataCompat>()
+        .apply { postValue(EMPTY_MEDIA_METADATA) }
 
     val isConnected = MutableLiveData<Boolean>()
         .apply { postValue(false) }
@@ -81,12 +80,10 @@ class MediaServiceConnection @Inject constructor(val context: Context, val servi
 
     private inner class MediaBrowserConnectionCallback(private val context: Context) : MediaBrowserCompat.ConnectionCallback() {
         override fun onConnected() {
-            mediaController = MediaControllerCompat(context, mediaBrowser.sessionToken).apply {
-                Log.d(TAG, "onConnected: ")
-                registerCallback(MediaControllerCallback())
-            }
+            Log.d(TAG, "onConnected: ")
+            mediaController = MediaControllerCompat(context, mediaBrowser.sessionToken)
+            mediaController.registerCallback(MediaControllerCallback())
             isConnected.postValue(true)
-
         }
 
         override fun onConnectionFailed() {
@@ -104,7 +101,7 @@ class MediaServiceConnection @Inject constructor(val context: Context, val servi
         }
 
         override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
-            nowPlaying.postValue(metadata)
+            mediaMetadataCompat.postValue(metadata ?: EMPTY_MEDIA_METADATA)
         }
 
         override fun onSessionEvent(event: String?, extras: Bundle?) {
@@ -118,7 +115,6 @@ class MediaServiceConnection @Inject constructor(val context: Context, val servi
             super.onSessionDestroyed()
         }
     }
-
 }
 
 
@@ -128,7 +124,7 @@ val EMPTY_PLAYBACK_STATE: PlaybackStateCompat = PlaybackStateCompat.Builder()
     .build()
 
 @Suppress("PropertyName")
-val NOTHING_PLAYING: MediaMetadataCompat = MediaMetadataCompat.Builder()
+val EMPTY_MEDIA_METADATA: MediaMetadataCompat = MediaMetadataCompat.Builder()
     .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, "")
     .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, 0)
     .build()

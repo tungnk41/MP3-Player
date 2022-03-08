@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 class GenreRemoteDataSource @Inject constructor(private val musicServiceApi: MediaApiInterface):
     GenreDataSource {
-    override suspend fun getAllGenre(): List<Genre> = withContext(Dispatchers.IO){
+    override suspend fun findAll(): List<Genre> = withContext(Dispatchers.IO){
         musicServiceApi.getAllGenre()?.body() ?: listOf()
     }
 }

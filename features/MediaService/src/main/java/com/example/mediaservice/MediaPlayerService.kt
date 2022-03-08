@@ -176,36 +176,36 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
                 } else {
                     when (mediaParentType) {
                         TYPE_ALL_SONGS -> {
-                            val listSong = songRepository.getAllSong(mediaParentDataType)
+                            val listSong = songRepository.findAll(mediaParentDataType)
                             mediaItems = listSong.map { it.toBrowserMediaItem(TYPE_SONG,mediaParentDataType) }
                             withContext(Dispatchers.Main){
                                 currentPlayer.setPlayList(listSong)
                             }
                         }
                         TYPE_ALL_ALBUMS -> {
-                            mediaItems = albumRepository.getAllAlbum(mediaParentDataType).map { it.toBrowserMediaItem(TYPE_ALBUM,mediaParentDataType) }
+                            mediaItems = albumRepository.findAll(mediaParentDataType).map { it.toBrowserMediaItem(TYPE_ALBUM,mediaParentDataType) }
                         }
                         TYPE_ALL_ARTISTS -> {
-                            mediaItems = artistRepository.getAllArtist(mediaParentDataType).map {it.toBrowserMediaItem(TYPE_ARTIST,mediaParentDataType)}
+                            mediaItems = artistRepository.findAll(mediaParentDataType).map {it.toBrowserMediaItem(TYPE_ARTIST,mediaParentDataType)}
                         }
                         TYPE_ALL_GENRES -> {
-                            mediaItems = genreRepository.getAllGenre(mediaParentDataType).map {it.toBrowserMediaItem(TYPE_GENRE,mediaParentDataType)}
+                            mediaItems = genreRepository.findAll(mediaParentDataType).map {it.toBrowserMediaItem(TYPE_GENRE,mediaParentDataType)}
                         }
-//                            TYPE_ALL_PLAYLISTS -> {
-//                                 songRepository.getLocalListSong().map { it.toMediaMetaItem() }.toMutableList()
-//                            }
+                        TYPE_ALL_PLAYLISTS -> {
+
+                        }
                         TYPE_ALBUM -> {
-                            mediaItems = songRepository.getAllSongFromAlbum(mediaParentId?.toLong() ?: -1, mediaParentDataType).map { it.toBrowserMediaItem(TYPE_SONG,mediaParentDataType) }
+                            mediaItems = songRepository.findAllByAlbumId(mediaParentId?.toLong() ?: -1, mediaParentDataType).map { it.toBrowserMediaItem(TYPE_SONG,mediaParentDataType) }
                         }
                         TYPE_ARTIST -> {
-                            mediaItems = songRepository.getAllSongFromArtist(mediaParentId?.toLong() ?: -1, mediaParentDataType).map { it.toBrowserMediaItem(TYPE_SONG,mediaParentDataType) }
+                            mediaItems = songRepository.findAllByArtistId(mediaParentId?.toLong() ?: -1, mediaParentDataType).map { it.toBrowserMediaItem(TYPE_SONG,mediaParentDataType) }
                         }
                         TYPE_GENRE -> {
-                            mediaItems = songRepository.getAllSongFromGenre(mediaParentId?.toLong() ?: -1, mediaParentDataType).map { it.toBrowserMediaItem(TYPE_SONG,mediaParentDataType) }
+                            mediaItems = songRepository.findAllByGenreId(mediaParentId?.toLong() ?: -1, mediaParentDataType).map { it.toBrowserMediaItem(TYPE_SONG,mediaParentDataType) }
                         }
-//                            TYPE_PLAYLIST -> {
-//                                 songRepository.getLocalListSong().map { it.toMediaMetaItem() }.toMutableList()
-//                            }
+                        TYPE_PLAYLIST -> {
+
+                        }
                     }
                 }
             } catch (e: Exception) {
@@ -277,11 +277,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
                             PlaybackStateCompat.ACTION_PLAY_FROM_URI
 
         override fun onPrepare(playWhenReady: Boolean) {
-//            return onPrepareFromMediaId(
-//                recentSong.mediaId!!,
-//                playWhenReady,
-//                recentSong.description.extras
-//            )
+            Log.d(TAG, "onPrepare: ")
         }
 
         override fun onPrepareFromMediaId(
@@ -302,25 +298,34 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
 
         override fun onPrepareFromUri(uri: Uri, playWhenReady: Boolean, extras: Bundle?) = Unit
 
-        override fun onCommand(
-            player: Player,
-            command: String,
-            extras: Bundle?,
-            cb: ResultReceiver?
-        ) = false
+        override fun onCommand(player: Player, command: String, extras: Bundle?, cb: ResultReceiver?): Boolean {
+            Log.d(TAG, "onCommand: $command")
+            return true
+        }
 
     }
 
     private val playerStateListener = object : Player.Listener {
         override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+            Log.d(TAG, "onPlayerStateChanged: $playbackState + $playWhenReady")
             when (playbackState) {
+                Player.STATE_IDLE -> {
+
+                }
+                Player.STATE_BUFFERING -> {
+
+                }
                 Player.STATE_READY -> {
                     mediaNotification.showNotificationForPlayer(currentPlayer.getExoPlayerInstance())
+
 
                     if(!playWhenReady) {
                         stopForeground(false)
                         isForegroundService = false
                     }
+                }
+                Player.STATE_ENDED -> {
+                    
                 }
                 else -> {
                     mediaNotification.hideNotification()
