@@ -4,7 +4,12 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/TungNK/Documents/MP3-Player/app/src/main/res/layout/fragment_common.xml" value="0.33" />
+        <entry key="..\:/Users/TungNK/Documents/MP3-Player/app/src/main/res/layout/fragment_favorite.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/TungNK/Documents/MP3-Player/app/src/main/res/menu/bottom_nav.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/TungNK/Documents/MP3-Player/features/Demo/src/main/res/layout/fragment_login.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/TungNK/Documents/MP3-Player/features/Demo/src/main/res/layout/fragment_setting.xml" value="0.14114583333333333" />
+        <entry key="..\:/Users/TungNK/Documents/MP3-Player/features/Demo/src/main/res/layout/layout_item_user.xml" value="0.14114583333333333" />
+        <entry key="..\:/Users/TungNK/Documents/MP3-Player/features/Login/src/main/res/layout/fragment_login.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_common.xml" value="0.5405128205128205" />
         <entry key="app/src/main/res/menu/bottom_nav.xml" value="0.5489583333333333" />
       </map>

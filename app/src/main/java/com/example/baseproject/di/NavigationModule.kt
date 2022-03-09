@@ -3,7 +3,7 @@ package com.example.baseproject.di
 import com.example.baseproject.navigation.AppNavigation
 import com.example.baseproject.navigation.AppNavigatorImpl
 import com.example.core.navigationComponent.BaseNavigator
-import com.example.setting.DemoNavigation
+import com.example.login.LoginNavigation
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -24,5 +24,5 @@ abstract class NavigationModule {
 
     @Binds
     @ActivityScoped
-    abstract fun provideDemoNavigation(navigation: AppNavigatorImpl): DemoNavigation
+    abstract fun provideLoginNavigation(navigation: AppNavigatorImpl): LoginNavigation
 }
