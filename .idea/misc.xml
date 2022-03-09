@@ -3,7 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/TungNK/Documents/MP3-Player/app/src/main/res/layout/fragment_common.xml" value="0.24954710144927536" />
+        <entry key="..\:/Users/TungNK/Documents/MP3-Player/app/src/main/res/layout/fragment_common.xml" value="0.33" />
+        <entry key="..\:/Users/TungNK/Documents/MP3-Player/app/src/main/res/menu/bottom_nav.xml" value="0.36666666666666664" />
         <entry key="app/src/main/res/layout/fragment_common.xml" value="0.5405128205128205" />
         <entry key="app/src/main/res/menu/bottom_nav.xml" value="0.5489583333333333" />
       </map>

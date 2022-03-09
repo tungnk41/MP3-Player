@@ -11,6 +11,7 @@ import com.google.android.exoplayer2.MediaMetadata
 import com.google.android.exoplayer2.util.MimeTypes
 
 const val METADATA_KEY_BROWSER_FLAG = "android.media.metadata.extension.browser.flag"
+const val METADATA_KEY_MEDIA_FAVORITE = "android.media.metadata.extension.media.favorite"
 
 inline val MediaMetadataCompat.id: String?
     get() = getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID)
@@ -101,6 +102,9 @@ inline val MediaMetadataCompat.downloadStatus
 
 inline val MediaMetadataCompat.flag
     get() = getLong(METADATA_KEY_BROWSER_FLAG)
+
+inline val MediaMetadataCompat.favorite
+    get() = getLong(METADATA_KEY_MEDIA_FAVORITE)
 /**
  * Custom property for storing whether a [MediaMetadataCompat] item represents an
  * item that is [MediaItem.FLAG_BROWSABLE] or [MediaItem.FLAG_PLAYABLE].
@@ -230,6 +234,13 @@ inline var MediaMetadataCompat.Builder.flag: Int
     get() = throw IllegalAccessException("Cannot get from MediaMetadataCompat.Builder")
     set(value) {
         putLong(METADATA_KEY_BROWSER_FLAG, value.toLong())
+    }
+
+inline var MediaMetadataCompat.Builder.favorite: Int
+    @Deprecated(NO_GET, level = DeprecationLevel.ERROR)
+    get() = throw IllegalAccessException("Cannot get from MediaMetadataCompat.Builder")
+    set(value) {
+        putLong(METADATA_KEY_MEDIA_FAVORITE, value.toLong())
     }
 
 

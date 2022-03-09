@@ -6,9 +6,14 @@ import com.example.mediaservice.repository.AlbumRepository.datasource.AlbumRemot
 import com.example.mediaservice.repository.ArtistRepository.ArtistDataSource
 import com.example.mediaservice.repository.ArtistRepository.datasource.ArtistLocalDataSource
 import com.example.mediaservice.repository.ArtistRepository.datasource.ArtistRemoteDataSource
+import com.example.mediaservice.repository.FavoriteRepository.FavoriteDataSource
+import com.example.mediaservice.repository.FavoriteRepository.datasource.FavoriteLocalDataSource
+import com.example.mediaservice.repository.FavoriteRepository.datasource.FavoriteRemoteDataSource
 import com.example.mediaservice.repository.GenreRepository.GenreDataSource
 import com.example.mediaservice.repository.GenreRepository.datasource.GenreLocalDataSource
 import com.example.mediaservice.repository.GenreRepository.datasource.GenreRemoteDataSource
+import com.example.mediaservice.repository.PlaylistRepository.PlaylistDataSource
+import com.example.mediaservice.repository.PlaylistRepository.datasource.PlaylistLocalDataSource
 import com.example.mediaservice.repository.SongRepository.SongDataSource
 import com.example.mediaservice.repository.SongRepository.datasource.SongLocalDataSource
 import com.example.mediaservice.repository.SongRepository.datasource.SongRemoteDataSource
@@ -61,4 +66,20 @@ abstract class DataSourceModule{
     @RemoteDataSource
     @Binds
     abstract fun bindGenreRemoteDataSource(remoteDataSource: GenreRemoteDataSource): GenreDataSource
+
+    @LocalDataSource
+    @Binds
+    abstract fun bindPlaylistLocalDataSource(localDataSource: PlaylistLocalDataSource): PlaylistDataSource
+
+    @RemoteDataSource
+    @Binds
+    abstract fun bindPlaylistRemoteDataSource(remoteDataSource: PlaylistLocalDataSource): PlaylistDataSource
+
+    @LocalDataSource
+    @Binds
+    abstract fun bindFavoriteLocalDataSource(localDataSource: FavoriteLocalDataSource): FavoriteDataSource
+
+    @RemoteDataSource
+    @Binds
+    abstract fun bindFavoriteRemoteDataSource(remoteDataSource: FavoriteRemoteDataSource): FavoriteDataSource
 }

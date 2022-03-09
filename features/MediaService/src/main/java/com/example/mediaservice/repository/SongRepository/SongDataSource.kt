@@ -10,4 +10,6 @@ interface SongDataSource {
     suspend fun findAllByArtistId(artistId : Long) : List<Song>
 
     suspend fun findAllByGenreId(genreId : Long) : List<Song>
+
+    suspend fun findAllByPlaylistId(playlistID : Long) : List<Song>
 }

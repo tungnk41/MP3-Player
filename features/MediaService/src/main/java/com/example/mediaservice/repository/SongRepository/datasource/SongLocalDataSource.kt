@@ -91,6 +91,10 @@ class SongLocalDataSource @Inject constructor(@ApplicationContext val context: C
         findAllByCursor(cursor)
     }
 
+    override suspend fun findAllByPlaylistId(playlistID: Long): List<Song> {
+        return emptyList()
+    }
+
     private suspend fun findAllByCursor(cursor: Cursor?) : List<Song> {
         val listSong = mutableListOf<Song>()
         cursor?.let {

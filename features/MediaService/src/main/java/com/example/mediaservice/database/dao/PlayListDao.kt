@@ -6,11 +6,11 @@ import com.example.mediaservice.repository.models.Playlist
 @Dao
 interface PlayListDao {
 
-    @Query("SELECT * FROM playlist")
-    suspend fun findAll() : List<Playlist>
+    @Query("SELECT * FROM playlist WHERE userId = :userId")
+    suspend fun findAll(userId: Long) : List<Playlist>
 
-    @Insert
-    suspend fun insert(playlist: Playlist)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(playlist: Playlist) : Long
 
     @Update
     suspend fun update(playlist: Playlist)

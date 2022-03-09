@@ -4,8 +4,12 @@ import com.example.mediaservice.repository.AlbumRepository.AlbumDataSource
 import com.example.mediaservice.repository.AlbumRepository.AlbumRepository
 import com.example.mediaservice.repository.ArtistRepository.ArtistDataSource
 import com.example.mediaservice.repository.ArtistRepository.ArtistRepository
+import com.example.mediaservice.repository.FavoriteRepository.FavoriteDataSource
+import com.example.mediaservice.repository.FavoriteRepository.FavoriteRepository
 import com.example.mediaservice.repository.GenreRepository.GenreDataSource
 import com.example.mediaservice.repository.GenreRepository.GenreRepository
+import com.example.mediaservice.repository.PlaylistRepository.PlaylistDataSource
+import com.example.mediaservice.repository.PlaylistRepository.PlaylistRepository
 import com.example.mediaservice.repository.SongRepository.SongDataSource
 import com.example.mediaservice.repository.SongRepository.SongRepository
 import dagger.Module
@@ -49,4 +53,20 @@ object RepositoryModule {
         @RemoteDataSource remoteDataSource: GenreDataSource
     ): GenreRepository =
         GenreRepository(localDataSource, remoteDataSource)
+
+    @Provides
+    @Singleton
+    fun providePlaylistRepository(
+        @LocalDataSource localDataSource: PlaylistDataSource,
+        @RemoteDataSource remoteDataSource: PlaylistDataSource
+    ): PlaylistRepository =
+        PlaylistRepository(localDataSource, remoteDataSource)
+
+    @Provides
+    @Singleton
+    fun provideFavoriteRepository(
+        @LocalDataSource localDataSource: FavoriteDataSource,
+        @RemoteDataSource remoteDataSource: FavoriteDataSource
+    ): FavoriteRepository =
+        FavoriteRepository(localDataSource, remoteDataSource)
 }

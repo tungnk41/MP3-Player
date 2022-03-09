@@ -10,7 +10,6 @@ import java.util.concurrent.TimeUnit
 
 @Parcelize
 data class Song(
-    var _id: Long? = null, //This id is used for combine data between local and remote source
     var id: Long = -1,
     val title: String = "",
     var album: String = "",
@@ -24,6 +23,7 @@ data class Song(
     @SerializedName("image")
     val iconUri: String = "",
     val duration: Long = 0,
+    val favorite: Int = 0
 ) : Parcelable
 {
 
@@ -38,6 +38,7 @@ data class Song(
         builder.albumArtUri = iconUri
         builder.displayIconUri = iconUri
         builder.duration = TimeUnit.SECONDS.toMillis(duration)
+        builder.favorite = favorite
         builder.flag = FLAG_PLAYABLE
         return builder.build()
     }

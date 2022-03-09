@@ -51,6 +51,16 @@ class SongRepository @Inject constructor(@LocalDataSource private val localDataS
         }.map { it.toMediaMetadataCompat() }
     }
 
+    suspend fun findAllByPlaylistId(playlistId : Long, dataType: Int) : List<MediaMetadataCompat> {
+        return withContext(Dispatchers.Default){
+            if(dataType == LOCAL_DATA) {
+                findAllLocalDataByPlaylistId(playlistId)
+            } else {
+                findAllRemoteDataByPlaylistId(playlistId)
+            }
+        }.map { it.toMediaMetadataCompat() }
+    }
+
     private suspend fun findAllRemoteData() : List<Song> = remoteDataSource.findAll()
     private suspend fun findAllLocalData() : List<Song> = localDataSource.findAll()
 
@@ -62,5 +72,8 @@ class SongRepository @Inject constructor(@LocalDataSource private val localDataS
 
     private suspend fun findAllRemoteDataByGenreId(genreId: Long) : List<Song> = remoteDataSource.findAllByGenreId(genreId)
     private suspend fun findAllLocalDataByGenreId(genreId: Long) : List<Song> = localDataSource.findAllByGenreId(genreId)
+
+    private suspend fun findAllRemoteDataByPlaylistId(playlistId: Long) : List<Song> = remoteDataSource.findAllByPlaylistId(playlistId)
+    private suspend fun findAllLocalDataByPlaylistId(playlistId: Long) : List<Song> = localDataSource.findAllByPlaylistId(playlistId)
 
 }

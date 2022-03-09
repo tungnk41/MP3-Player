@@ -5,13 +5,12 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
 
-@Entity(tableName = "song_playlist")
+@Entity(tableName = "favorite")
 @Parcelize
-data class SongPlaylist(
+data class Favorite(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
+    val userId: Long,
     val songId: Long,
-    val playlistId: Long,
-    val remoteTable: Int,
-    val position: Int,
+    val remoteTable: Int, //True = 1, False = 0
 ): Parcelable

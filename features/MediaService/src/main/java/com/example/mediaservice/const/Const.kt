@@ -15,13 +15,17 @@ const val TYPE_ARTIST = 8
 const val TYPE_GENRE = 9
 const val TYPE_PLAYLIST = 10
 
-const val LOCAL_DATA = 11
-const val REMOTE_DATA = 12
+const val LOCAL_DATA = 1
+const val REMOTE_DATA = 2
 
 //101 -> 200
-const val NOTIFICATION_ID = 101
+const val NOTIFICATION_ID = 100
 
 const val NOTIFICATION_CHANNEL_ID = "media_channel_01"
 const val NETWORK_FAILURE = "NETWORK_FAILURE"
 
 const val DATABASE_NAME = "mediaservice.db"
+
+
+const val CMD_ADD_PLAYLIST = "com.example.mediaservice.add.playlist"
+const val KEY_PLAYLIST = "playlist"

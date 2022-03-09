@@ -1,21 +1,22 @@
 package com.example.baseproject.ui.tabCommon
 
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_ONE
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.example.core.base.BaseViewModel
 import com.example.mediaservice.MediaServiceConnection
-import com.example.mediaservice.const.LOCAL_DATA
-import com.example.mediaservice.const.REMOTE_DATA
-import com.example.mediaservice.const.TYPE_ALL_SONGS
+import com.example.mediaservice.const.*
 import com.example.mediaservice.extensions.currentPlayBackPosition
 import com.example.mediaservice.repository.models.MediaIdExtra
+import com.example.mediaservice.repository.models.Playlist
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -88,12 +89,29 @@ class CommonViewModel @Inject constructor(private val mediaServiceConnection: Me
         mediaServiceConnection.sendCommand("command 1", null)
     }
 
-    fun sendPlaylist() {
+    fun repeate() {
+        mediaServiceConnection.transportControls.setRepeatMode(PlaybackStateCompat.REPEAT_MODE_ONE)
+    }
 
+    fun shuffle() {
+        mediaServiceConnection.transportControls.setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_ALL)
+    }
+    fun sendPlaylist() {
+        val playlist = Playlist(title = "title playlist", iconUri = "", userId = -1)
+        val bundle : Bundle = Bundle().apply { putParcelable(KEY_PLAYLIST,playlist) }
+        mediaServiceConnection.sendCommand(CMD_ADD_PLAYLIST,bundle)
     }
 
     fun getPlaylist() {
+        val mediaIdExtra = MediaIdExtra(TYPE_ALL_PLAYLISTS,null, LOCAL_DATA)
+        mediaServiceConnection.subscribe(mediaIdExtra.toString(),subscriptionCallback)
+    }
 
+    fun seekTo() {
+        val position = _playbackState.value?.currentPlayBackPosition
+        position?.let {
+            mediaServiceConnection.transportControls.seekTo(it + 5000)
+        }
     }
 
     //View

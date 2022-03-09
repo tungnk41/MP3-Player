@@ -59,5 +59,17 @@ class CommonFragment :
             viewModel.getPlaylist()
         }
 
+        binding.btnRepeate.setOnClickListener {
+            viewModel.repeate()
+        }
+
+        binding.btnShuffle.setOnClickListener {
+            viewModel.shuffle()
+        }
+
+        binding.btnSeekTo.setOnClickListener {
+            viewModel.seekTo()
+        }
+
     }
 }

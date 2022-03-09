@@ -23,14 +23,17 @@ import com.example.mediaservice.player.MediaPlayer
 import com.example.mediaservice.repository.AlbumRepository.AlbumRepository
 import com.example.mediaservice.repository.ArtistRepository.ArtistRepository
 import com.example.mediaservice.repository.GenreRepository.GenreRepository
+import com.example.mediaservice.repository.PlaylistRepository.PlaylistRepository
 import com.example.mediaservice.repository.SongRepository.SongRepository
 import com.example.mediaservice.repository.models.MediaIdExtra
+import com.example.mediaservice.repository.models.Playlist
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
+import timber.log.Timber
 import java.util.jar.Manifest
 import javax.inject.Inject
 
@@ -48,6 +51,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
     private lateinit var mediaSessionConnector: MediaSessionConnector
     private val serviceJob = SupervisorJob()
     private val serviceScope = CoroutineScope(Dispatchers.Default + serviceJob)
+    private val userId : Long = -1
 
     @Inject
     lateinit var songRepository: SongRepository
@@ -57,6 +61,8 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
     lateinit var artistRepository: ArtistRepository
     @Inject
     lateinit var genreRepository: GenreRepository
+    @Inject
+    lateinit var playlistRepository: PlaylistRepository
 
     override fun onCreate() {
         super.onCreate()
@@ -192,7 +198,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
                             mediaItems = genreRepository.findAll(mediaParentDataType).map {it.toBrowserMediaItem(TYPE_GENRE,mediaParentDataType)}
                         }
                         TYPE_ALL_PLAYLISTS -> {
-
+                            mediaItems = playlistRepository.findAll(mediaParentDataType,userId).map { it.toBrowserMediaItem(TYPE_PLAYLIST,mediaParentDataType) }
                         }
                         TYPE_ALBUM -> {
                             mediaItems = songRepository.findAllByAlbumId(mediaParentId?.toLong() ?: -1, mediaParentDataType).map { it.toBrowserMediaItem(TYPE_SONG,mediaParentDataType) }
@@ -204,7 +210,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
                             mediaItems = songRepository.findAllByGenreId(mediaParentId?.toLong() ?: -1, mediaParentDataType).map { it.toBrowserMediaItem(TYPE_SONG,mediaParentDataType) }
                         }
                         TYPE_PLAYLIST -> {
-
+                            mediaItems = songRepository.findAllByPlaylistId(mediaParentId?.toLong() ?: -1, mediaParentDataType).map { it.toBrowserMediaItem(TYPE_SONG,mediaParentDataType) }
                         }
                     }
                 }
@@ -290,7 +296,6 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
 
         }
 
-
         override fun onPrepareFromSearch(query: String, playWhenReady: Boolean, extras: Bundle?) {
             Log.d(TAG, "onPrepareFromSearch: " + query)
 
@@ -299,10 +304,20 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
         override fun onPrepareFromUri(uri: Uri, playWhenReady: Boolean, extras: Bundle?) = Unit
 
         override fun onCommand(player: Player, command: String, extras: Bundle?, cb: ResultReceiver?): Boolean {
-            Log.d(TAG, "onCommand: $command")
+            when(command) {
+                CMD_ADD_PLAYLIST -> {
+                    val playlist = extras?.getParcelable<Playlist>(KEY_PLAYLIST)
+                    Log.d(TAG, "onCommand: " + playlist.toString())
+
+                    serviceScope.launch {
+                        playlist?.let {
+                            playlistRepository.insert(it, LOCAL_DATA)
+                        }
+                    }
+                }
+            }
             return true
         }
-
     }
 
     private val playerStateListener = object : Player.Listener {

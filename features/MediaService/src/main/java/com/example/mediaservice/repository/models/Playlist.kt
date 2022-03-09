@@ -13,9 +13,10 @@ import kotlinx.android.parcel.Parcelize
 data class Playlist(
 
     @PrimaryKey(autoGenerate = true)
-    val id: Long,
+    val id: Long = -1,
     val title: String = "",
     val iconUri: String = "",
+    val userId: Long
 ) : Parcelable {
 
     fun toMediaMetadataCompat(): MediaMetadataCompat {
