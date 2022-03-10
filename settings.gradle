@@ -3,4 +3,4 @@ include ':libraries:core'
 include ':app'
 rootProject.name = "BaseProject"
 include ':features:MediaService'
-include ':features:Login'
+include ':features:LoginService'

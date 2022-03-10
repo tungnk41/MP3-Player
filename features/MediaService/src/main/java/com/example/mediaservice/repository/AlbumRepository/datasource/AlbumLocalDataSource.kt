@@ -7,6 +7,7 @@ import android.provider.MediaStore
 import com.example.mediaservice.repository.AlbumRepository.AlbumDataSource
 import com.example.mediaservice.repository.models.Album
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject

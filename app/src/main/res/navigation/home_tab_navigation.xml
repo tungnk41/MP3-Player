@@ -2,10 +2,10 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/home_tab_navigation"
-    app:startDestination="@+id/common">
+    app:startDestination="@+id/tabOnline">
 
-    <include app:graph="@navigation/tab_common_navigation" />
+    <include app:graph="@navigation/tab_online_navigation" />
 
-    <include app:graph="@navigation/tab_favorite_navigation" />
+    <include app:graph="@navigation/tab_local_navigation" />
 
 </navigation>

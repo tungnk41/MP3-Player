@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tabLocal"
+    app:startDestination="@+id/tabLocalMusicFragment">
+
+    <fragment
+        android:id="@+id/tabLocalMusicFragment"
+        android:name="com.example.baseproject.ui.tabLocalMusic.LocalMusicFragment"
+        android:label="LocalFragment"
+        tools:layout="@layout/fragment_local_music" />
+</navigation>

@@ -42,7 +42,7 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
     implementation project(':libraries:core')
-    implementation project(':features:Login')
+    implementation project(':features:LoginService')
     implementation project(':features:MediaService')
 
     //appcompat

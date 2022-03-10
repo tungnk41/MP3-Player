@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/common"
-        android:icon="@drawable/ic_birthday"
-        android:contentDescription="Common"
-        android:title="Common" />
+        android:id="@+id/tabOnline"
+        android:icon="@drawable/ic_online_24"
+        android:contentDescription="Online Music"
+        android:title="Online" />
 
     <item
-        android:id="@+id/favorite"
-        android:icon="@drawable/ic_birthday"
-        android:contentDescription="Favorite"
-        android:title="Favorite" />
+        android:id="@+id/tabLocal"
+        android:icon="@drawable/ic_default_art_24"
+        android:contentDescription="Local Music"
+        android:title="Local" />
 </menu>
