@@ -5,7 +5,7 @@ import com.example.mediaservice.repository.models.MediaIdExtra
 import com.example.mediaservice.utils.DataSource
 import com.example.mediaservice.utils.MediaType
 
-data class MediaItemExtra(
+data class MediaItemUI(
     val mediaIdExtra: String, // Keep mediaIdExtra as String
     val id: Long,
     val title: String,

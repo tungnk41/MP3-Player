@@ -8,12 +8,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.baseproject.databinding.AdapterMediaItemBinding
-import com.example.baseproject.model.MediaItemExtra
+import com.example.baseproject.model.MediaItemUI
 
 class MediaItemAdapter (
     val context: Context,
     val onClickListener: (Int,Boolean) -> Unit,
-): ListAdapter<MediaItemExtra, MediaItemHolder>(MediaItemDiffUtil()) {
+): ListAdapter<MediaItemUI, MediaItemHolder>(MediaItemDiffUtil()) {
 
     private val layoutInflater by lazy {
         LayoutInflater.from(context)
@@ -38,17 +38,17 @@ class MediaItemHolder (
 
     }
 
-    fun bindData(data: MediaItemExtra) {
+    fun bindData(data: MediaItemUI) {
         binding.tvTitle.setText(data.title)
     }
 }
 
-class MediaItemDiffUtil: DiffUtil.ItemCallback<MediaItemExtra>() {
-    override fun areItemsTheSame(oldItem: MediaItemExtra, newItem: MediaItemExtra): Boolean {
+class MediaItemDiffUtil: DiffUtil.ItemCallback<MediaItemUI>() {
+    override fun areItemsTheSame(oldItem: MediaItemUI, newItem: MediaItemUI): Boolean {
         return oldItem.id == newItem.id && oldItem.dataSource == newItem.dataSource
     }
 
-    override fun areContentsTheSame(oldItem: MediaItemExtra, newItem: MediaItemExtra): Boolean {
+    override fun areContentsTheSame(oldItem: MediaItemUI, newItem: MediaItemUI): Boolean {
         return oldItem.iconUri == newItem.iconUri && oldItem.title == newItem.title
     }
 
