@@ -13,10 +13,9 @@ import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
-import androidx.core.app.ServiceCompat.stopForeground
 import androidx.core.content.ContextCompat
 import androidx.media.MediaBrowserServiceCompat
-import com.example.mediaservice.const.*
+import com.example.mediaservice.utils.*
 import com.example.mediaservice.extensions.toBrowserMediaItem
 import com.example.mediaservice.notification.MediaNotification
 import com.example.mediaservice.player.MediaPlayer
@@ -33,8 +32,6 @@ import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
-import timber.log.Timber
-import java.util.jar.Manifest
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -158,7 +155,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
         rootHints: Bundle?
     ): BrowserRoot? {
         if (clientPackageName == CLIENT_PACKAGE_NAME) {
-            return BrowserRoot(MediaIdExtra(TYPE_MEDIA_ROOT, null).toString(), null)
+            return BrowserRoot(MediaIdExtra(MediaType.TYPE_MEDIA_ROOT, null).toString(), null)
         }
         return null
     }
@@ -167,50 +164,50 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
         parentId: String,
         result: Result<MutableList<MediaBrowserCompat.MediaItem>>,
     ) {
-        val mediaIdExtra = MediaIdExtra().getDataFromString(parentId)
+        val mediaIdExtra = MediaIdExtra.getDataFromString(parentId)
         val mediaParentId = mediaIdExtra.id
-        val mediaParentType = mediaIdExtra.mediaType //TYPE_SONG,TYPE_ALBUM ...
-        val mediaParentDataType = mediaIdExtra.dataType //LOCAL_DATA or REMOTE_DATA
+        val mediaParentType = mediaIdExtra.mediaType //MediaType.TYPE_SONG,MediaType.TYPE_ALBUM ...
+        val mediaParentDataType = mediaIdExtra.dataSource //DataSource.LOCAL or REMOTE_DATA
 
         Log.d(TAG, "onLoadChildren: Service")
         //allow calling result.sendResult from another thread
         result.detach()
         serviceScope.launch {
             try {
-                if (mediaParentType == TYPE_MEDIA_ROOT) {
+                if (mediaParentType == MediaType.TYPE_MEDIA_ROOT) {
                     mediaItems = getRootMediaBrowserData()
                 } else {
                     when (mediaParentType) {
-                        TYPE_ALL_SONGS -> {
+                        MediaType.TYPE_ALL_SONGS -> {
                             val listSong = songRepository.findAll(mediaParentDataType)
-                            mediaItems = listSong.map { it.toBrowserMediaItem(TYPE_SONG,mediaParentDataType) }
+                            mediaItems = listSong.map { it.toBrowserMediaItem(MediaType.TYPE_SONG,mediaParentDataType) }
                             withContext(Dispatchers.Main){
                                 currentPlayer.setPlayList(listSong)
                             }
                         }
-                        TYPE_ALL_ALBUMS -> {
-                            mediaItems = albumRepository.findAll(mediaParentDataType).map { it.toBrowserMediaItem(TYPE_ALBUM,mediaParentDataType) }
+                        MediaType.TYPE_ALL_ALBUMS -> {
+                            mediaItems = albumRepository.findAll(mediaParentDataType).map { it.toBrowserMediaItem(MediaType.TYPE_ALBUM,mediaParentDataType) }
                         }
-                        TYPE_ALL_ARTISTS -> {
-                            mediaItems = artistRepository.findAll(mediaParentDataType).map {it.toBrowserMediaItem(TYPE_ARTIST,mediaParentDataType)}
+                        MediaType.TYPE_ALL_ARTISTS -> {
+                            mediaItems = artistRepository.findAll(mediaParentDataType).map {it.toBrowserMediaItem(MediaType.TYPE_ARTIST,mediaParentDataType)}
                         }
-                        TYPE_ALL_GENRES -> {
-                            mediaItems = genreRepository.findAll(mediaParentDataType).map {it.toBrowserMediaItem(TYPE_GENRE,mediaParentDataType)}
+                        MediaType.TYPE_ALL_GENRES -> {
+                            mediaItems = genreRepository.findAll(mediaParentDataType).map {it.toBrowserMediaItem(MediaType.TYPE_GENRE,mediaParentDataType)}
                         }
-                        TYPE_ALL_PLAYLISTS -> {
-                            mediaItems = playlistRepository.findAll(mediaParentDataType,userId).map { it.toBrowserMediaItem(TYPE_PLAYLIST,mediaParentDataType) }
+                        MediaType.TYPE_ALL_PLAYLISTS -> {
+                            mediaItems = playlistRepository.findAll(mediaParentDataType,userId).map { it.toBrowserMediaItem(MediaType.TYPE_PLAYLIST,mediaParentDataType) }
                         }
-                        TYPE_ALBUM -> {
-                            mediaItems = songRepository.findAllByAlbumId(mediaParentId?.toLong() ?: -1, mediaParentDataType).map { it.toBrowserMediaItem(TYPE_SONG,mediaParentDataType) }
+                        MediaType.TYPE_ALBUM -> {
+                            mediaItems = songRepository.findAllByAlbumId(mediaParentId ?: -1, mediaParentDataType).map { it.toBrowserMediaItem(MediaType.TYPE_SONG,mediaParentDataType) }
                         }
-                        TYPE_ARTIST -> {
-                            mediaItems = songRepository.findAllByArtistId(mediaParentId?.toLong() ?: -1, mediaParentDataType).map { it.toBrowserMediaItem(TYPE_SONG,mediaParentDataType) }
+                        MediaType.TYPE_ARTIST -> {
+                            mediaItems = songRepository.findAllByArtistId(mediaParentId ?: -1, mediaParentDataType).map { it.toBrowserMediaItem(MediaType.TYPE_SONG,mediaParentDataType) }
                         }
-                        TYPE_GENRE -> {
-                            mediaItems = songRepository.findAllByGenreId(mediaParentId?.toLong() ?: -1, mediaParentDataType).map { it.toBrowserMediaItem(TYPE_SONG,mediaParentDataType) }
+                        MediaType.TYPE_GENRE -> {
+                            mediaItems = songRepository.findAllByGenreId(mediaParentId ?: -1, mediaParentDataType).map { it.toBrowserMediaItem(MediaType.TYPE_SONG,mediaParentDataType) }
                         }
-                        TYPE_PLAYLIST -> {
-                            mediaItems = songRepository.findAllByPlaylistId(mediaParentId?.toLong() ?: -1, mediaParentDataType).map { it.toBrowserMediaItem(TYPE_SONG,mediaParentDataType) }
+                        MediaType.TYPE_PLAYLIST -> {
+                            mediaItems = songRepository.findAllByPlaylistId(mediaParentId ?: -1, mediaParentDataType).map { it.toBrowserMediaItem(MediaType.TYPE_SONG,mediaParentDataType) }
                         }
                     }
                 }
@@ -311,7 +308,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
 
                     serviceScope.launch {
                         playlist?.let {
-                            playlistRepository.insert(it, LOCAL_DATA)
+                            playlistRepository.insert(it, DataSource.LOCAL)
                         }
                     }
                 }

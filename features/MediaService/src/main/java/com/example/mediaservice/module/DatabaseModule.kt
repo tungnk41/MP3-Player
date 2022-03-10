@@ -2,7 +2,7 @@ package com.example.mediaservice.module
 
 import android.content.Context
 import androidx.room.Room
-import com.example.mediaservice.const.DATABASE_NAME
+import com.example.mediaservice.utils.DATABASE_NAME
 import com.example.mediaservice.database.Database
 import com.example.mediaservice.database.dao.FavoriteDao
 import com.example.mediaservice.database.dao.PlayListDao

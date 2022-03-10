@@ -1,18 +1,18 @@
 package com.example.mediaservice.repository.PlaylistRepository
 
 import android.support.v4.media.MediaMetadataCompat
-import com.example.mediaservice.const.LOCAL_DATA
+import com.example.mediaservice.utils.DataSource.LOCAL
 import com.example.mediaservice.module.LocalDataSource
 import com.example.mediaservice.module.RemoteDataSource
 import com.example.mediaservice.repository.models.Playlist
-import com.example.mediaservice.repository.models.Song
+import com.example.mediaservice.utils.DataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class PlaylistRepository @Inject constructor(@LocalDataSource private val localDataSource: PlaylistDataSource, @RemoteDataSource private val remoteDataSource: PlaylistDataSource) {
-    suspend fun findAll(dataType: Int,userId: Long) : List<MediaMetadataCompat> = withContext(Dispatchers.Default){
-        if(dataType == LOCAL_DATA) {
+    suspend fun findAll(dataSource: Int,userId: Long) : List<MediaMetadataCompat> = withContext(Dispatchers.Default){
+        if(dataSource == DataSource.LOCAL) {
              findAllLocalData(userId)
         }
         else {
@@ -20,8 +20,8 @@ class PlaylistRepository @Inject constructor(@LocalDataSource private val localD
         }.map { it.toMediaMetadataCompat() }
     }
 
-    suspend fun insert(playlist: Playlist,dataType: Int) = withContext(Dispatchers.Default) {
-        if(dataType == LOCAL_DATA) {
+    suspend fun insert(playlist: Playlist,dataSource: Int) = withContext(Dispatchers.Default) {
+        if(dataSource == DataSource.LOCAL) {
             insertLocalData(playlist)
         }
         else {

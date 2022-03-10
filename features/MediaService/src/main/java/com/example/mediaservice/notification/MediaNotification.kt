@@ -4,14 +4,13 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
 import com.bumptech.glide.Glide
 import com.example.mediaservice.R
-import com.example.mediaservice.const.NOTIFICATION_CHANNEL_ID
-import com.example.mediaservice.const.NOTIFICATION_ID
+import com.example.mediaservice.utils.NOTIFICATION_CHANNEL_ID
+import com.example.mediaservice.utils.NOTIFICATION_ID
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import kotlinx.coroutines.*

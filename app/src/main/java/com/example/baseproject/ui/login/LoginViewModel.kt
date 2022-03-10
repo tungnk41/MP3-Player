@@ -1,5 +1,6 @@
 package com.example.baseproject.ui.login
 
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -10,14 +11,18 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.viewModelScope
+import com.example.baseproject.model.MediaItemExtra
 import com.example.baseproject.ui.tabLocalMusic.LocalMusicViewModel
 import com.example.core.base.BaseViewModel
 import com.example.mediaservice.MediaServiceConnection
-import com.example.mediaservice.const.*
+import com.example.mediaservice.utils.*
 import com.example.mediaservice.extensions.currentPlayBackPosition
 import com.example.mediaservice.repository.models.MediaIdExtra
 import com.example.mediaservice.repository.models.Playlist
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,11 +32,11 @@ class LoginViewModel @Inject constructor(private val mediaServiceConnection: Med
         const val TAG = "LoginViewModel"
     }
 
-    private val mediaIdExtra = MediaIdExtra(TYPE_ALL_SONGS,null, LOCAL_DATA)
+    private val mediaIdExtra = MediaIdExtra(MediaType.TYPE_ALL_SONGS,null, DataSource.LOCAL)
     private val handler = Handler(Looper.getMainLooper())
 
-    private val _mediaItems = MutableLiveData<List<MediaBrowserCompat.MediaItem>>(emptyList())
-    val mediaItems : LiveData<List<MediaBrowserCompat.MediaItem>> = _mediaItems
+    private val _mediaItems = MutableLiveData<List<MediaItemExtra>>(emptyList())
+    val mediaItems : LiveData<List<MediaItemExtra>> = _mediaItems
 
     private val _mediaPosition = MutableLiveData<Long>(0)
     val mediaPosition: LiveData<Long> = _mediaPosition
@@ -61,8 +66,20 @@ class LoginViewModel @Inject constructor(private val mediaServiceConnection: Med
     private val subscriptionCallback = object: MediaBrowserCompat.SubscriptionCallback(){
         override fun onChildrenLoaded(parentId: String, children: MutableList<MediaBrowserCompat.MediaItem>) {
             Log.d("TAG", "onChildrenLoaded: " + children.toString())
-            _mediaItems.value = children
-        }
+            viewModelScope.launch(Dispatchers.Default) {
+                val listMediaItemExtra = children.map {
+                        val mediaIdExtra = MediaIdExtra.getDataFromString(it.mediaId ?: "")
+                        val id: Long= mediaIdExtra.id ?: -1
+                        val title: String = it.description.title.toString()
+                        val iconUri: Uri = it.description.iconUri ?: Uri.EMPTY
+                        val isBrowsable: Boolean = it.flags.equals(MediaBrowserCompat.MediaItem.FLAG_BROWSABLE)
+                        val mediaType = mediaIdExtra.mediaType ?: -1
+                        val dataSource = mediaIdExtra.dataSource
+                        MediaItemExtra(mediaIdExtra = it.mediaId ?: "",id = id, title = title, iconUri = iconUri, isBrowsable = isBrowsable, dataSource = dataSource, mediaType = mediaType)
+                    }
+                    _mediaItems.postValue(listMediaItemExtra)
+                }
+            }
     }
 
     fun connect() {
@@ -103,7 +120,7 @@ class LoginViewModel @Inject constructor(private val mediaServiceConnection: Med
     }
 
     fun getPlaylist() {
-        val mediaIdExtra = MediaIdExtra(TYPE_ALL_PLAYLISTS,null, LOCAL_DATA)
+        val mediaIdExtra = MediaIdExtra(MediaType.TYPE_ALL_PLAYLISTS,null, DataSource.LOCAL)
         mediaServiceConnection.subscribe(mediaIdExtra.toString(),subscriptionCallback)
     }
 

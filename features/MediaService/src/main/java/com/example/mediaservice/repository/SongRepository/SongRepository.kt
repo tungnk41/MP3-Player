@@ -1,19 +1,19 @@
 package com.example.mediaservice.repository.SongRepository
 
 import android.support.v4.media.MediaMetadataCompat
-import com.example.mediaservice.const.LOCAL_DATA
 import com.example.mediaservice.module.LocalDataSource
 import com.example.mediaservice.module.RemoteDataSource
 import com.example.mediaservice.repository.models.Song
+import com.example.mediaservice.utils.DataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class SongRepository @Inject constructor(@LocalDataSource private val localDataSource: SongDataSource, @RemoteDataSource private val remoteDataSource: SongDataSource) {
 
-    suspend fun findAll(dataType : Int) : List<MediaMetadataCompat>{
+    suspend fun findAll(dataSource : Int) : List<MediaMetadataCompat>{
         return withContext(Dispatchers.Default){
-            if(dataType == LOCAL_DATA) {
+            if(dataSource == DataSource.LOCAL) {
                 findAllLocalData()
             } else {
                 findAllRemoteData()
@@ -21,9 +21,9 @@ class SongRepository @Inject constructor(@LocalDataSource private val localDataS
         }
     }
 
-    suspend fun findAllByAlbumId(albumId: Long, dataType: Int): List<MediaMetadataCompat> {
+    suspend fun findAllByAlbumId(albumId: Long, dataSource: Int): List<MediaMetadataCompat> {
         return withContext(Dispatchers.Default){
-            if(dataType == LOCAL_DATA) {
+            if(dataSource == DataSource.LOCAL) {
                 findAllLocalDataByAlbumId(albumId)
             } else {
                 findAllRemoteDataByAlbumId(albumId)
@@ -31,9 +31,9 @@ class SongRepository @Inject constructor(@LocalDataSource private val localDataS
         }.map { it.toMediaMetadataCompat() }
     }
 
-    suspend fun findAllByArtistId(artistId: Long,dataType: Int) : List<MediaMetadataCompat> {
+    suspend fun findAllByArtistId(artistId: Long,dataSource: Int) : List<MediaMetadataCompat> {
         return withContext(Dispatchers.Default){
-            if(dataType == LOCAL_DATA) {
+            if(dataSource == DataSource.LOCAL) {
                 findAllLocalDataByArtistId(artistId)
             } else {
                 findAllRemoteDataByArtistId(artistId)
@@ -41,9 +41,9 @@ class SongRepository @Inject constructor(@LocalDataSource private val localDataS
         }.map { it.toMediaMetadataCompat() }
     }
 
-    suspend fun findAllByGenreId(genreId: Long,dataType: Int) : List<MediaMetadataCompat> {
+    suspend fun findAllByGenreId(genreId: Long,dataSource: Int) : List<MediaMetadataCompat> {
         return withContext(Dispatchers.Default){
-            if(dataType == LOCAL_DATA) {
+            if(dataSource == DataSource.LOCAL) {
                 findAllLocalDataByGenreId(genreId)
             } else {
                 findAllRemoteDataByGenreId(genreId)
@@ -51,9 +51,9 @@ class SongRepository @Inject constructor(@LocalDataSource private val localDataS
         }.map { it.toMediaMetadataCompat() }
     }
 
-    suspend fun findAllByPlaylistId(playlistId : Long, dataType: Int) : List<MediaMetadataCompat> {
+    suspend fun findAllByPlaylistId(playlistId : Long, dataSource: Int) : List<MediaMetadataCompat> {
         return withContext(Dispatchers.Default){
-            if(dataType == LOCAL_DATA) {
+            if(dataSource == DataSource.LOCAL) {
                 findAllLocalDataByPlaylistId(playlistId)
             } else {
                 findAllRemoteDataByPlaylistId(playlistId)

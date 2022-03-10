@@ -2,7 +2,6 @@ package com.example.mediaservice
 
 import android.content.ComponentName
 import android.content.Context
-import android.media.browse.MediaBrowser
 import android.os.Bundle
 import android.os.Handler
 import android.os.ResultReceiver
@@ -12,7 +11,7 @@ import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.example.mediaservice.const.NETWORK_FAILURE
+import com.example.mediaservice.utils.NETWORK_FAILURE
 import javax.inject.Inject
 
 class MediaServiceConnection @Inject constructor(val context: Context, val serviceComponent: ComponentName) {

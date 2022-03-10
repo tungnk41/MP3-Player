@@ -271,9 +271,9 @@ fun MediaMetadataCompat.toExoPlayerMediaItem(): com.google.android.exoplayer2.Me
     }.build()
 }
 
-fun MediaMetadataCompat.toBrowserMediaItem(mediaType: Int, dataType: Int) : MediaBrowserCompat.MediaItem {
+fun MediaMetadataCompat.toBrowserMediaItem(mediaType: Int, dataSource: Int) : MediaBrowserCompat.MediaItem {
     val mediaDescriptionBuilder = MediaDescriptionCompat.Builder()
-        .setMediaId(MediaIdExtra(mediaType,id,dataType).toString())
+        .setMediaId(MediaIdExtra(mediaType,id?.toLong(),dataSource).toString())
         .setTitle(title)
         .setIconUri(Uri.parse(displayIconUri))
     return MediaBrowserCompat.MediaItem(mediaDescriptionBuilder.build(), flag.toInt())

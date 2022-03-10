@@ -1,25 +1,15 @@
 package com.example.baseproject.container
 
-import android.app.Activity
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.navigation.fragment.NavHostFragment
 import com.example.baseproject.R
 import com.example.baseproject.databinding.ActivityMainBinding
 import com.example.baseproject.navigation.AppNavigation
 import com.example.core.base.BaseActivityNotRequireViewModel
-import com.example.mediaservice.const.NOTIFICATION_CHANNEL_ID
-import com.google.android.exoplayer2.util.NotificationUtil
 import dagger.hilt.android.AndroidEntryPoint
-import java.lang.Exception
-import java.lang.reflect.Executable
-import java.util.jar.Manifest
 import javax.inject.Inject
 
 @AndroidEntryPoint
