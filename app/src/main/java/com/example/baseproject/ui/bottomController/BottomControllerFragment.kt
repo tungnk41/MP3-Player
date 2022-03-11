@@ -20,6 +20,7 @@ class BottomControllerFragment : BaseFragment<FragmentBottomControllerBinding,Bo
     private val viewModel: BottomControllerViewModel by viewModels()
     private val mainViewModel: MainViewModel by activityViewModels()
     override fun getVM(): BottomControllerViewModel = viewModel
+    private var isPlayingUI : Boolean = false
 
     @Inject
     lateinit var appNavigation: AppNavigation
@@ -51,6 +52,7 @@ class BottomControllerFragment : BaseFragment<FragmentBottomControllerBinding,Bo
                 binding.btnPlayPauseBottomController.setImageResource(R.drawable.ic_play_24)
                 mainViewModel.stopUpdateProgress()
             }
+            isPlayingUI = isPlaying
         })
     }
 
@@ -74,7 +76,15 @@ class BottomControllerFragment : BaseFragment<FragmentBottomControllerBinding,Bo
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onResume() {
+        super.onResume()
+        if(isPlayingUI){
+            mainViewModel.startUpdateProgress()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mainViewModel.stopUpdateProgress()
     }
 }

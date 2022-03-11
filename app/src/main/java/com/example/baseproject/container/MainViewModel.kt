@@ -63,13 +63,10 @@ class MainViewModel @Inject constructor(private val mediaServiceConnection: Medi
     }
 
     fun playPauseToggle() {
-        _isPlaying.value?.let {
-            _isPlaying.value = !_isPlaying.value!!
-        }
         if(_isPlaying.value == true){
-            mediaServiceConnection.transportControls.pause()
+            pause()
         }else {
-            mediaServiceConnection.transportControls.play()
+            play()
         }
     }
 
@@ -109,7 +106,7 @@ class MainViewModel @Inject constructor(private val mediaServiceConnection: Medi
         isUpdatingProgress = true
         viewModelScope.launch {
             while (isUpdatingProgress && isPlaying.hasObservers()) {
-                d("Updating Progress")
+                d("isUpdatingProgress")
                 val currentProgress : Double = withContext(Dispatchers.Default){
                     (((_playbackState.value?.currentPlayBackPosition ?: 0).toDouble())/duration)* PROGRESS_BAR_MAX_VALUE
                 }

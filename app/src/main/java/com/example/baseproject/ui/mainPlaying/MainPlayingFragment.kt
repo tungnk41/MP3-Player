@@ -26,6 +26,7 @@ class MainPlayingFragment : BaseFragment<FragmentMainPlayingBinding,MainPlayingV
 
     private val viewModel: MainPlayingViewModel by viewModels()
     private val mainViewModel: MainViewModel by activityViewModels()
+    private var isPlayingUI: Boolean = false
 
     override fun getVM(): MainPlayingViewModel = viewModel
 
@@ -57,6 +58,7 @@ class MainPlayingFragment : BaseFragment<FragmentMainPlayingBinding,MainPlayingV
                 binding.btnPlayPauseMainPlaying.setImageResource(R.drawable.ic_play_24)
                 mainViewModel.stopUpdateProgress()
             }
+            isPlayingUI = isPlaying
         })
     }
 
@@ -89,12 +91,18 @@ class MainPlayingFragment : BaseFragment<FragmentMainPlayingBinding,MainPlayingV
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 mainViewModel.play()
             }
-
         })
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onResume() {
+        super.onResume()
+        if(isPlayingUI){
+            mainViewModel.startUpdateProgress()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
         mainViewModel.stopUpdateProgress()
     }
 }
