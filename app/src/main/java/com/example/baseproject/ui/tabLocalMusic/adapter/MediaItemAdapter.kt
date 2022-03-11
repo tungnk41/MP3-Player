@@ -39,7 +39,7 @@ class MediaItemHolder (
     }
 
     fun bindData(data: MediaItemUI) {
-        binding.tvTitle.setText(data.title)
+        binding.tvTitle.text = data.title
     }
 }
 

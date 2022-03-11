@@ -136,8 +136,7 @@ class LoginViewModel @Inject constructor(private val mediaServiceConnection: Med
         val position = _playbackState.value?.currentPlayBackPosition?.div(1000) ?: 0
         if(position != currentPosition){
             currentPosition = position
-            Log.d(LocalMusicViewModel.TAG, "updatePosition: " + currentPosition)
-//        updatePosition()
+        updatePosition()
         }
     },1000)
 

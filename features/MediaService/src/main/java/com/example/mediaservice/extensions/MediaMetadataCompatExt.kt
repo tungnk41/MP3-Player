@@ -247,20 +247,15 @@ inline var MediaMetadataCompat.Builder.favorite: Int
 fun MediaMetadataCompat.toExoPlayerMetadata(): com.google.android.exoplayer2.MediaMetadata {
     return with(MediaMetadata.Builder()) {
         setTitle(title)
-        setDisplayTitle(displayTitle)
-        setAlbumArtist(artist)
+        setArtist(artist)
         setAlbumTitle(album)
-        setComposer(composer)
-        setTrackNumber(trackNumber.toInt())
-        setTotalTrackCount(trackCount.toInt())
-        setDiscNumber(discNumber.toInt())
-        setWriter(writer)
         setArtworkUri(Uri.parse(albumArtUri))
         val extras = Bundle()
         extras.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration)
         setExtras(extras)
     }.build()
 }
+
 
 fun MediaMetadataCompat.toExoPlayerMediaItem(): com.google.android.exoplayer2.MediaItem {
     return with(com.google.android.exoplayer2.MediaItem.Builder()) {
@@ -275,6 +270,7 @@ fun MediaMetadataCompat.toBrowserMediaItem(mediaType: Int, dataSource: Int) : Me
     val mediaDescriptionBuilder = MediaDescriptionCompat.Builder()
         .setMediaId(MediaIdExtra(mediaType,id?.toLong(),dataSource).toString())
         .setTitle(title)
+        .setSubtitle(artist)
         .setIconUri(Uri.parse(displayIconUri))
     return MediaBrowserCompat.MediaItem(mediaDescriptionBuilder.build(), flag.toInt())
 }

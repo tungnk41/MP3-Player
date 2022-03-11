@@ -20,6 +20,7 @@ import com.google.android.exoplayer2.upstream.cache.CacheDataSource
 import com.google.android.exoplayer2.upstream.cache.CacheWriter
 import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor
 import com.google.android.exoplayer2.upstream.cache.SimpleCache
+import timber.log.Timber
 import java.io.File
 
 class MediaPlayer(private val context : Context) {
@@ -64,6 +65,7 @@ class MediaPlayer(private val context : Context) {
                 ProgressiveMediaSource.Factory(cacheDataSourceFactory)
                     .createMediaSource(mediaMetadataCompat.toExoPlayerMediaItem())
             }
+
         }
         currentPlayer.setMediaSources(playListMediaSource)
     }
@@ -112,6 +114,14 @@ class MediaPlayer(private val context : Context) {
         return currentPlayer.currentPosition
     }
 
+    fun currentIndex(): Int{
+        return currentPlayer.currentMediaItemIndex
+    }
+
+    fun currentMediaMetadataCompat() : MediaMetadataCompat{
+        return playListMediaMetadataCompat[currentIndex()]
+    }
+
     fun isPlaying() : Boolean {
         return currentPlayer.isPlaying
     }
@@ -142,7 +152,7 @@ class MediaPlayer(private val context : Context) {
     fun prefetchRemoteData() {
         playListMediaSource.forEach {
             it.mediaItem.localConfiguration?.uri?.let { uri ->
-                Log.d("TAG", "prefetchRemoteData: $uri")
+                Timber.d("prefetchRemoteData: $uri")
                 if(!uri.toString().startsWith("content://")){
                     val dataSpec = DataSpec.Builder()
                         .setUri(uri)

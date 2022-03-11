@@ -2,7 +2,9 @@ package com.example.baseproject.ui.tabLocalMusic
 
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.baseproject.R
@@ -36,22 +38,22 @@ class LocalMusicFragment :
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
 
-        binding.listMediaItem.setHasFixedSize(true)
+        viewModel.connect()
+
+        binding.listMediaItem.setHasFixedSize(false)
         mAdapter.setHasStableIds(true)
         (binding.listMediaItem.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
-
         binding.listMediaItem.layoutManager = GridLayoutManager(requireContext(),3)
         binding.listMediaItem.adapter = mAdapter
 
-        val listMediaItem = listOf<MediaItemUI>(
-            MediaItemUI("",1,"title 1", Uri.EMPTY,false,1,1),
-            MediaItemUI("",1,"title 2", Uri.EMPTY,false,1,1),
-            MediaItemUI("",1,"title 3", Uri.EMPTY,false,1,1),
-            MediaItemUI("",1,"title 4", Uri.EMPTY,false,1,1),
-            MediaItemUI("",1,"title 5", Uri.EMPTY,false,1,1),
-            MediaItemUI("",1,"title 6", Uri.EMPTY,false,1,1),
-        )
-        mAdapter.submitList(listMediaItem)
+        viewModel.mediaItems.observe(this, Observer {
+            mAdapter.submitList(it)
+        })
+
+
+
+
+
     }
 
     override fun setOnClick() {

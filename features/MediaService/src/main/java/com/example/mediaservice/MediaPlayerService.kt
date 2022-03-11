@@ -10,13 +10,14 @@ import android.os.ResultReceiver
 import android.provider.MediaStore
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
+import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.media.MediaBrowserServiceCompat
+import com.example.mediaservice.extensions.*
 import com.example.mediaservice.utils.*
-import com.example.mediaservice.extensions.toBrowserMediaItem
 import com.example.mediaservice.notification.MediaNotification
 import com.example.mediaservice.player.MediaPlayer
 import com.example.mediaservice.repository.AlbumRepository.AlbumRepository
@@ -26,12 +27,15 @@ import com.example.mediaservice.repository.PlaylistRepository.PlaylistRepository
 import com.example.mediaservice.repository.SongRepository.SongRepository
 import com.example.mediaservice.repository.models.MediaIdExtra
 import com.example.mediaservice.repository.models.Playlist
+import com.google.android.exoplayer2.MediaMetadata
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
+import timber.log.Timber
+import timber.log.Timber.d
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -77,6 +81,11 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
         // ExoPlayer will manage the MediaSession for us.
         mediaSessionConnector = MediaSessionConnector(mediaSession)
         mediaSessionConnector.setPlaybackPreparer(MediaPlaybackPreparer())
+        mediaSessionConnector.setMediaMetadataProvider(object : MediaSessionConnector.MediaMetadataProvider{
+            override fun getMetadata(player: Player): MediaMetadataCompat {
+                return player.mediaMetadata.toMediaMetadataCompat()
+            }
+        })
         mediaSessionConnector.setQueueNavigator(object : TimelineQueueNavigator(mediaSession) {
             override fun getMediaDescription(player: Player, windowIndex: Int): MediaDescriptionCompat {
                 val currentPlaylist = currentPlayer.playListMediaMetadataCompat()
@@ -155,7 +164,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
         rootHints: Bundle?
     ): BrowserRoot? {
         if (clientPackageName == CLIENT_PACKAGE_NAME) {
-            return BrowserRoot(MediaIdExtra(MediaType.TYPE_MEDIA_ROOT, null).toString(), null)
+            return BrowserRoot(MediaIdExtra(MediaType.TYPE_MEDIA_ROOT).toString(), null)
         }
         return null
     }
@@ -221,23 +230,33 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
     private fun getRootMediaBrowserData() : List<MediaBrowserCompat.MediaItem> {
         return listOf(
             MediaBrowserCompat.MediaItem(
-                MediaDescriptionCompat.Builder().setTitle("Songs").build(),
+                MediaDescriptionCompat.Builder()
+                    .setMediaId(MediaIdExtra(mediaType = MediaType.TYPE_ALL_SONGS, id = 1, dataSource = DataSource.LOCAL).toString())
+                    .setTitle("Songs").build(),
                 MediaBrowserCompat.MediaItem.FLAG_BROWSABLE
             ),
             MediaBrowserCompat.MediaItem(
-                MediaDescriptionCompat.Builder().setTitle("Albums").build(),
+                MediaDescriptionCompat.Builder()
+                    .setMediaId(MediaIdExtra(mediaType = MediaType.TYPE_ALL_ALBUMS,id = 2, dataSource = DataSource.LOCAL).toString())
+                    .setTitle("Albums").build(),
                 MediaBrowserCompat.MediaItem.FLAG_BROWSABLE
             ),
             MediaBrowserCompat.MediaItem(
-                MediaDescriptionCompat.Builder().setTitle("Artists").build(),
+                MediaDescriptionCompat.Builder()
+                    .setMediaId(MediaIdExtra(mediaType = MediaType.TYPE_ALL_ARTISTS,id = 3, dataSource = DataSource.LOCAL).toString())
+                    .setTitle("Artists").build(),
                 MediaBrowserCompat.MediaItem.FLAG_BROWSABLE
             ),
             MediaBrowserCompat.MediaItem(
-                MediaDescriptionCompat.Builder().setTitle("Genres").build(),
+                MediaDescriptionCompat.Builder()
+                    .setMediaId(MediaIdExtra(mediaType = MediaType.TYPE_ALL_GENRES,id = 4, dataSource = DataSource.LOCAL).toString())
+                    .setTitle("Genres").build(),
                 MediaBrowserCompat.MediaItem.FLAG_BROWSABLE
             ),
             MediaBrowserCompat.MediaItem(
-                MediaDescriptionCompat.Builder().setTitle("Playlists").build(),
+                MediaDescriptionCompat.Builder()
+                    .setMediaId(MediaIdExtra(mediaType = MediaType.TYPE_ALL_PLAYLISTS,id = 5, dataSource = DataSource.LOCAL).toString())
+                    .setTitle("Playlists").build(),
                 MediaBrowserCompat.MediaItem.FLAG_BROWSABLE
             ),
         )
@@ -288,7 +307,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
             playWhenReady: Boolean,
             extras: Bundle?
         ) {
-            Log.d(TAG, "onPrepareFromMediaId: ")
+//            val mediaIdExtra = MediaIdExtra.getDataFromString(mediaId)
             currentPlayer.playAtIndex(2)
 
         }
@@ -329,8 +348,6 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
                 }
                 Player.STATE_READY -> {
                     mediaNotification.showNotificationForPlayer(currentPlayer.getExoPlayerInstance())
-
-
                     if(!playWhenReady) {
                         stopForeground(false)
                         isForegroundService = false
@@ -344,5 +361,6 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
                 }
             }
         }
+
     }
 }

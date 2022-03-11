@@ -37,7 +37,7 @@ data class Song(
         builder.mediaUri = mediaUri
         builder.albumArtUri = iconUri
         builder.displayIconUri = iconUri
-        builder.duration = TimeUnit.SECONDS.toMillis(duration)
+        builder.duration = duration
         builder.favorite = favorite
         builder.flag = FLAG_PLAYABLE
         return builder.build()

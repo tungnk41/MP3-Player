@@ -11,10 +11,15 @@ import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import com.example.mediaservice.extensions.artist
+import com.example.mediaservice.extensions.title
 import com.example.mediaservice.utils.NETWORK_FAILURE
+import timber.log.Timber
+import timber.log.Timber.d
+import java.util.*
 import javax.inject.Inject
 
-class MediaServiceConnection @Inject constructor(val context: Context, val serviceComponent: ComponentName) {
+class MediaServiceConnection @Inject constructor(val context: Context, serviceComponent: ComponentName) {
 
     companion object {
         const val TAG = "MediaServiceConnection"
@@ -100,8 +105,11 @@ class MediaServiceConnection @Inject constructor(val context: Context, val servi
         }
 
         override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
+            Timber.d("onMetadataChanged Service connection : ${metadata?.title}  + ${metadata?.description?.subtitle}" )
             mediaMetadataCompat.postValue(metadata ?: EMPTY_MEDIA_METADATA)
         }
+
+
 
         override fun onSessionEvent(event: String?, extras: Bundle?) {
             super.onSessionEvent(event, extras)

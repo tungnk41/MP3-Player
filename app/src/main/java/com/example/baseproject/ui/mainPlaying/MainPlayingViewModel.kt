@@ -1,9 +1,9 @@
-package com.example.baseproject.ui.playing
+package com.example.baseproject.ui.mainPlaying
 
 import com.example.core.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class PlayingViewModel @Inject constructor() : BaseViewModel() {
+class MainPlayingViewModel @Inject constructor() : BaseViewModel() {
 }

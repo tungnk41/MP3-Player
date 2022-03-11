@@ -20,5 +20,9 @@ class AppNavigatorImpl @Inject constructor() : BaseNavigatorImpl(),
         openScreen(R.id.action_loginFragment_to_homeFragment, bundle)
     }
 
+    override fun openHomeScreenToPlayingScreen(bundle: Bundle?) {
+        openScreen(R.id.action_homeFragment_to_playingFragment, bundle)
+    }
+
 
 }

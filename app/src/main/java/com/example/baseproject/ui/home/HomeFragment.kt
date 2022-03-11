@@ -7,6 +7,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentHomeBinding
 import com.example.baseproject.navigation.AppNavigation
+import com.example.baseproject.ui.bottomController.BottomControllerFragment
 import com.example.core.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -23,8 +24,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
         super.initView(savedInstanceState)
 
         setupBottomNavigationBar()
+
+        showBottomController()
     }
 
+    private fun showBottomController() {
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.bottom_controller, BottomControllerFragment())
+            .commit()
+    }
     private fun setupBottomNavigationBar() {
         val navHostFragment = childFragmentManager.findFragmentById(
             R.id.nav_host_container

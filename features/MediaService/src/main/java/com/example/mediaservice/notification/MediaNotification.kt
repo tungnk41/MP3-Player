@@ -9,6 +9,8 @@ import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
 import com.bumptech.glide.Glide
 import com.example.mediaservice.R
+import com.example.mediaservice.extensions.artist
+import com.example.mediaservice.extensions.title
 import com.example.mediaservice.utils.NOTIFICATION_CHANNEL_ID
 import com.example.mediaservice.utils.NOTIFICATION_ID
 import com.google.android.exoplayer2.Player
