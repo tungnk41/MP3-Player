@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/tabLocalMusicFragment"
-        android:name="com.example.baseproject.ui.tabLocalMusic.LocalMusicFragment"
+        android:name="com.example.baseproject.ui.home.tabLocalMusic.LocalMusicFragment"
         android:label="LocalFragment"
         tools:layout="@layout/fragment_local_music" >
         <action
@@ -19,13 +19,29 @@
             app:popExitAnim="@anim/slide_out_left"
             app:popUpTo="@id/tabLocalMusicFragment"
             app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_localMusicFragment_toAlbumFragment"
+            app:destination="@id/albumFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"
+            app:popUpTo="@id/tabLocalMusicFragment"
+            app:popUpToInclusive="false" />
     </fragment>
 
     <fragment
         android:id="@+id/songFragment"
-        android:name="com.example.baseproject.ui.song.SongFragment"
+        android:name="com.example.baseproject.ui.home.song.SongFragment"
         android:label="SongFragmant"
         tools:layout="@layout/fragment_song" >
+    </fragment>
+
+    <fragment
+        android:id="@+id/albumFragment"
+        android:name="com.example.baseproject.ui.home.album.AlbumFragment"
+        android:label="albumFragment"
+        tools:layout="@layout/fragment_album" >
     </fragment>
 
 </navigation>

@@ -17,7 +17,11 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/adapter_media_browsable_item.xml" value="0.5489583333333333" />
         <entry key="app/src/main/res/layout/adapter_media_item.xml" value="0.5489583333333333" />
+        <entry key="app/src/main/res/layout/adapter_media_item_horizontal.xml" value="0.5489583333333333" />
+        <entry key="app/src/main/res/layout/adapter_media_item_vertical.xml" value="0.5489583333333333" />
         <entry key="app/src/main/res/layout/adapter_media_playable_item.xml" value="0.67" />
+        <entry key="app/src/main/res/layout/adapter_media_playable_item_horizontal.xml" value="0.5489583333333333" />
+        <entry key="app/src/main/res/layout/fragment_album.xml" value="0.5489583333333333" />
         <entry key="app/src/main/res/layout/fragment_bottom_controller.xml" value="0.421875" />
         <entry key="app/src/main/res/layout/fragment_common.xml" value="0.5405128205128205" />
         <entry key="app/src/main/res/layout/fragment_favorite.xml" value="0.5489583333333333" />

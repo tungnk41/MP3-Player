@@ -8,7 +8,15 @@ import javax.inject.Inject
 class HomeNavigatorImpl @Inject constructor() : BaseNavigatorImpl(), HomeNavigation {
 
     override fun openLocalMusicScreenToSongScreen(bundle: Bundle?) {
-        openScreen(R.id.action_localMusicFragment_toSongFragment, null)
+        openScreen(R.id.action_localMusicFragment_toSongFragment, bundle)
+    }
+
+    override fun openLocalMusicScreenToAlbumScreen(bundle: Bundle?) {
+        openScreen(R.id.action_localMusicFragment_toAlbumFragment, bundle)
+    }
+
+    override fun openOnlineMusicScreenToSongcreen(bundle: Bundle?) {
+        openScreen(R.id.action_onlineMusicFragment_toSongFragment, bundle)
     }
 
 }

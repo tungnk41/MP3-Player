@@ -13,7 +13,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import com.example.baseproject.model.MediaItemUI
-import com.example.baseproject.ui.tabLocalMusic.LocalMusicViewModel
 import com.example.core.base.BaseViewModel
 import com.example.mediaservice.MediaServiceConnection
 import com.example.mediaservice.utils.*
@@ -73,7 +72,7 @@ class LoginViewModel @Inject constructor(private val mediaServiceConnection: Med
                         val isBrowsable: Boolean = it.flags.equals(MediaBrowserCompat.MediaItem.FLAG_BROWSABLE)
                         val mediaType = mediaIdExtra.mediaType ?: -1
                         val dataSource = mediaIdExtra.dataSource
-                        MediaItemUI(mediaIdExtra = it.mediaId ?: "",id = id, title = title,subTitle = subTitle, iconUri = iconUri, isBrowsable = isBrowsable, dataSource = dataSource, mediaType = mediaType)
+                        MediaItemUI(mediaIdExtra = mediaIdExtra,id = id, title = title,subTitle = subTitle, iconUri = iconUri, isBrowsable = isBrowsable, dataSource = dataSource, mediaType = mediaType)
                 }
                 d("onChildrenLoaded " + listMediaItemExtra.toString())
                 _mediaItems.postValue(listMediaItemExtra)

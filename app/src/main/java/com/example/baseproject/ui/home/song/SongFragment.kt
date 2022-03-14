@@ -1,18 +1,17 @@
-package com.example.baseproject.ui.song
+package com.example.baseproject.ui.home.song
 
 import android.os.Bundle
-import android.widget.LinearLayout
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentSongBinding
-import com.example.baseproject.navigation.AppNavigation
 import com.example.baseproject.navigation.HomeNavigation
-import com.example.baseproject.ui.adapter.MediaPlayableItemAdapter
+import com.example.baseproject.ui.adapter.MediaItemVerticalAdapter
 import com.example.core.base.BaseFragment
+import com.example.mediaservice.repository.models.MediaIdExtra
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber.d
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -24,17 +23,25 @@ class SongFragment: BaseFragment<FragmentSongBinding, SongViewModel>(R.layout.fr
     private val viewModel: SongViewModel by viewModels()
     override fun getVM(): SongViewModel = viewModel
 
-    private val mAdapter: MediaPlayableItemAdapter by lazy {
-        MediaPlayableItemAdapter(
+    private var parentMediaIdExtra: MediaIdExtra? = null
+
+    private val mAdapter: MediaItemVerticalAdapter by lazy {
+        MediaItemVerticalAdapter(
             requireContext(),
             onClickListener = { position  ->
                 viewModel.playAtIndex(position)
             })
     }
 
+    override fun setArguments(args: Bundle?) {
+        super.setArguments(args)
+        parentMediaIdExtra = args?.getParcelable<MediaIdExtra>("mediaIdExtra")
+    }
+
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
-        viewModel.startLoadingData()
+        parentMediaIdExtra?.let { viewModel.startLoadingData(parentMediaIdExtra!!) }
+
 
 //        binding.listMediaItem.setHasFixedSize(false)
 //        if(!mAdapter.hasObservers()){

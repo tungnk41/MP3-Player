@@ -12,8 +12,8 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imgIcon"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:src="@drawable/ic_default_art_24"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -25,7 +25,7 @@
             android:layout_marginStart="10dp"
             android:text="Title"
             android:textColor="@color/black"
-            android:textSize="@dimen/text_size_12"
+            android:textSize="@dimen/text_size_14"
             app:layout_constraintStart_toEndOf="@+id/imgIcon"
             app:layout_constraintTop_toTopOf="@+id/imgIcon" />
 
@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="SubTitle"
-            android:textSize="@dimen/text_size_10"
+            android:textSize="@dimen/text_size_12"
             app:layout_constraintBottom_toBottomOf="@+id/imgIcon"
             app:layout_constraintStart_toStartOf="@+id/tvTitle"
             app:layout_constraintTop_toBottomOf="@+id/tvTitle" />

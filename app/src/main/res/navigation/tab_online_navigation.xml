@@ -7,7 +7,24 @@
 
     <fragment
         android:id="@+id/tabOnlineMusicFragment"
-        android:name="com.example.baseproject.ui.tabOnlineMusic.OnlineMusicFragment"
+        android:name="com.example.baseproject.ui.home.tabOnlineMusic.OnlineMusicFragment"
         android:label="OnlineMusicFragment"
-        tools:layout="@layout/fragment_online_music" />
+        tools:layout="@layout/fragment_online_music">
+        <action
+            android:id="@+id/action_onlineMusicFragment_toSongFragment"
+            app:destination="@id/songFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"
+            app:popUpTo="@id/tabOnlineMusicFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/songFragment"
+        android:name="com.example.baseproject.ui.home.song.SongFragment"
+        android:label="SongFragmant"
+        tools:layout="@layout/fragment_song" >
+    </fragment>
 </navigation>

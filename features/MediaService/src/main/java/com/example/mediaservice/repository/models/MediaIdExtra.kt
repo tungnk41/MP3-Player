@@ -1,10 +1,13 @@
 package com.example.mediaservice.repository.models
 
+import android.os.Parcelable
 import com.example.mediaservice.utils.DataSource
 import com.example.mediaservice.utils.DataSource.LOCAL
 import com.google.gson.Gson
+import kotlinx.android.parcel.Parcelize
 
-data class MediaIdExtra(var mediaType: Int? = null, var id: Long? = null, var dataSource : Int = DataSource.LOCAL) {
+@Parcelize
+data class MediaIdExtra(var mediaType: Int? = null, var id: Long? = null, var dataSource : Int = DataSource.LOCAL): Parcelable {
 
     /*
     const val MEDIA_ID_ROOT = 0

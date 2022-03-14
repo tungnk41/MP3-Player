@@ -1,9 +1,8 @@
-package com.example.baseproject.ui.song
+package com.example.baseproject.ui.home.song
 
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -20,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SongViewModel @Inject constructor(private val mediaServiceConnection: MediaServiceConnection) : BaseViewModel() {
-    private val mediaIdExtra = MediaIdExtra(mediaType = TYPE_ALL_SONGS, dataSource = DataSource.LOCAL)
+    private var mediaIdExtra = MediaIdExtra()
     private var listSongMediaItemUI = listOf<MediaItemUI>()
 
     private val _mediaItems = MutableLiveData<List<MediaItemUI>>(emptyList())
@@ -38,14 +37,15 @@ class SongViewModel @Inject constructor(private val mediaServiceConnection: Medi
                         val isBrowsable: Boolean = it.flags.equals(MediaBrowserCompat.MediaItem.FLAG_BROWSABLE)
                         val mediaType = mediaIdExtra.mediaType ?: -1
                         val dataSource = mediaIdExtra.dataSource
-                        MediaItemUI(mediaIdExtra = it.mediaId ?: "",id = id, title = title, subTitle = subTitle , iconUri = iconUri, isBrowsable = isBrowsable, dataSource = dataSource, mediaType = mediaType)
+                        MediaItemUI(mediaIdExtra = mediaIdExtra,id = id, title = title, subTitle = subTitle , iconUri = iconUri, isBrowsable = isBrowsable, dataSource = dataSource, mediaType = mediaType)
                     }
                 _mediaItems.postValue(listSongMediaItemUI)
             }
         }
     }
 
-    fun startLoadingData() {
+    fun startLoadingData(parentMediaIdExtra : MediaIdExtra) {
+        mediaIdExtra = parentMediaIdExtra
         mediaServiceConnection.subscribe(mediaIdExtra.toString(),subscriptionCallback)
     }
 

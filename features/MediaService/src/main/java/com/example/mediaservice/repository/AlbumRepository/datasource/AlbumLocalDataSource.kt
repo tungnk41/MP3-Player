@@ -10,6 +10,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.util.HashSet
 import javax.inject.Inject
 
 class AlbumLocalDataSource @Inject constructor(@ApplicationContext val context: Context) :
@@ -18,21 +19,25 @@ class AlbumLocalDataSource @Inject constructor(@ApplicationContext val context: 
         val listAlbum = mutableListOf<Album>()
         val contentResolver: ContentResolver = context.contentResolver
         val contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-
+        val setIdAlbum = hashSetOf<Long>()
         //Column Query
         val projection = arrayOf(
             MediaStore.Audio.Media.ALBUM_ID,
-            MediaStore.Audio.Media.ALBUM,
+            MediaStore.Audio.Media.ALBUM
         )
+
         //Condition
-        val cursor: Cursor? = contentResolver.query(contentUri, projection, null, null, null)
+        val cursor: Cursor? = contentResolver.query(contentUri, projection, null, null,null)
 
         cursor?.let {
             if (cursor.moveToFirst()) {
                 do {
                     val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID))
                     val name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM))
-                    listAlbum.add(Album(id,name))
+                    if(!setIdAlbum.contains(id)) {
+                        setIdAlbum.add(id)
+                        listAlbum.add(Album(id,name))
+                    }
                 } while (cursor.moveToNext())
             }
             if (cursor != null) {

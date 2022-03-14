@@ -1,8 +1,6 @@
-package com.example.baseproject.ui.tabLocalMusic
+package com.example.baseproject.ui.home.album
 
 import android.net.Uri
-import android.os.Handler
-import android.os.Looper
 import android.support.v4.media.MediaBrowserCompat
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -20,9 +18,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LocalMusicViewModel @Inject constructor(private val mediaServiceConnection: MediaServiceConnection) : BaseViewModel() {
+class AlbumViewModel@Inject constructor(private val mediaServiceConnection: MediaServiceConnection) : BaseViewModel() {
 
-    private val rootMediaId = mediaServiceConnection.rootMediaId
+    private var mediaIdExtra = MediaIdExtra()
 
     private val _mediaItems = MutableLiveData<List<MediaItemUI>>(emptyList())
     val mediaItems : LiveData<List<MediaItemUI>> = _mediaItems
@@ -39,20 +37,21 @@ class LocalMusicViewModel @Inject constructor(private val mediaServiceConnection
                     val isBrowsable: Boolean = it.flags.equals(MediaBrowserCompat.MediaItem.FLAG_BROWSABLE)
                     val mediaType = mediaIdExtra.mediaType ?: -1
                     val dataSource = mediaIdExtra.dataSource
-                    MediaItemUI(mediaIdExtra = it.mediaId ?: "",id = id, title = title, subTitle = subTitle , iconUri = iconUri, isBrowsable = isBrowsable, dataSource = dataSource, mediaType = mediaType)
+                    MediaItemUI(mediaIdExtra = mediaIdExtra,id = id, title = title, subTitle = subTitle , iconUri = iconUri, isBrowsable = isBrowsable, dataSource = dataSource, mediaType = mediaType)
                 }
-                Log.d("TAG", "onChildrenLoaded: " + listMediaItemExtra.toString())
+
                 _mediaItems.postValue(listMediaItemExtra)
             }
         }
     }
 
-    fun startLoadingData() {
-        mediaServiceConnection.subscribe(rootMediaId,subscriptionCallback)
+    fun startLoadingData(parentMediaIdExtra: MediaIdExtra) {
+        mediaIdExtra = parentMediaIdExtra
+        mediaServiceConnection.subscribe(mediaIdExtra.toString(),subscriptionCallback)
     }
 
     override fun onCleared() {
         super.onCleared()
-        mediaServiceConnection.unsubscribe(rootMediaId,subscriptionCallback)
+        mediaServiceConnection.unsubscribe(mediaIdExtra.toString(),subscriptionCallback)
     }
 }

@@ -1,4 +1,4 @@
-package com.example.baseproject.ui.tabLocalMusic
+package com.example.baseproject.ui.home.album
 
 import android.os.Bundle
 import androidx.fragment.app.viewModels
@@ -6,58 +6,67 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.baseproject.R
-import com.example.baseproject.databinding.FragmentLocalMusicBinding
-import com.example.baseproject.navigation.AppNavigation
+import com.example.baseproject.databinding.FragmentAlbumBinding
 import com.example.baseproject.navigation.HomeNavigation
-import com.example.baseproject.ui.adapter.MediaBrowsableItemAdapter
-import com.example.baseproject.ui.bottomController.BottomControllerFragment
+import com.example.baseproject.ui.adapter.MediaItemHorizontalAdapter
 import com.example.core.base.BaseFragment
+import com.example.mediaservice.repository.models.MediaIdExtra
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber.d
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class LocalMusicFragment :
-    BaseFragment<FragmentLocalMusicBinding, LocalMusicViewModel>(R.layout.fragment_local_music) {
+class AlbumFragment: BaseFragment<FragmentAlbumBinding,AlbumViewModel>(R.layout.fragment_album) {
 
     @Inject
     lateinit var homeNavigation: HomeNavigation
 
-    private val viewModel: LocalMusicViewModel by viewModels()
-    override fun getVM(): LocalMusicViewModel = viewModel
+    private val viewModel: AlbumViewModel by viewModels()
+    override fun getVM(): AlbumViewModel = viewModel
 
-    private val mAdapter: MediaBrowsableItemAdapter by lazy {
-        MediaBrowsableItemAdapter(
+    private var parentMediaIdExtra: MediaIdExtra? = null
+
+    private val mAdapter: MediaItemHorizontalAdapter by lazy {
+        MediaItemHorizontalAdapter(
             requireContext(),
             onClickListener = { position ->
-                d("Position $position")
+                Timber.d("Position $position")
                 if(position == 0){
-                    homeNavigation.openLocalMusicScreenToSongScreen()
+
                 }
             })
     }
 
+    override fun setArguments(args: Bundle?) {
+        super.setArguments(args)
+        parentMediaIdExtra = args?.getParcelable<MediaIdExtra>("mediaIdExtra")
+    }
+
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
-        viewModel.startLoadingData()
+        parentMediaIdExtra?.let {
+            viewModel.startLoadingData(it)
+        }
+
 
         binding.listMediaItem.setHasFixedSize(false)
         if(!mAdapter.hasObservers()){
             mAdapter.setHasStableIds(true)
         }
         (binding.listMediaItem.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
-        binding.listMediaItem.layoutManager = GridLayoutManager(requireContext(),3)
+        binding.listMediaItem.layoutManager = GridLayoutManager(requireContext(),2)
         binding.listMediaItem.adapter = mAdapter
 
         viewModel.mediaItems.observe(this, Observer {
             mAdapter.submitList(it)
         })
-
-
     }
 
     override fun setOnClick() {
         super.setOnClick()
 
+        binding.btnBack.setOnClickListener {
+            homeNavigation.navController?.popBackStack()
+        }
     }
 }

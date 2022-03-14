@@ -8,6 +8,4 @@
 
     <include app:graph="@navigation/tab_local_navigation" />
 
-    <include app:graph="@navigation/tab_local_song_navigation" />
-
 </navigation>

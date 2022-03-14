@@ -6,7 +6,7 @@ import com.example.mediaservice.utils.DataSource
 import com.example.mediaservice.utils.MediaType
 
 data class MediaItemUI(
-    val mediaIdExtra: String, // Keep mediaIdExtra as String
+    val mediaIdExtra: MediaIdExtra, // Keep mediaIdExtra as String
     val id: Long,
     val title: String,
     val subTitle: String,
