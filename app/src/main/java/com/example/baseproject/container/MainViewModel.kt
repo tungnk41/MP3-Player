@@ -140,7 +140,7 @@ class MainViewModel @Inject constructor(private val mediaServiceConnection: Medi
         mIsUpdatingProgress = true
         viewModelScope.launch {
             while (mIsUpdatingProgress && isPlaying.hasObservers()) {
-                d("isUpdatingProgress")
+//                d("isUpdatingProgress")
                 val currentPosition = mPlaybackState.value?.currentPlayBackPosition ?: 0
                 val currentProgress : Double = withContext(Dispatchers.Default){
                     ((currentPosition.toDouble())/mDuration)* PROGRESS_BAR_MAX_VALUE

@@ -29,7 +29,8 @@ class SongLocalDataSource @Inject constructor(@ApplicationContext val context: C
             MediaStore.Audio.Media.DURATION,
         )
         val selection = "${MediaStore.Audio.Media.IS_MUSIC}=1"
-        val cursor: Cursor? = contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, selection, null, null)
+        val sortOrder = MediaStore.Audio.Media.TITLE
+        val cursor: Cursor? = contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, selection, null, sortOrder)
 
         findAllByCursor(cursor)
     }

@@ -23,6 +23,7 @@ import com.example.mediaservice.repository.models.Playlist
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber.d
 import javax.inject.Inject
 
 @HiltViewModel
@@ -67,13 +68,15 @@ class LoginViewModel @Inject constructor(private val mediaServiceConnection: Med
                         val mediaIdExtra = MediaIdExtra.getDataFromString(it.mediaId ?: "")
                         val id: Long= mediaIdExtra.id ?: -1
                         val title: String = it.description.title.toString()
+                        val subTitle: String = it.description.subtitle.toString()
                         val iconUri: Uri = it.description.iconUri ?: Uri.EMPTY
                         val isBrowsable: Boolean = it.flags.equals(MediaBrowserCompat.MediaItem.FLAG_BROWSABLE)
                         val mediaType = mediaIdExtra.mediaType ?: -1
                         val dataSource = mediaIdExtra.dataSource
-                        MediaItemUI(mediaIdExtra = it.mediaId ?: "",id = id, title = title, iconUri = iconUri, isBrowsable = isBrowsable, dataSource = dataSource, mediaType = mediaType)
-                    }
-                    _mediaItems.postValue(listMediaItemExtra)
+                        MediaItemUI(mediaIdExtra = it.mediaId ?: "",id = id, title = title,subTitle = subTitle, iconUri = iconUri, isBrowsable = isBrowsable, dataSource = dataSource, mediaType = mediaType)
+                }
+                d("onChildrenLoaded " + listMediaItemExtra.toString())
+                _mediaItems.postValue(listMediaItemExtra)
                 }
             }
     }

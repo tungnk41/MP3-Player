@@ -34,11 +34,12 @@ class LocalMusicViewModel @Inject constructor(private val mediaServiceConnection
                     val mediaIdExtra = MediaIdExtra.getDataFromString(it.mediaId ?: "")
                     val id: Long= mediaIdExtra.id ?: -1
                     val title: String = it.description.title.toString()
+                    val subTitle: String = it.description.subtitle.toString()
                     val iconUri: Uri = it.description.iconUri ?: Uri.EMPTY
                     val isBrowsable: Boolean = it.flags.equals(MediaBrowserCompat.MediaItem.FLAG_BROWSABLE)
                     val mediaType = mediaIdExtra.mediaType ?: -1
                     val dataSource = mediaIdExtra.dataSource
-                    MediaItemUI(mediaIdExtra = it.mediaId ?: "",id = id, title = title, iconUri = iconUri, isBrowsable = isBrowsable, dataSource = dataSource, mediaType = mediaType)
+                    MediaItemUI(mediaIdExtra = it.mediaId ?: "",id = id, title = title, subTitle = subTitle , iconUri = iconUri, isBrowsable = isBrowsable, dataSource = dataSource, mediaType = mediaType)
                 }
                 Log.d("TAG", "onChildrenLoaded: " + listMediaItemExtra.toString())
                 _mediaItems.postValue(listMediaItemExtra)
@@ -46,7 +47,7 @@ class LocalMusicViewModel @Inject constructor(private val mediaServiceConnection
         }
     }
 
-    fun connect() {
+    fun startLoadingData() {
         mediaServiceConnection.subscribe(rootMediaId,subscriptionCallback)
     }
 

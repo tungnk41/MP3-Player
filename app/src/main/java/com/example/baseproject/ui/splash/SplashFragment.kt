@@ -30,7 +30,8 @@ class SplashFragment :
         super.bindingAction()
         viewModel.actionSPlash.observe(viewLifecycleOwner) {
             if (it is SplashActionState.Finish)
-                appNavigation.openSplashToLoginScreen()
+                appNavigation.openSplashToHomeScreen()
+
         }
     }
 

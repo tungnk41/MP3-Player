@@ -9,5 +9,23 @@
         android:id="@+id/tabLocalMusicFragment"
         android:name="com.example.baseproject.ui.tabLocalMusic.LocalMusicFragment"
         android:label="LocalFragment"
-        tools:layout="@layout/fragment_local_music" />
+        tools:layout="@layout/fragment_local_music" >
+        <action
+            android:id="@+id/action_localMusicFragment_toSongFragment"
+            app:destination="@id/songFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"
+            app:popUpTo="@id/tabLocalMusicFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/songFragment"
+        android:name="com.example.baseproject.ui.song.SongFragment"
+        android:label="SongFragmant"
+        tools:layout="@layout/fragment_song" >
+    </fragment>
+
 </navigation>

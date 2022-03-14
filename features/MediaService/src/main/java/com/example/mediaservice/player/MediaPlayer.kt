@@ -65,18 +65,16 @@ class MediaPlayer(private val context : Context) {
                 ProgressiveMediaSource.Factory(cacheDataSourceFactory)
                     .createMediaSource(mediaMetadataCompat.toExoPlayerMediaItem())
             }
-
         }
         currentPlayer.setMediaSources(playListMediaSource)
+        currentPlayer.prepare()
     }
-
-    fun playListMediaSource() = playListMediaSource
 
     fun playListMediaMetadataCompat() = playListMediaMetadataCompat
 
     fun playAtIndex(index : Int) {
-        currentPlayer.prepare()
-        currentPlayer.play()
+        currentPlayer.seekTo(index,0)
+        currentPlayer.playWhenReady = true
     }
 
     fun getExoPlayerInstance() : Player {
@@ -135,7 +133,7 @@ class MediaPlayer(private val context : Context) {
         currentPlayer = ExoPlayer.Builder(context).build().apply {
             setAudioAttributes(attributes, true)
             setHandleAudioBecomingNoisy(true)
-            setPauseAtEndOfMediaItems(false)
+            pauseAtEndOfMediaItems = false
         }
     }
 

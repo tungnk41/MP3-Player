@@ -9,6 +9,7 @@ data class MediaItemUI(
     val mediaIdExtra: String, // Keep mediaIdExtra as String
     val id: Long,
     val title: String,
+    val subTitle: String,
     val iconUri: Uri,
     val isBrowsable: Boolean,
     val dataSource: Int,

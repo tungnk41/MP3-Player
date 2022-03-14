@@ -2,6 +2,8 @@ package com.example.baseproject.di
 
 import com.example.baseproject.navigation.AppNavigation
 import com.example.baseproject.navigation.AppNavigatorImpl
+import com.example.baseproject.navigation.HomeNavigation
+import com.example.baseproject.navigation.HomeNavigatorImpl
 import com.example.core.navigationComponent.BaseNavigator
 import dagger.Binds
 import dagger.Module
@@ -20,5 +22,9 @@ abstract class NavigationModule {
     @Binds
     @ActivityScoped
     abstract fun provideAppNavigation(navigation: AppNavigatorImpl): AppNavigation
+
+    @Binds
+    @ActivityScoped
+    abstract fun provideHomeNavigation(navigation: HomeNavigatorImpl): HomeNavigation
 
 }

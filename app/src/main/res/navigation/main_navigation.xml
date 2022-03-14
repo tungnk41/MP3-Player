@@ -74,5 +74,4 @@
         tools:layout="@layout/fragment_main_playing">
     </fragment>
 
-
 </navigation>

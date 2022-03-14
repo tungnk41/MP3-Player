@@ -47,12 +47,15 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
     private lateinit var currentPlayer: MediaPlayer
     private lateinit var mediaSession: MediaSessionCompat
     private var mediaItems: List<MediaBrowserCompat.MediaItem> = listOf()
+    private var currentFocusListSong: List<MediaMetadataCompat> = listOf()
     private var isForegroundService = false
     private lateinit var mediaNotification: MediaNotification
     private lateinit var mediaSessionConnector: MediaSessionConnector
     private val serviceJob = SupervisorJob()
     private val serviceScope = CoroutineScope(Dispatchers.Default + serviceJob)
     private val userId : Long = -1
+    private var isNeedToApplyNewListSong = false
+
 
     @Inject
     lateinit var songRepository: SongRepository
@@ -174,49 +177,60 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
         result: Result<MutableList<MediaBrowserCompat.MediaItem>>,
     ) {
         val mediaIdExtra = MediaIdExtra.getDataFromString(parentId)
-        val mediaParentId = mediaIdExtra.id
-        val mediaParentType = mediaIdExtra.mediaType //MediaType.TYPE_SONG,MediaType.TYPE_ALBUM ...
-        val mediaParentDataType = mediaIdExtra.dataSource //DataSource.LOCAL or REMOTE
+        val parentId = mediaIdExtra.id
+        val parentMediaType = mediaIdExtra.mediaType //MediaType.TYPE_SONG,MediaType.TYPE_ALBUM ...
+        val parentDataType = mediaIdExtra.dataSource //DataSource.LOCAL or REMOTE
 
         Log.d(TAG, "onLoadChildren: Service")
         //allow calling result.sendResult from another thread
         result.detach()
         serviceScope.launch {
             try {
-                if (mediaParentType == MediaType.TYPE_MEDIA_ROOT) {
+                if (parentMediaType == MediaType.TYPE_MEDIA_ROOT) {
                     mediaItems = getRootMediaBrowserData()
                 } else {
-                    when (mediaParentType) {
+                    when (parentMediaType) {
                         MediaType.TYPE_ALL_SONGS -> {
-                            val listSong = songRepository.findAll(mediaParentDataType)
-                            mediaItems = listSong.map { it.toBrowserMediaItem(MediaType.TYPE_SONG,mediaParentDataType) }
-                            withContext(Dispatchers.Main){
-                                currentPlayer.setPlayList(listSong)
-                            }
+                            val listSong = songRepository.findAll(parentDataType)
+                            mediaItems = listSong.map { it.toBrowserMediaItem(MediaType.TYPE_SONG,parentDataType) }
+                            currentFocusListSong = listSong
+                            isNeedToApplyNewListSong = true
                         }
                         MediaType.TYPE_ALL_ALBUMS -> {
-                            mediaItems = albumRepository.findAll(mediaParentDataType).map { it.toBrowserMediaItem(MediaType.TYPE_ALBUM,mediaParentDataType) }
+                            mediaItems = albumRepository.findAll(parentDataType).map { it.toBrowserMediaItem(MediaType.TYPE_ALBUM,parentDataType) }
                         }
                         MediaType.TYPE_ALL_ARTISTS -> {
-                            mediaItems = artistRepository.findAll(mediaParentDataType).map {it.toBrowserMediaItem(MediaType.TYPE_ARTIST,mediaParentDataType)}
+                            mediaItems = artistRepository.findAll(parentDataType).map {it.toBrowserMediaItem(MediaType.TYPE_ARTIST,parentDataType)}
                         }
                         MediaType.TYPE_ALL_GENRES -> {
-                            mediaItems = genreRepository.findAll(mediaParentDataType).map {it.toBrowserMediaItem(MediaType.TYPE_GENRE,mediaParentDataType)}
+                            mediaItems = genreRepository.findAll(parentDataType).map {it.toBrowserMediaItem(MediaType.TYPE_GENRE,parentDataType)}
                         }
                         MediaType.TYPE_ALL_PLAYLISTS -> {
-                            mediaItems = playlistRepository.findAll(mediaParentDataType,userId).map { it.toBrowserMediaItem(MediaType.TYPE_PLAYLIST,mediaParentDataType) }
+                            mediaItems = playlistRepository.findAll(parentDataType,userId).map { it.toBrowserMediaItem(MediaType.TYPE_PLAYLIST,parentDataType) }
                         }
                         MediaType.TYPE_ALBUM -> {
-                            mediaItems = songRepository.findAllByAlbumId(mediaParentId ?: -1, mediaParentDataType).map { it.toBrowserMediaItem(MediaType.TYPE_SONG,mediaParentDataType) }
+                            val listSong = songRepository.findAllByAlbumId(parentId ?: -1, parentDataType)
+                            mediaItems = listSong.map { it.toBrowserMediaItem(MediaType.TYPE_SONG,parentDataType) }
+                            currentFocusListSong = listSong
+                            isNeedToApplyNewListSong = true
                         }
                         MediaType.TYPE_ARTIST -> {
-                            mediaItems = songRepository.findAllByArtistId(mediaParentId ?: -1, mediaParentDataType).map { it.toBrowserMediaItem(MediaType.TYPE_SONG,mediaParentDataType) }
+                            val listSong = songRepository.findAllByArtistId(parentId ?: -1, parentDataType)
+                            mediaItems = listSong.map { it.toBrowserMediaItem(MediaType.TYPE_SONG,parentDataType) }
+                            currentFocusListSong = listSong
+                            isNeedToApplyNewListSong = true
                         }
                         MediaType.TYPE_GENRE -> {
-                            mediaItems = songRepository.findAllByGenreId(mediaParentId ?: -1, mediaParentDataType).map { it.toBrowserMediaItem(MediaType.TYPE_SONG,mediaParentDataType) }
+                            val listSong = songRepository.findAllByGenreId(parentId ?: -1, parentDataType)
+                            mediaItems = listSong.map { it.toBrowserMediaItem(MediaType.TYPE_SONG,parentDataType) }
+                            currentFocusListSong = listSong
+                            isNeedToApplyNewListSong = true
                         }
                         MediaType.TYPE_PLAYLIST -> {
-                            mediaItems = songRepository.findAllByPlaylistId(mediaParentId ?: -1, mediaParentDataType).map { it.toBrowserMediaItem(MediaType.TYPE_SONG,mediaParentDataType) }
+                            val listSong = songRepository.findAllByPlaylistId(parentId ?: -1, parentDataType)
+                            mediaItems = listSong.map { it.toBrowserMediaItem(MediaType.TYPE_SONG,parentDataType) }
+                            currentFocusListSong = listSong
+                            isNeedToApplyNewListSong = true
                         }
                     }
                 }
@@ -273,7 +287,6 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
                     applicationContext,
                     Intent(applicationContext, MediaPlayerService::class.java)
                 )
-
                 startForeground(notificationId, notification)
                 isForegroundService = true
             }
@@ -288,7 +301,6 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
 
 
     private inner class MediaPlaybackPreparer : MediaSessionConnector.PlaybackPreparer {
-
         override fun getSupportedPrepareActions(): Long =
                             PlaybackStateCompat.ACTION_PREPARE or
                             PlaybackStateCompat.ACTION_PREPARE_FROM_MEDIA_ID or
@@ -307,9 +319,23 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
             playWhenReady: Boolean,
             extras: Bundle?
         ) {
-//            val mediaIdExtra = MediaIdExtra.getDataFromString(mediaId)
-            currentPlayer.playAtIndex(2)
+            serviceScope.launch {
+                val mediaIdExtra = MediaIdExtra.getDataFromString(mediaId)
+                val id = mediaIdExtra.id
+                val mediaType = mediaIdExtra.mediaType
+                val dataType = mediaIdExtra.dataSource
 
+                val index = extras?.getInt("index")
+                withContext(Dispatchers.Main) {
+                    if(isNeedToApplyNewListSong) {
+                        currentPlayer.setPlayList(currentFocusListSong)
+                        isNeedToApplyNewListSong = false
+                    }
+                    index?.let {
+                        currentPlayer.playAtIndex(index)
+                    }
+                }
+            }
         }
 
         override fun onPrepareFromSearch(query: String, playWhenReady: Boolean, extras: Bundle?) {
@@ -324,7 +350,6 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
                 CMD_ADD_PLAYLIST -> {
                     val playlist = extras?.getParcelable<Playlist>(KEY_PLAYLIST)
                     Log.d(TAG, "onCommand: " + playlist.toString())
-
                     serviceScope.launch {
                         playlist?.let {
                             playlistRepository.insert(it, DataSource.LOCAL)

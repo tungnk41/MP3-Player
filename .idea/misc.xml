@@ -15,7 +15,9 @@
         <entry key="app/src/main/res/drawable/ic_repeat_one_24.xml" value="0.189" />
         <entry key="app/src/main/res/drawable/ic_shuffle_on_24.xml" value="0.189" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/adapter_media_browsable_item.xml" value="0.5489583333333333" />
         <entry key="app/src/main/res/layout/adapter_media_item.xml" value="0.5489583333333333" />
+        <entry key="app/src/main/res/layout/adapter_media_playable_item.xml" value="0.67" />
         <entry key="app/src/main/res/layout/fragment_bottom_controller.xml" value="0.421875" />
         <entry key="app/src/main/res/layout/fragment_common.xml" value="0.5405128205128205" />
         <entry key="app/src/main/res/layout/fragment_favorite.xml" value="0.5489583333333333" />
@@ -26,6 +28,8 @@
         <entry key="app/src/main/res/layout/fragment_online_music.xml" value="0.5489583333333333" />
         <entry key="app/src/main/res/layout/fragment_playing.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_search.xml" value="0.5489583333333333" />
+        <entry key="app/src/main/res/layout/fragment_song.xml" value="0.5489583333333333" />
+        <entry key="app/src/main/res/layout/fragment_song_screen.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_splash.xml" value="0.5489583333333333" />
         <entry key="app/src/main/res/menu/bottom_nav.xml" value="0.5489583333333333" />
         <entry key="features/Demo/src/main/res/layout/adapter_item_title_setting.xml" value="0.4425925925925926" />
