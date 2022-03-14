@@ -10,6 +10,7 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.mediaservice.extensions.artist
 import com.example.mediaservice.extensions.title
@@ -31,23 +32,29 @@ class MediaServiceConnection @Inject constructor(val context: Context, serviceCo
     //Expose to Viewmodel
     val rootMediaId: String get() = mediaBrowser.root
 
-    val playbackState = MutableLiveData<PlaybackStateCompat>()
-        .apply { postValue(EMPTY_PLAYBACK_STATE) }
-    val mediaMetadataCompat = MutableLiveData<MediaMetadataCompat>()
-        .apply { postValue(EMPTY_MEDIA_METADATA) }
+    private var mPlaybackState = MutableLiveData<PlaybackStateCompat>().apply { postValue(EMPTY_PLAYBACK_STATE) }
+    val playbackState: LiveData<PlaybackStateCompat> = mPlaybackState
 
-    val isConnected = MutableLiveData<Boolean>()
-        .apply { postValue(false) }
-    val networkFailure = MutableLiveData<Boolean>()
-        .apply { postValue(false) }
+    private var mMediaMetadataCompat = MutableLiveData<MediaMetadataCompat>().apply { postValue(EMPTY_MEDIA_METADATA) }
+    val mediaMetadataCompat: LiveData<MediaMetadataCompat> = mMediaMetadataCompat
 
+    private var mIsConnected = MutableLiveData<Boolean>().apply { postValue(false) }
+    val isConnected: LiveData<Boolean> = mIsConnected
+
+    private val mNetworkFailure = MutableLiveData<Boolean>().apply { postValue(false) }
+    val networkFailure: LiveData<Boolean> = mNetworkFailure
+
+    private var mRepeatMode = MutableLiveData<Int>().apply { postValue(PlaybackStateCompat.REPEAT_MODE_NONE) }
+    val repeatMode: LiveData<Int> = mRepeatMode
+
+    private var mShuffleMode = MutableLiveData<Int>().apply { postValue(PlaybackStateCompat.SHUFFLE_MODE_NONE) }
+    val shuffleMode: LiveData<Int> = mShuffleMode
 
     private val mediaBrowserConnectionCallback = MediaBrowserConnectionCallback(context)
     private val mediaBrowser = MediaBrowserCompat(context, serviceComponent, mediaBrowserConnectionCallback, null)
         .apply {
             connect()
         }
-
 
     fun subscribe(parentId: String, callback: MediaBrowserCompat.SubscriptionCallback) {
         mediaBrowser.subscribe(parentId, callback)
@@ -87,34 +94,39 @@ class MediaServiceConnection @Inject constructor(val context: Context, serviceCo
             Log.d(TAG, "onConnected: ")
             mediaController = MediaControllerCompat(context, mediaBrowser.sessionToken)
             mediaController.registerCallback(MediaControllerCallback())
-            isConnected.postValue(true)
+            mIsConnected.postValue(true)
         }
 
         override fun onConnectionFailed() {
-            isConnected.postValue(false)
+            mIsConnected.postValue(false)
         }
 
         override fun onConnectionSuspended() {
-            isConnected.postValue(false)
+            mIsConnected.postValue(false)
         }
     }
 
     private inner class MediaControllerCallback : MediaControllerCompat.Callback() {
         override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
-            playbackState.postValue(state ?: EMPTY_PLAYBACK_STATE)
+            mPlaybackState.postValue(state ?: EMPTY_PLAYBACK_STATE)
         }
 
         override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
-            Timber.d("onMetadataChanged Service connection : ${metadata?.title}  + ${metadata?.description?.subtitle}" )
-            mediaMetadataCompat.postValue(metadata ?: EMPTY_MEDIA_METADATA)
+            mMediaMetadataCompat.postValue(metadata ?: EMPTY_MEDIA_METADATA)
         }
 
+        override fun onRepeatModeChanged(repeatMode: Int) {
+            mRepeatMode.postValue(repeatMode)
+        }
 
+        override fun onShuffleModeChanged(shuffleMode: Int) {
+            mShuffleMode.postValue(shuffleMode)
+        }
 
         override fun onSessionEvent(event: String?, extras: Bundle?) {
             super.onSessionEvent(event, extras)
             when (event) {
-                NETWORK_FAILURE -> networkFailure.postValue(true)
+                NETWORK_FAILURE -> mNetworkFailure.postValue(true)
             }
         }
 

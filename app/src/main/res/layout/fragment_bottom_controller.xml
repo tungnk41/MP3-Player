@@ -24,6 +24,8 @@
             android:text="Title"
             android:textColor="@color/black"
             android:textSize="16sp"
+            android:maxLines="1"
+            android:ellipsize="end"
             app:layout_constraintStart_toEndOf="@+id/imgArtworkBottomController"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginStart="10dp" />
@@ -34,6 +36,8 @@
             android:layout_height="wrap_content"
             android:text="Artist"
             android:textSize="14sp"
+            android:maxLines="1"
+            android:ellipsize="end"
             app:layout_constraintStart_toEndOf="@+id/imgArtworkBottomController"
             app:layout_constraintTop_toBottomOf="@id/tvTitleBottomController"
             android:layout_marginStart="10dp" />

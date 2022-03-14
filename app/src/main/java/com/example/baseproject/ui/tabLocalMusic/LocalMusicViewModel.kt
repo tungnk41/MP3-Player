@@ -47,7 +47,7 @@ class LocalMusicViewModel @Inject constructor(private val mediaServiceConnection
     }
 
     fun connect() {
-        mediaServiceConnection.subscribe(MediaIdExtra(MediaType.TYPE_MEDIA_ROOT).toString(),subscriptionCallback)
+        mediaServiceConnection.subscribe(rootMediaId,subscriptionCallback)
     }
 
     override fun onCleared() {

@@ -83,7 +83,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
         mediaSessionConnector.setPlaybackPreparer(MediaPlaybackPreparer())
         mediaSessionConnector.setMediaMetadataProvider(object : MediaSessionConnector.MediaMetadataProvider{
             override fun getMetadata(player: Player): MediaMetadataCompat {
-                return player.mediaMetadata.toMediaMetadataCompat()
+                return player.mediaMetadata.toMediaMetadataCompat(currentPlayer.getDuration())
             }
         })
         mediaSessionConnector.setQueueNavigator(object : TimelineQueueNavigator(mediaSession) {
@@ -176,7 +176,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
         val mediaIdExtra = MediaIdExtra.getDataFromString(parentId)
         val mediaParentId = mediaIdExtra.id
         val mediaParentType = mediaIdExtra.mediaType //MediaType.TYPE_SONG,MediaType.TYPE_ALBUM ...
-        val mediaParentDataType = mediaIdExtra.dataSource //DataSource.LOCAL or REMOTE_DATA
+        val mediaParentDataType = mediaIdExtra.dataSource //DataSource.LOCAL or REMOTE
 
         Log.d(TAG, "onLoadChildren: Service")
         //allow calling result.sendResult from another thread

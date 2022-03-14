@@ -1,6 +1,7 @@
 package com.example.baseproject.ui.mainPlaying
 
 import android.os.Bundle
+import android.support.v4.media.session.PlaybackStateCompat
 import android.widget.SeekBar
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -35,7 +36,6 @@ class MainPlayingFragment : BaseFragment<FragmentMainPlayingBinding,MainPlayingV
 
         binding.sbSeekBarMainPlaying.max = PROGRESS_BAR_MAX_VALUE
 
-
         mainViewModel.currentProgress.observe(this, Observer {
             binding.sbSeekBarMainPlaying.progress = it
         })
@@ -59,6 +59,39 @@ class MainPlayingFragment : BaseFragment<FragmentMainPlayingBinding,MainPlayingV
                 mainViewModel.stopUpdateProgress()
             }
             isPlayingUI = isPlaying
+        })
+
+        mainViewModel.currentPositionUI.observe(this, Observer {
+            binding.tvPosition.text = it
+        })
+
+        mainViewModel.durationUI.observe(this, Observer {
+            binding.tvDuration.text = it
+        })
+
+        mainViewModel.repeatMode.observe(this, Observer { repeatMode ->
+            when(repeatMode) {
+                PlaybackStateCompat.REPEAT_MODE_NONE  -> {
+                    binding.btnRepeatMainPlaying.setImageResource(R.drawable.ic_repeat_none_24)
+                }
+                PlaybackStateCompat.REPEAT_MODE_ALL -> {
+                    binding.btnRepeatMainPlaying.setImageResource(R.drawable.ic_repeat_all_24)
+                }
+                PlaybackStateCompat.REPEAT_MODE_ONE -> {
+                    binding.btnRepeatMainPlaying.setImageResource(R.drawable.ic_repeat_one_24)
+                }
+            }
+        })
+
+        mainViewModel.shuffleMode.observe(this, Observer { shuffleMode ->
+            when(shuffleMode) {
+                PlaybackStateCompat.SHUFFLE_MODE_NONE  -> {
+                    binding.btnShuffleMainPlaying.setImageResource(R.drawable.ic_shuffle_none_24)
+                }
+                PlaybackStateCompat.SHUFFLE_MODE_ALL -> {
+                    binding.btnShuffleMainPlaying.setImageResource(R.drawable.ic_shuffle_all_24)
+                }
+            }
         })
     }
 
@@ -92,6 +125,14 @@ class MainPlayingFragment : BaseFragment<FragmentMainPlayingBinding,MainPlayingV
                 mainViewModel.play()
             }
         })
+
+        binding.btnRepeatMainPlaying.setOnClickListener {
+            mainViewModel.nextRepeatMode()
+        }
+
+        binding.btnShuffleMainPlaying.setOnClickListener {
+            mainViewModel.nextShuffleMode()
+        }
     }
 
     override fun onResume() {

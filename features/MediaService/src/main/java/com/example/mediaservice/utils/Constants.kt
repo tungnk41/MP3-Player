@@ -18,7 +18,7 @@ object MediaType {
 
 object DataSource {
     const val LOCAL = 1
-    const val REMOTE_DATA = 2
+    const val REMOTE = 2
 }
 
 const val NOTIFICATION_ID = 100

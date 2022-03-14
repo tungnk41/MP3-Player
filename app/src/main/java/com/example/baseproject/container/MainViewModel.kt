@@ -4,12 +4,14 @@ import android.os.Handler
 import android.os.Looper
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import android.support.v4.media.session.PlaybackStateCompat.*
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import com.example.baseproject.utils.PROGRESS_BAR_MAX_VALUE
+import com.example.baseproject.utils.convertToTimeString
 import com.example.core.base.BaseViewModel
 import com.example.mediaservice.MediaServiceConnection
 import com.example.mediaservice.extensions.currentPlayBackPosition
@@ -27,34 +29,55 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(private val mediaServiceConnection: MediaServiceConnection) : BaseViewModel() {
 
-    private var duration : Long= 0
-    private var isUpdatingProgress : Boolean= false
+    private var mIsUpdatingProgress : Boolean= false
+    private var mDuration : Long= 0
 
-    private val _currentProgress = MutableLiveData<Int>(0)
-    val currentProgress: LiveData<Int> = _currentProgress
+    private val mCurrentProgress = MutableLiveData<Int>(0)
+    val currentProgress: LiveData<Int> = mCurrentProgress
 
-    private val _mediaMetadata = MutableLiveData<MediaMetadataCompat>()
-    val mediaMetadata: LiveData<MediaMetadataCompat> = _mediaMetadata
+    private val mDurationUI = MutableLiveData<String>("00:00")
+    val durationUI: LiveData<String> = mDurationUI
 
-    private val _playbackState = MutableLiveData<PlaybackStateCompat>()
-    val playbackState: LiveData<PlaybackStateCompat> = _playbackState
+    private val mCurrentPositionUI = MutableLiveData<String>("00:00")
+    val currentPositionUI: LiveData<String> = mCurrentPositionUI
 
-    private val _isPlaying = MutableLiveData<Boolean>(false)
-    val isPlaying: LiveData<Boolean> = _isPlaying
+    private val mMediaMetadata = MutableLiveData<MediaMetadataCompat>()
+    val mediaMetadata: LiveData<MediaMetadataCompat> = mMediaMetadata
+
+    private val mPlaybackState = MutableLiveData<PlaybackStateCompat>()
+    val playbackState: LiveData<PlaybackStateCompat> = mPlaybackState
+
+    private val mIsPlaying = MutableLiveData<Boolean>(false)
+    val isPlaying: LiveData<Boolean> = mIsPlaying
+
+    private val mRepeatMode = MutableLiveData<Int>(PlaybackStateCompat.REPEAT_MODE_NONE)
+    val repeatMode: LiveData<Int> = mRepeatMode
+
+    private val mShuffleMode = MutableLiveData<Int>(PlaybackStateCompat.SHUFFLE_MODE_NONE)
+    val shuffleMode: LiveData<Int> = mShuffleMode
 
     private val playbackStateObserver = Observer<PlaybackStateCompat> {
-        _playbackState.value = it
-        _isPlaying.value = it.isPlaying
+        mPlaybackState.value = it
+        mIsPlaying.value = it.isPlaying
     }
     private val mediaMetadataObserver = Observer<MediaMetadataCompat> {
-        _mediaMetadata.value = it
-        duration = it.duration
+        mMediaMetadata.value = it
+        mDuration = it.duration
+        mDurationUI.value = convertToTimeString(mDuration)
+    }
+    private val repeatModeObserver = Observer<Int> {
+        mRepeatMode.value = it
+    }
+    private val shuffleModeObserver = Observer<Int> {
+        mShuffleMode.value = it
     }
 
 
     init {
         mediaServiceConnection.playbackState.observeForever(playbackStateObserver)
         mediaServiceConnection.mediaMetadataCompat.observeForever(mediaMetadataObserver)
+        mediaServiceConnection.repeatMode.observeForever(repeatModeObserver)
+        mediaServiceConnection.shuffleMode.observeForever(shuffleModeObserver)
     }
 
 
@@ -63,7 +86,7 @@ class MainViewModel @Inject constructor(private val mediaServiceConnection: Medi
     }
 
     fun playPauseToggle() {
-        if(_isPlaying.value == true){
+        if(mIsPlaying.value == true){
             pause()
         }else {
             play()
@@ -71,12 +94,12 @@ class MainViewModel @Inject constructor(private val mediaServiceConnection: Medi
     }
 
     fun play() {
-        _isPlaying.value = true
+        mIsPlaying.value = true
         mediaServiceConnection.transportControls.play()
     }
 
     fun pause() {
-        _isPlaying.value = false
+        mIsPlaying.value = false
         mediaServiceConnection.transportControls.pause()
     }
 
@@ -87,37 +110,50 @@ class MainViewModel @Inject constructor(private val mediaServiceConnection: Medi
     fun seekTo(pos : Int) {
         viewModelScope.launch {
             val playbackPosition: Long = withContext(Dispatchers.Default) {
-                ((pos.toDouble()/PROGRESS_BAR_MAX_VALUE)*duration).toLong()
+                ((pos.toDouble()/PROGRESS_BAR_MAX_VALUE)*mDuration).toLong()
             }
             mediaServiceConnection.transportControls.seekTo(playbackPosition)
         }
     }
 
+    fun nextRepeatMode() {
+        val nextRepeatMode = when(repeatMode.value){
+            REPEAT_MODE_NONE -> REPEAT_MODE_ALL
+            REPEAT_MODE_ALL -> REPEAT_MODE_ONE
+            REPEAT_MODE_ONE -> REPEAT_MODE_NONE
+            else -> REPEAT_MODE_NONE
+        }
+        mediaServiceConnection.transportControls.setRepeatMode(nextRepeatMode)
+    }
 
-//    private fun updateProgress(): Boolean = handler.postDelayed({
-//        if(duration != 0L){
-//            val currentProgress : Double = (((_playbackState.value?.currentPlayBackPosition ?: 0).toDouble())/duration)* PROGRESS_BAR_MAX_VALUE
-//            _currentProgress.value = currentProgress?.toInt()
-//            updateProgress()
-//        }
-//    },1000)
+    fun nextShuffleMode() {
+        val nextShuffleMode = when(shuffleMode.value){
+            SHUFFLE_MODE_NONE -> SHUFFLE_MODE_ALL
+            SHUFFLE_MODE_ALL -> SHUFFLE_MODE_NONE
+            else -> SHUFFLE_MODE_NONE
+        }
+        mediaServiceConnection.transportControls.setShuffleMode(nextShuffleMode)
+    }
+
 
     fun startUpdateProgress() {
-        isUpdatingProgress = true
+        mIsUpdatingProgress = true
         viewModelScope.launch {
-            while (isUpdatingProgress && isPlaying.hasObservers()) {
+            while (mIsUpdatingProgress && isPlaying.hasObservers()) {
                 d("isUpdatingProgress")
+                val currentPosition = mPlaybackState.value?.currentPlayBackPosition ?: 0
                 val currentProgress : Double = withContext(Dispatchers.Default){
-                    (((_playbackState.value?.currentPlayBackPosition ?: 0).toDouble())/duration)* PROGRESS_BAR_MAX_VALUE
+                    ((currentPosition.toDouble())/mDuration)* PROGRESS_BAR_MAX_VALUE
                 }
-                _currentProgress.value = currentProgress?.toInt()
+                mCurrentProgress.value = currentProgress?.toInt()
+                mCurrentPositionUI.value = convertToTimeString(currentPosition)
                 delay(1000)
             }
         }
     }
 
     fun stopUpdateProgress() {
-        isUpdatingProgress = false
+        mIsUpdatingProgress = false
     }
 
     override fun onCleared() {
@@ -125,6 +161,8 @@ class MainViewModel @Inject constructor(private val mediaServiceConnection: Medi
         stopUpdateProgress()
         mediaServiceConnection.playbackState.removeObserver(playbackStateObserver)
         mediaServiceConnection.mediaMetadataCompat.removeObserver(mediaMetadataObserver)
+        mediaServiceConnection.repeatMode.removeObserver(repeatModeObserver)
+        mediaServiceConnection.shuffleMode.removeObserver(shuffleModeObserver)
     }
 
 }

@@ -41,7 +41,9 @@ class LocalMusicFragment :
         viewModel.connect()
 
         binding.listMediaItem.setHasFixedSize(false)
-        mAdapter.setHasStableIds(true)
+        if(!mAdapter.hasObservers()){
+            mAdapter.setHasStableIds(true)
+        }
         (binding.listMediaItem.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         binding.listMediaItem.layoutManager = GridLayoutManager(requireContext(),3)
         binding.listMediaItem.adapter = mAdapter

@@ -29,6 +29,8 @@
             android:text="Title"
             android:textColor="@color/black"
             android:textSize="@dimen/text_size_16"
+            android:maxLines="1"
+            android:ellipsize="end"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imgArtworkMainPlaying" />
@@ -40,6 +42,8 @@
             android:layout_marginTop="5dp"
             android:text="SubTitle"
             android:textSize="@dimen/text_size_14"
+            android:maxLines="1"
+            android:ellipsize="end"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.502"
             app:layout_constraintStart_toStartOf="parent"
@@ -50,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="30dp"
-            android:src="@drawable/ic_repeat_24"
+            android:src="@drawable/ic_repeat_all_24"
             app:layout_constraintEnd_toStartOf="@+id/btnPrevMainPlaying"
             app:layout_constraintTop_toTopOf="@+id/btnPrevMainPlaying" />
 
@@ -89,7 +93,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
-            android:src="@drawable/ic_shuffle_24"
+            android:src="@drawable/ic_shuffle_none_24"
             app:layout_constraintStart_toEndOf="@+id/btnNextMainPlaying"
             app:layout_constraintTop_toTopOf="@+id/btnNextMainPlaying" />
 
@@ -104,6 +108,27 @@
             app:layout_constraintTop_toBottomOf="@+id/tvSubTitleMainPlaying"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvPosition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="12dp"
+            android:text="00:00"
+            android:textSize="@dimen/text_size_14"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/sbSeekBarMainPlaying" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvDuration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="00:00"
+            android:textSize="@dimen/text_size_14"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvPosition" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

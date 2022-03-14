@@ -28,11 +28,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(private val mediaServiceConnection: MediaServiceConnection) : BaseViewModel(){
 
-    companion object{
-        const val TAG = "LoginViewModel"
-    }
-
-    private val mediaIdExtra = MediaIdExtra(MediaType.TYPE_ALL_SONGS,null, DataSource.LOCAL)
+    private val mediaIdExtra = MediaIdExtra(MediaType.TYPE_ALL_SONGS,null, DataSource.REMOTE)
     private val handler = Handler(Looper.getMainLooper())
 
     private val _mediaItems = MutableLiveData<List<MediaItemUI>>(emptyList())

@@ -22,7 +22,7 @@ data class Song(
     val mediaUri: String = "",
     @SerializedName("image")
     val iconUri: String = "",
-    val duration: Long = 0,
+    var duration: Long = 0,
     val favorite: Int = 0
 ) : Parcelable
 {
