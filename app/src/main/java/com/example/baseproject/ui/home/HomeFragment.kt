@@ -45,7 +45,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
         setupBottomController()
 
         mainViewModel.isPlaying.observe(this, Observer { isPlaying ->
-            binding.bottomController.visibility = if(isPlaying) View.VISIBLE else View.GONE
+            if(isPlaying){
+                binding.bottomController.visibility = View.VISIBLE
+            }
         })
     }
 
