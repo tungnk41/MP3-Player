@@ -15,6 +15,7 @@ import com.example.baseproject.navigation.HomeNavigation
 import com.example.baseproject.ui.bottomController.BottomControllerFragment
 import com.example.core.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -28,12 +29,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
 
     private val viewModel: HomeViewModel by viewModels()
     override fun getVM(): HomeViewModel = viewModel
-
     private val mainViewModel: MainViewModel by activityViewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
@@ -65,7 +62,5 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
         val navController = navHostFragment.navController
         binding.bottomNav.setupWithNavController(navController)
     }
-
-
-
+    
 }

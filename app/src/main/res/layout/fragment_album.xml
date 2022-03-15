@@ -31,13 +31,14 @@
             app:layout_constraintTop_toTopOf="@+id/btnBack"/>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/listMediaItem"
+            android:id="@+id/rvListAlbum"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:orientation="vertical"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintTop_toBottomOf="@+id/tvAllAlbum"
             android:layout_marginTop="30dp"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="2"
+            app:layout_constraintTop_toBottomOf="@+id/tvAllAlbum"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>

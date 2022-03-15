@@ -15,7 +15,7 @@ import java.net.ConnectException
 abstract class BaseViewModel : ViewModel() {
 
     var messageError = SingleLiveEvent<Any>()
-    var isLoading = MutableLiveData(false)
+    var isLoading = MutableLiveData<Boolean>(false)
 
     fun handleError(
         throwable: Throwable,

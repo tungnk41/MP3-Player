@@ -80,12 +80,22 @@ abstract class BaseFragmentNotRequireViewModel<BD : ViewDataBinding>(@LayoutRes 
     }
 
 
+//    fun showHideLoading(isShow: Boolean) {
+//        if (activity != null && activity is BaseActivityNotRequireViewModel<*>) {
+//            if (isShow) {
+//                (activity as BaseActivity<*, *>?)!!.showLoading()
+//            } else {
+//                (activity as BaseActivity<*, *>?)!!.hiddenLoading()
+//            }
+//        }
+//    }
+
     fun showHideLoading(isShow: Boolean) {
-        if (activity != null && activity is BaseActivity<*, *>) {
+        if (activity != null && activity is BaseActivityNotRequireViewModel<*>) {
             if (isShow) {
-                (activity as BaseActivity<*, *>?)!!.showLoading()
+                (activity as BaseActivityNotRequireViewModel<*>?)!!.showLoading()
             } else {
-                (activity as BaseActivity<*, *>?)!!.hiddenLoading()
+                (activity as BaseActivityNotRequireViewModel<*>?)!!.hiddenLoading()
             }
         }
     }

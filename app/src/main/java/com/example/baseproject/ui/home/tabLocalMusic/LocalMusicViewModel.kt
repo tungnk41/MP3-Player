@@ -14,12 +14,14 @@ import com.example.mediaservice.repository.models.MediaIdExtra
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber.d
 import javax.inject.Inject
 
 @HiltViewModel
 class LocalMusicViewModel @Inject constructor(private val mediaServiceConnection: MediaServiceConnection) : BaseViewModel() {
 
-    private val rootMediaId = mediaServiceConnection.rootMediaId
+    private val rootMediaIdExtra = mediaServiceConnection.rootMediaId
+    private var currentMediaIdExtra: MediaIdExtra? = null
 
     private val _mediaItems = MutableLiveData<List<MediaItemUI>>(emptyList())
     val mediaItems : LiveData<List<MediaItemUI>> = _mediaItems
@@ -39,19 +41,34 @@ class LocalMusicViewModel @Inject constructor(private val mediaServiceConnection
                     MediaItemUI(mediaIdExtra = mediaIdExtra,id = id, title = title, subTitle = subTitle , iconUri = iconUri, isBrowsable = isBrowsable, dataSource = dataSource, mediaType = mediaType)
                 }
                 _mediaItems.postValue(listMediaItemExtra)
+                isLoading.postValue(false)
             }
         }
+        override fun onError(parentId: String) {
+            super.onError(parentId)
+            isLoading.postValue(false)
+        }
+    }
+
+    init{
+        startLoadingData(MediaIdExtra.getDataFromString(rootMediaIdExtra))
     }
 
     fun getCurrentMediaIdExtra(position : Int): Parcelable?{
         return _mediaItems.value?.get(position)?.mediaIdExtra
     }
-    fun startLoadingData() {
-        mediaServiceConnection.subscribe(rootMediaId,subscriptionCallback)
+
+    fun startLoadingData(mediaIdExtra: MediaIdExtra) {
+        if(currentMediaIdExtra != mediaIdExtra) {
+            isLoading.postValue(true)
+            currentMediaIdExtra = mediaIdExtra
+            mediaServiceConnection.subscribe(mediaIdExtra.toString(),subscriptionCallback)
+        }
     }
 
     override fun onCleared() {
         super.onCleared()
-        mediaServiceConnection.unsubscribe(rootMediaId,subscriptionCallback)
+        d("onCleared")
+        mediaServiceConnection.unsubscribe(currentMediaIdExtra.toString(),subscriptionCallback)
     }
 }

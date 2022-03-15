@@ -38,21 +38,24 @@ class SongFragment: BaseFragment<FragmentSongBinding, SongViewModel>(R.layout.fr
         parentMediaIdExtra = args?.getParcelable<MediaIdExtra>("mediaIdExtra")
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        parentMediaIdExtra?.let { viewModel.startLoadingData(parentMediaIdExtra!!) }
+    }
+
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
-        parentMediaIdExtra?.let { viewModel.startLoadingData(parentMediaIdExtra!!) }
 
 
 //        binding.listMediaItem.setHasFixedSize(false)
 //        if(!mAdapter.hasObservers()){
 //            mAdapter.setHasStableIds(true)
 //        }
-        (binding.listMediaItem.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
-        binding.listMediaItem.adapter = mAdapter
+        (binding.rvListAllSong.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+        binding.rvListAllSong.adapter = mAdapter
 
-        viewModel.mediaItems.observe(this, Observer {
-            mAdapter.submitList(it)
-        })
+
     }
 
     override fun setOnClick() {
@@ -61,5 +64,12 @@ class SongFragment: BaseFragment<FragmentSongBinding, SongViewModel>(R.layout.fr
         binding.btnBack.setOnClickListener {
             homeNavigation.navController?.popBackStack()
         }
+    }
+
+    override fun bindingStateView() {
+
+        viewModel.mediaItems.observe(this, Observer {
+            mAdapter.submitList(it)
+        })
     }
 }

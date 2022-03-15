@@ -49,13 +49,12 @@ class AlbumFragment: BaseFragment<FragmentAlbumBinding,AlbumViewModel>(R.layout.
         }
 
 
-        binding.listMediaItem.setHasFixedSize(false)
+        binding.rvListAlbum.setHasFixedSize(false)
         if(!mAdapter.hasObservers()){
             mAdapter.setHasStableIds(true)
         }
-        (binding.listMediaItem.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
-        binding.listMediaItem.layoutManager = GridLayoutManager(requireContext(),2)
-        binding.listMediaItem.adapter = mAdapter
+        (binding.rvListAlbum.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+        binding.rvListAlbum.adapter = mAdapter
 
         viewModel.mediaItems.observe(this, Observer {
             mAdapter.submitList(it)

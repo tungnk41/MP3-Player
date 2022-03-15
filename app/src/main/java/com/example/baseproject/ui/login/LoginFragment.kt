@@ -26,48 +26,5 @@ class LoginFragment : BaseFragment<FragmentLoginBinding,LoginViewModel>(R.layout
             appNavigation.openLoginToHomeScreen()
         }
 
-        binding.btnConnect.setOnClickListener {
-            viewModel.connect()
-        }
-
-        binding.btnPrev.setOnClickListener {
-            viewModel.prev()
-        }
-
-        binding.btnPlay.setOnClickListener {
-            viewModel.play()
-        }
-
-        binding.btnNext.setOnClickListener {
-            viewModel.next()
-        }
-
-        binding.btnSearch.setOnClickListener {
-            viewModel.search()
-        }
-
-        binding.btnCmd.setOnClickListener {
-            viewModel.sendCommand()
-        }
-
-        binding.btnSendPlaylist.setOnClickListener {
-            viewModel.sendPlaylist()
-        }
-
-        binding.btnGetPlaylist.setOnClickListener {
-            viewModel.getPlaylist()
-        }
-
-        binding.btnRepeate.setOnClickListener {
-            viewModel.repeate()
-        }
-
-        binding.btnShuffle.setOnClickListener {
-            viewModel.shuffle()
-        }
-
-        binding.btnSeekTo.setOnClickListener {
-            viewModel.seekTo()
-        }
     }
 }

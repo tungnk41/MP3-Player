@@ -44,15 +44,18 @@ class LocalMusicFragment :
 
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
-        viewModel.startLoadingData()
 
-        binding.listMediaItem.setHasFixedSize(false)
+        binding.rvListMediaItem.setHasFixedSize(false)
         if(!mAdapter.hasObservers()){
             mAdapter.setHasStableIds(true)
         }
-        (binding.listMediaItem.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
-        binding.listMediaItem.layoutManager = GridLayoutManager(requireContext(),3)
-        binding.listMediaItem.adapter = mAdapter
+        (binding.rvListMediaItem.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+        binding.rvListMediaItem.adapter = mAdapter
+
+    }
+
+    override fun bindingStateView() {
+        super.bindingStateView()
 
         viewModel.mediaItems.observe(this, Observer {
             mAdapter.submitList(it)
