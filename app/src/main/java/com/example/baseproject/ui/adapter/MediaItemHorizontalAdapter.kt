@@ -7,6 +7,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.FitCenter
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.baseproject.R
 import com.example.baseproject.databinding.AdapterMediaItemHorizontalBinding
 import com.example.baseproject.model.MediaItemUI
@@ -47,7 +50,7 @@ class MediaItemHorizontalHolder (
         Glide.with(binding.root)
             .load(data.iconUri)
             .placeholder(R.drawable.ic_default_art_24)
-            .centerCrop()
+            .transform(CenterCrop(),RoundedCorners(20))
             .into(binding.imgIcon)
     }
 }

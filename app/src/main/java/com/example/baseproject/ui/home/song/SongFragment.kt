@@ -60,10 +60,6 @@ class SongFragment: BaseFragment<FragmentSongBinding, SongViewModel>(R.layout.fr
 
     override fun setOnClick() {
         super.setOnClick()
-
-        binding.btnBack.setOnClickListener {
-            homeNavigation.navController?.popBackStack()
-        }
     }
 
     override fun bindingStateView() {

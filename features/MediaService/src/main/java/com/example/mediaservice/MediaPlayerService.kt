@@ -27,6 +27,8 @@ import com.example.mediaservice.repository.PlaylistRepository.PlaylistRepository
 import com.example.mediaservice.repository.SongRepository.SongRepository
 import com.example.mediaservice.repository.models.MediaIdExtra
 import com.example.mediaservice.repository.models.Playlist
+import com.example.mediaservice.utils.MediaType.TYPE_ALBUM
+import com.example.mediaservice.utils.MediaType.TYPE_ALL_SONGS
 import com.google.android.exoplayer2.MediaMetadata
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
@@ -47,14 +49,19 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
     private lateinit var currentPlayer: MediaPlayer
     private lateinit var mediaSession: MediaSessionCompat
     private var mediaItems: List<MediaBrowserCompat.MediaItem> = listOf()
-    private var currentFocusListSong: List<MediaMetadataCompat> = listOf()
     private var isForegroundService = false
     private lateinit var mediaNotification: MediaNotification
     private lateinit var mediaSessionConnector: MediaSessionConnector
     private val serviceJob = SupervisorJob()
     private val serviceScope = CoroutineScope(Dispatchers.Default + serviceJob)
     private val userId : Long = -1
+
+    private var cachedlocalListSong: List<MediaMetadataCompat> = listOf()
+    private var cachedremoteListSong: List<MediaMetadataCompat> = listOf()
+    private var cachedplaylistListSong: List<MediaMetadataCompat> = listOf()
+    private var currentFocusListSong: List<MediaMetadataCompat> = listOf()
     private var isNeedToApplyNewListSong = false
+    private var currenParentMediaIdExtra: MediaIdExtra? = null
 
 
     @Inject
@@ -161,7 +168,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
         rootHints: Bundle?
     ): BrowserRoot? {
         if (clientPackageName == CLIENT_PACKAGE_NAME) {
-            return BrowserRoot(MediaIdExtra(MediaType.TYPE_MEDIA_ROOT).toString(), null)
+            return BrowserRoot(MediaIdExtra(mediaType = MediaType.TYPE_MEDIA_ROOT).toString(), null)
         }
         return null
     }
@@ -175,7 +182,8 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
         val parentMediaType = mediaIdExtra.mediaType //MediaType.TYPE_SONG,MediaType.TYPE_ALBUM ...
         val parentDataSource = mediaIdExtra.dataSource //DataSource.LOCAL or REMOTE
 
-        Log.d(TAG, "onLoadChildren: Service")
+        currenParentMediaIdExtra = mediaIdExtra
+
         //allow calling result.sendResult from another thread
         result.detach()
         serviceScope.launch {
@@ -186,45 +194,40 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
                     when (parentMediaType) {
                         MediaType.TYPE_ALL_SONGS -> {
                             val listSong = songRepository.findAll(parentDataSource)
-                            mediaItems = listSong.map { it.toBrowserMediaItem(MediaType.TYPE_SONG,parentDataSource) }
-                            currentFocusListSong = listSong
-                            isNeedToApplyNewListSong = true
+                            mediaItems = listSong.map { it.toBrowserMediaItem(MediaType.TYPE_SONG,parentMediaType,parentDataSource) }
+                            cacheListSong(parentMediaType,parentDataSource,listSong)
                         }
                         MediaType.TYPE_ALL_ALBUMS -> {
-                            mediaItems = albumRepository.findAll(parentDataSource).map { it.toBrowserMediaItem(MediaType.TYPE_ALBUM,parentDataSource) }
+                            mediaItems = albumRepository.findAll(parentDataSource).map { it.toBrowserMediaItem(MediaType.TYPE_ALBUM,parentMediaType,parentDataSource) }
                         }
                         MediaType.TYPE_ALL_ARTISTS -> {
-                            mediaItems = artistRepository.findAll(parentDataSource).map {it.toBrowserMediaItem(MediaType.TYPE_ARTIST,parentDataSource)}
+                            mediaItems = artistRepository.findAll(parentDataSource).map {it.toBrowserMediaItem(MediaType.TYPE_ARTIST,parentMediaType,parentDataSource)}
                         }
                         MediaType.TYPE_ALL_GENRES -> {
-                            mediaItems = genreRepository.findAll(parentDataSource).map {it.toBrowserMediaItem(MediaType.TYPE_GENRE,parentDataSource)}
+                            mediaItems = genreRepository.findAll(parentDataSource).map {it.toBrowserMediaItem(MediaType.TYPE_GENRE,parentMediaType,parentDataSource)}
                         }
                         MediaType.TYPE_ALL_PLAYLISTS -> {
-                            mediaItems = playlistRepository.findAll(parentDataSource,userId).map { it.toBrowserMediaItem(MediaType.TYPE_PLAYLIST,parentDataSource) }
+                            mediaItems = playlistRepository.findAll(parentDataSource,userId).map { it.toBrowserMediaItem(MediaType.TYPE_PLAYLIST,parentMediaType,parentDataSource) }
                         }
                         MediaType.TYPE_ALBUM -> {
                             val listSong = songRepository.findAllByAlbumId(parentId ?: -1, parentDataSource)
-                            mediaItems = listSong.map { it.toBrowserMediaItem(MediaType.TYPE_SONG,parentDataSource) }
-                            currentFocusListSong = listSong
-                            isNeedToApplyNewListSong = true
+                            mediaItems = listSong.map { it.toBrowserMediaItem(MediaType.TYPE_SONG,parentMediaType,parentDataSource) }
+                            cacheListSong(parentMediaType,parentDataSource,listSong)
                         }
                         MediaType.TYPE_ARTIST -> {
                             val listSong = songRepository.findAllByArtistId(parentId ?: -1, parentDataSource)
-                            mediaItems = listSong.map { it.toBrowserMediaItem(MediaType.TYPE_SONG,parentDataSource) }
-                            currentFocusListSong = listSong
-                            isNeedToApplyNewListSong = true
+                            mediaItems = listSong.map { it.toBrowserMediaItem(MediaType.TYPE_SONG,parentMediaType,parentDataSource) }
+                            cacheListSong(parentMediaType,parentDataSource,listSong)
                         }
                         MediaType.TYPE_GENRE -> {
                             val listSong = songRepository.findAllByGenreId(parentId ?: -1, parentDataSource)
-                            mediaItems = listSong.map { it.toBrowserMediaItem(MediaType.TYPE_SONG,parentDataSource) }
-                            currentFocusListSong = listSong
-                            isNeedToApplyNewListSong = true
+                            mediaItems = listSong.map { it.toBrowserMediaItem(MediaType.TYPE_SONG,parentMediaType,parentDataSource) }
+                            cacheListSong(parentMediaType,parentDataSource,listSong)
                         }
                         MediaType.TYPE_PLAYLIST -> {
                             val listSong = songRepository.findAllByPlaylistId(parentId ?: -1, parentDataSource)
-                            mediaItems = listSong.map { it.toBrowserMediaItem(MediaType.TYPE_SONG,parentDataSource) }
-                            currentFocusListSong = listSong
-                            isNeedToApplyNewListSong = true
+                            mediaItems = listSong.map { it.toBrowserMediaItem(MediaType.TYPE_SONG,parentMediaType,parentDataSource) }
+                            cacheListSong(parentMediaType,parentDataSource,listSong)
                         }
                     }
                 }
@@ -316,17 +319,27 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
             serviceScope.launch {
                 val mediaIdExtra = MediaIdExtra.getDataFromString(mediaId)
                 val id = mediaIdExtra.id
+                val parentMediaType = mediaIdExtra.parentMediaType ?: -1
                 val mediaType = mediaIdExtra.mediaType
-                val dataType = mediaIdExtra.dataSource
-
+                val dataSource = mediaIdExtra.dataSource
                 val index = extras?.getInt("index")
+
+                var listSongToPlay = getListSongToPlay(parentMediaType,dataSource)
                 withContext(Dispatchers.Main) {
-                    if(isNeedToApplyNewListSong) {
+                    if(listSongToPlay == currentFocusListSong) {
+                        if(isNeedToApplyNewListSong) {
+                            currentPlayer.setPlayList(currentFocusListSong)
+                            isNeedToApplyNewListSong = false
+                        }
+                        index?.let {
+                            currentPlayer.playAtIndex(index)
+                        }
+                    }else {
+                        currentFocusListSong = listSongToPlay
                         currentPlayer.setPlayList(currentFocusListSong)
-                        isNeedToApplyNewListSong = false
-                    }
-                    index?.let {
-                        currentPlayer.playAtIndex(index)
+                        index?.let {
+                            currentPlayer.playAtIndex(index)
+                        }
                     }
                 }
             }
@@ -380,5 +393,38 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
                 }
             }
         }
+    }
+
+    private fun cacheListSong(parentMediaType: Int, parentDataSource: Int, listSong: List<MediaMetadataCompat>){
+        if(parentMediaType == MediaType.TYPE_PLAYLIST) {
+            cachedplaylistListSong = listSong
+        }
+        else {
+            if(parentDataSource == DataSource.LOCAL) {
+                cachedlocalListSong = listSong
+            }
+            else {
+                cachedremoteListSong = listSong
+            }
+        }
+        currentFocusListSong = listSong
+        isNeedToApplyNewListSong = true
+    }
+
+    private fun getListSongToPlay(parentMediaType: Int, parentDataSource: Int) : List<MediaMetadataCompat> {
+        var listSong = listOf<MediaMetadataCompat>()
+
+        if(parentMediaType == MediaType.TYPE_PLAYLIST) {
+            listSong = cachedplaylistListSong
+        }
+        else {
+            if(parentDataSource == DataSource.LOCAL) {
+                listSong = cachedlocalListSong
+            }
+            else {
+                listSong = cachedremoteListSong
+            }
+        }
+        return listSong
     }
 }

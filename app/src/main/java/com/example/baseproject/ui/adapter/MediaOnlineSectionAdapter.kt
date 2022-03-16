@@ -14,14 +14,18 @@ import com.example.baseproject.databinding.AdapterMediaOnlineBinding
 import com.example.baseproject.model.MediaItemUI
 import com.example.baseproject.model.MediaOnlineItem
 
-class MediaOnlineSectionAdapter(val context: Context) : ListAdapter<MediaOnlineItem,MediaOnlineSectionHolder>(MediaOnlineSectionDiffUtil()) {
+class MediaOnlineSectionAdapter(
+    val context: Context,
+    val onExpandedClickListener: (Int) -> Unit,
+    val onItemClickListener: (Int,Int) -> Unit,
+    ) : ListAdapter<MediaOnlineItem,MediaOnlineSectionHolder>(MediaOnlineSectionDiffUtil()) {
 
     private val layoutInflater by lazy {
         LayoutInflater.from(context)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaOnlineSectionHolder {
-        return return MediaOnlineSectionHolder(AdapterMediaOnlineBinding.inflate(layoutInflater,parent,false))
+        return return MediaOnlineSectionHolder(AdapterMediaOnlineBinding.inflate(layoutInflater,parent,false),onExpandedClickListener,onItemClickListener)
     }
 
     override fun onBindViewHolder(holder: MediaOnlineSectionHolder, position: Int) {
@@ -31,12 +35,20 @@ class MediaOnlineSectionAdapter(val context: Context) : ListAdapter<MediaOnlineI
 
 class MediaOnlineSectionHolder (
     val binding: AdapterMediaOnlineBinding,
+    val onExpandedClickListener: (Int) -> Unit,
+    val onItemClickListener: (Int,Int) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    private val childAdapter = MediaItemHorizontalAdapter(binding.root.context, onClickListener = {})
+    private val childAdapter = MediaItemHorizontalAdapter(binding.root.context, onClickListener = {
+        onItemClickListener.invoke(bindingAdapterPosition,it)
+    })
 
     init {
         binding.rvListChildMediaItem.adapter = childAdapter
+        binding.rvListChildMediaItem.isNestedScrollingEnabled = false
+        binding.combTitle.setOnClickListener {
+            onExpandedClickListener.invoke(bindingAdapterPosition)
+        }
     }
 
     fun bindData(data: MediaOnlineItem) {

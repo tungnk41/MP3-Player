@@ -7,7 +7,7 @@ import com.google.gson.Gson
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class MediaIdExtra(var mediaType: Int? = null, var id: Long? = null, var dataSource : Int = DataSource.LOCAL): Parcelable {
+data class MediaIdExtra(var parentMediaType: Int? = null, var mediaType: Int? = null, var id: Long? = null, var dataSource : Int = DataSource.LOCAL): Parcelable {
 
     /*
     const val MEDIA_ID_ROOT = 0

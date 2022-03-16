@@ -5,7 +5,10 @@ import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.example.baseproject.R
 import com.example.baseproject.container.MainViewModel
@@ -42,13 +45,17 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
         setupBottomNavigationBar()
         setupBottomController()
 
+    }
+
+    override fun bindingStateView() {
+        super.bindingStateView()
+
         mainViewModel.isPlaying.observe(this, Observer { isPlaying ->
             if(isPlaying){
                 binding.bottomController.visibility = View.VISIBLE
             }
         })
     }
-
 
     private fun setupBottomController() {
         parentFragmentManager.beginTransaction()
@@ -57,10 +64,24 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
     }
 
     private fun setupBottomNavigationBar() {
+
         val navHostFragment = childFragmentManager.findFragmentById(
             R.id.nav_host_container
         ) as NavHostFragment
         val navController = navHostFragment.navController
+        val appBarConfiguration = AppBarConfiguration(navController.graph)
+
         binding.bottomNav.setupWithNavController(navController)
+        binding.tbToolbar.setupWithNavController(navController,appBarConfiguration)
+
+
+        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+            if(destination.id == R.id.tabOnlineMusicFragment || destination.id == R.id.tabLocalMusicFragment) {
+                d("addOnDestinationChangedListener " + destination.id)
+                binding.tbToolbar.visibility = View.GONE
+            }else{
+                binding.tbToolbar.visibility = View.VISIBLE
+            }
+        }
     }
 }

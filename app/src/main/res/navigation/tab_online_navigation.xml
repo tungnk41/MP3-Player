@@ -9,7 +9,7 @@
     <fragment
         android:id="@+id/tabOnlineMusicFragment"
         android:name="com.example.baseproject.ui.home.tabOnlineMusic.OnlineMusicFragment"
-        android:label="OnlineMusicFragment"
+        android:label="Online"
         tools:layout="@layout/fragment_online_music">
         <action
             android:id="@+id/action_onlineMusicFragment_toSongFragment"
@@ -25,7 +25,7 @@
     <fragment
         android:id="@+id/songFragment"
         android:name="com.example.baseproject.ui.home.song.SongFragment"
-        android:label="SongFragmant"
+        android:label="Songs"
         tools:layout="@layout/fragment_song" >
     </fragment>
 </navigation>

@@ -29,7 +29,7 @@ class LocalMusicViewModel @Inject constructor(private val mediaServiceConnection
     private val subscriptionCallback = object: MediaBrowserCompat.SubscriptionCallback(){
         override fun onChildrenLoaded(parentId: String, children: MutableList<MediaBrowserCompat.MediaItem>) {
             viewModelScope.launch(Dispatchers.Default) {
-                val listMediaItemExtra = children.map {
+                val listMediaItemUI = children.map {
                     val mediaIdExtra = MediaIdExtra.getDataFromString(it.mediaId ?: "")
                     val id: Long= mediaIdExtra.id ?: -1
                     val title: String = it.description.title.toString()
@@ -40,7 +40,8 @@ class LocalMusicViewModel @Inject constructor(private val mediaServiceConnection
                     val dataSource = mediaIdExtra.dataSource
                     MediaItemUI(mediaIdExtra = mediaIdExtra,id = id, title = title, subTitle = subTitle , iconUri = iconUri, isBrowsable = isBrowsable, dataSource = dataSource, mediaType = mediaType)
                 }
-                _mediaItems.postValue(listMediaItemExtra)
+                d("onChildrenLoaded  " + listMediaItemUI.toString())
+                _mediaItems.postValue(listMediaItemUI)
                 isLoading.postValue(false)
             }
         }

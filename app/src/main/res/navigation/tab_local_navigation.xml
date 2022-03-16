@@ -34,14 +34,14 @@
     <fragment
         android:id="@+id/songFragment"
         android:name="com.example.baseproject.ui.home.song.SongFragment"
-        android:label="SongFragmant"
+        android:label="Songs"
         tools:layout="@layout/fragment_song" >
     </fragment>
 
     <fragment
         android:id="@+id/albumFragment"
         android:name="com.example.baseproject.ui.home.album.AlbumFragment"
-        android:label="albumFragment"
+        android:label="Albums"
         tools:layout="@layout/fragment_album" >
     </fragment>
 

@@ -1,8 +1,11 @@
 package com.example.mediaservice.repository.AlbumRepository.datasource
 
 import android.content.ContentResolver
+import android.content.ContentUris
 import android.content.Context
 import android.database.Cursor
+import android.net.Uri
+import android.os.Build
 import android.provider.MediaStore
 import com.example.mediaservice.repository.AlbumRepository.AlbumDataSource
 import com.example.mediaservice.repository.models.Album
@@ -34,9 +37,16 @@ class AlbumLocalDataSource @Inject constructor(@ApplicationContext val context: 
                 do {
                     val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID))
                     val name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM))
+                    var image = ""
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        val albumArtUri = Uri.parse("content://media/external/audio/albumart")
+                        image = ContentUris.withAppendedId(albumArtUri,id).toString()
+                    } else {
+                        image = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM_ART))
+                    }
                     if(!setIdAlbum.contains(id)) {
                         setIdAlbum.add(id)
-                        listAlbum.add(Album(id,name))
+                        listAlbum.add(Album(id,name,image))
                     }
                 } while (cursor.moveToNext())
             }

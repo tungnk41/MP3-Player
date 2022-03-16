@@ -15,6 +15,7 @@ import com.example.mediaservice.utils.MediaType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber.d
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,6 +38,7 @@ class AlbumViewModel@Inject constructor(private val mediaServiceConnection: Medi
                     val isBrowsable: Boolean = it.flags.equals(MediaBrowserCompat.MediaItem.FLAG_BROWSABLE)
                     val mediaType = mediaIdExtra.mediaType ?: -1
                     val dataSource = mediaIdExtra.dataSource
+                    d("Icon Uri  " + iconUri)
                     MediaItemUI(mediaIdExtra = mediaIdExtra,id = id, title = title, subTitle = subTitle , iconUri = iconUri, isBrowsable = isBrowsable, dataSource = dataSource, mediaType = mediaType)
                 }
 

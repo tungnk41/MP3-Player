@@ -30,6 +30,14 @@ import javax.inject.Inject
 class OnlineMusicFragment :
     BaseFragment<FragmentOnlineMusicBinding, OnlineMusicViewModel>(R.layout.fragment_online_music) {
 
+    companion object {
+        const val SONGS = 0
+        const val ALBUMS = 1
+        const val ARTISTS = 2
+        const val GENRES = 3
+
+    }
+
     @Inject
     lateinit var homeNavigation: HomeNavigation
 
@@ -37,8 +45,18 @@ class OnlineMusicFragment :
     override fun getVM(): OnlineMusicViewModel = viewModel
 
     private val mAdapter: MediaOnlineSectionAdapter by lazy {
-        MediaOnlineSectionAdapter(
-            requireContext())
+        MediaOnlineSectionAdapter(requireContext(),
+            onExpandedClickListener = { parentPos ->
+                d("onExpandedClickListener $parentPos")
+                if(parentPos == SONGS) {
+                    val bundle = Bundle()
+                    bundle.putParcelable("mediaIdExtra",MediaIdExtra(mediaType = com.example.mediaservice.utils.MediaType.TYPE_ALL_SONGS, dataSource = DataSource.REMOTE))
+                    homeNavigation.openOnlineMusicScreenToSongcreen(bundle)
+                }
+            },
+            onItemClickListener = { parentPos, childPos ->
+                d("onItemClickListener $parentPos $childPos")
+            })
     }
 
     private val bannerAdapter: BannerAdapter by lazy {
@@ -58,9 +76,6 @@ class OnlineMusicFragment :
         binding.vpBanner.adapter = bannerAdapter
     }
 
-//    val bundle = Bundle()
-//    bundle.putParcelable("mediaIdExtra",MediaIdExtra(mediaType = com.example.mediaservice.utils.MediaType.TYPE_ALL_SONGS, dataSource = DataSource.REMOTE))
-//    homeNavigation.openOnlineMusicScreenToSongcreen(bundle)
 
     override fun setOnClick() {
         super.setOnClick()

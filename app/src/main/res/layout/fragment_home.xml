@@ -8,6 +8,13 @@
         android:orientation="vertical"
         android:background="@color/background_common">
 
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tbToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:background="@color/white"/>
+
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/nav_host_container"
             android:name="androidx.navigation.fragment.NavHostFragment"

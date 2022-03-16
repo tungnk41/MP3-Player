@@ -10,8 +10,10 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
     android:padding="5dp">
 
     <LinearLayout
+        android:id="@+id/combTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clickable="true"
         android:orientation="horizontal">
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvTitle"
@@ -32,6 +34,7 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
         android:id="@+id/rvListChildMediaItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         android:orientation="horizontal"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 

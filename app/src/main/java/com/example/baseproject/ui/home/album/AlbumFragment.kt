@@ -56,6 +56,11 @@ class AlbumFragment: BaseFragment<FragmentAlbumBinding,AlbumViewModel>(R.layout.
         (binding.rvListAlbum.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         binding.rvListAlbum.adapter = mAdapter
 
+    }
+
+    override fun bindingStateView() {
+        super.bindingStateView()
+
         viewModel.mediaItems.observe(this, Observer {
             mAdapter.submitList(it)
         })
@@ -63,9 +68,5 @@ class AlbumFragment: BaseFragment<FragmentAlbumBinding,AlbumViewModel>(R.layout.
 
     override fun setOnClick() {
         super.setOnClick()
-
-        binding.btnBack.setOnClickListener {
-            homeNavigation.navController?.popBackStack()
-        }
     }
 }
