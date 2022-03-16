@@ -21,7 +21,6 @@ class SongViewModel @Inject constructor(private val mediaServiceConnection: Medi
     private var currentMediaIdExtra: MediaIdExtra? = null
     private var listSongMediaItemUI = listOf<MediaItemUI>()
 
-
     private val _mediaItems = MutableLiveData<List<MediaItemUI>>(emptyList())
     val mediaItems : LiveData<List<MediaItemUI>> = _mediaItems
 

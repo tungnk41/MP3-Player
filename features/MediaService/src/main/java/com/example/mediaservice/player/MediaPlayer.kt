@@ -27,7 +27,6 @@ class MediaPlayer(private val context : Context) {
     private lateinit var currentPlayer: ExoPlayer
     private lateinit var playListMediaSource: List<MediaSource>
     private lateinit var playListMediaMetadataCompat: List<MediaMetadataCompat>
-    private var currentPlayingIndex: Int = 0
     private var playerStateListener : Player.Listener? = null
     private val databaseProvider = StandaloneDatabaseProvider(context)
 
@@ -85,12 +84,6 @@ class MediaPlayer(private val context : Context) {
         return currentPlayer.duration
     }
 
-    fun play() {
-        currentPlayer.play()
-    }
-    fun pause() {
-        currentPlayer.pause()
-    }
     fun next() {
         currentPlayer.seekToNextMediaItem()
     }

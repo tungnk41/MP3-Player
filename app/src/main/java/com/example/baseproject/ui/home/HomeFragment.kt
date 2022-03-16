@@ -16,6 +16,7 @@ import com.example.baseproject.ui.bottomController.BottomControllerFragment
 import com.example.core.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
+import timber.log.Timber.d
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -62,5 +63,4 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
         val navController = navHostFragment.navController
         binding.bottomNav.setupWithNavController(navController)
     }
-    
 }

@@ -108,12 +108,6 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
                     Log.d(TAG, "onChange: " + uri)
                 }
             })
-
-//        serviceScope.launch {
-//            while (true){
-//                delay(1000)
-//                Log.d(TAG, "onCreate: " + currentPlayer.getDuration())
-//            }
     }
 
 
@@ -179,7 +173,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
         val mediaIdExtra = MediaIdExtra.getDataFromString(parentId)
         val parentId = mediaIdExtra.id
         val parentMediaType = mediaIdExtra.mediaType //MediaType.TYPE_SONG,MediaType.TYPE_ALBUM ...
-        val parentDataType = mediaIdExtra.dataSource //DataSource.LOCAL or REMOTE
+        val parentDataSource = mediaIdExtra.dataSource //DataSource.LOCAL or REMOTE
 
         Log.d(TAG, "onLoadChildren: Service")
         //allow calling result.sendResult from another thread
@@ -191,44 +185,44 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
                 } else {
                     when (parentMediaType) {
                         MediaType.TYPE_ALL_SONGS -> {
-                            val listSong = songRepository.findAll(parentDataType)
-                            mediaItems = listSong.map { it.toBrowserMediaItem(MediaType.TYPE_SONG,parentDataType) }
+                            val listSong = songRepository.findAll(parentDataSource)
+                            mediaItems = listSong.map { it.toBrowserMediaItem(MediaType.TYPE_SONG,parentDataSource) }
                             currentFocusListSong = listSong
                             isNeedToApplyNewListSong = true
                         }
                         MediaType.TYPE_ALL_ALBUMS -> {
-                            mediaItems = albumRepository.findAll(parentDataType).map { it.toBrowserMediaItem(MediaType.TYPE_ALBUM,parentDataType) }
+                            mediaItems = albumRepository.findAll(parentDataSource).map { it.toBrowserMediaItem(MediaType.TYPE_ALBUM,parentDataSource) }
                         }
                         MediaType.TYPE_ALL_ARTISTS -> {
-                            mediaItems = artistRepository.findAll(parentDataType).map {it.toBrowserMediaItem(MediaType.TYPE_ARTIST,parentDataType)}
+                            mediaItems = artistRepository.findAll(parentDataSource).map {it.toBrowserMediaItem(MediaType.TYPE_ARTIST,parentDataSource)}
                         }
                         MediaType.TYPE_ALL_GENRES -> {
-                            mediaItems = genreRepository.findAll(parentDataType).map {it.toBrowserMediaItem(MediaType.TYPE_GENRE,parentDataType)}
+                            mediaItems = genreRepository.findAll(parentDataSource).map {it.toBrowserMediaItem(MediaType.TYPE_GENRE,parentDataSource)}
                         }
                         MediaType.TYPE_ALL_PLAYLISTS -> {
-                            mediaItems = playlistRepository.findAll(parentDataType,userId).map { it.toBrowserMediaItem(MediaType.TYPE_PLAYLIST,parentDataType) }
+                            mediaItems = playlistRepository.findAll(parentDataSource,userId).map { it.toBrowserMediaItem(MediaType.TYPE_PLAYLIST,parentDataSource) }
                         }
                         MediaType.TYPE_ALBUM -> {
-                            val listSong = songRepository.findAllByAlbumId(parentId ?: -1, parentDataType)
-                            mediaItems = listSong.map { it.toBrowserMediaItem(MediaType.TYPE_SONG,parentDataType) }
+                            val listSong = songRepository.findAllByAlbumId(parentId ?: -1, parentDataSource)
+                            mediaItems = listSong.map { it.toBrowserMediaItem(MediaType.TYPE_SONG,parentDataSource) }
                             currentFocusListSong = listSong
                             isNeedToApplyNewListSong = true
                         }
                         MediaType.TYPE_ARTIST -> {
-                            val listSong = songRepository.findAllByArtistId(parentId ?: -1, parentDataType)
-                            mediaItems = listSong.map { it.toBrowserMediaItem(MediaType.TYPE_SONG,parentDataType) }
+                            val listSong = songRepository.findAllByArtistId(parentId ?: -1, parentDataSource)
+                            mediaItems = listSong.map { it.toBrowserMediaItem(MediaType.TYPE_SONG,parentDataSource) }
                             currentFocusListSong = listSong
                             isNeedToApplyNewListSong = true
                         }
                         MediaType.TYPE_GENRE -> {
-                            val listSong = songRepository.findAllByGenreId(parentId ?: -1, parentDataType)
-                            mediaItems = listSong.map { it.toBrowserMediaItem(MediaType.TYPE_SONG,parentDataType) }
+                            val listSong = songRepository.findAllByGenreId(parentId ?: -1, parentDataSource)
+                            mediaItems = listSong.map { it.toBrowserMediaItem(MediaType.TYPE_SONG,parentDataSource) }
                             currentFocusListSong = listSong
                             isNeedToApplyNewListSong = true
                         }
                         MediaType.TYPE_PLAYLIST -> {
-                            val listSong = songRepository.findAllByPlaylistId(parentId ?: -1, parentDataType)
-                            mediaItems = listSong.map { it.toBrowserMediaItem(MediaType.TYPE_SONG,parentDataType) }
+                            val listSong = songRepository.findAllByPlaylistId(parentId ?: -1, parentDataSource)
+                            mediaItems = listSong.map { it.toBrowserMediaItem(MediaType.TYPE_SONG,parentDataSource) }
                             currentFocusListSong = listSong
                             isNeedToApplyNewListSong = true
                         }
@@ -386,6 +380,5 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
                 }
             }
         }
-
     }
 }

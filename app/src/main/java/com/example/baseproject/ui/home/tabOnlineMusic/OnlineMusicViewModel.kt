@@ -7,66 +7,96 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.baseproject.model.MediaItemUI
+import com.example.baseproject.model.MediaOnlineItem
 import com.example.core.base.BaseViewModel
 import com.example.mediaservice.MediaServiceConnection
+import com.example.mediaservice.extensions.toBrowserMediaItem
+import com.example.mediaservice.repository.AlbumRepository.AlbumRepository
+import com.example.mediaservice.repository.ArtistRepository.ArtistRepository
+import com.example.mediaservice.repository.GenreRepository.GenreRepository
+import com.example.mediaservice.repository.SongRepository.SongRepository
 import com.example.mediaservice.repository.models.MediaIdExtra
 import com.example.mediaservice.utils.DataSource
 import com.example.mediaservice.utils.MediaType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import timber.log.Timber.d
 import javax.inject.Inject
 
 @HiltViewModel
-class OnlineMusicViewModel @Inject constructor(private val mediaServiceConnection: MediaServiceConnection) : BaseViewModel() {
+class OnlineMusicViewModel @Inject constructor(
+    private val mediaServiceConnection: MediaServiceConnection,
+    private val songRepository: SongRepository,
+    private val albumRepository: AlbumRepository,
+    private val artistRepository: ArtistRepository,
+    private val genreRepository: GenreRepository
+    ) : BaseViewModel() {
 
     private var currentMediaIdExtra: MediaIdExtra? = null
 
-    private val _allSongsCollapse = MutableLiveData<List<MediaItemUI>>(emptyList())
-    val allSongsCollapse : LiveData<List<MediaItemUI>> = _allSongsCollapse
+    private val _listMediaOnlineSection = MutableLiveData<List<MediaOnlineItem>>(emptyList())
+    val listMediaOnlineSection : LiveData<List<MediaOnlineItem>> = _listMediaOnlineSection
 
-    private val subscriptionCallback = object: MediaBrowserCompat.SubscriptionCallback(){
-        override fun onChildrenLoaded(parentId: String, children: MutableList<MediaBrowserCompat.MediaItem>) {
-            viewModelScope.launch(Dispatchers.Default) {
-                val listMediaItemExtra = children.take(5).map {
-                    val mediaIdExtra = MediaIdExtra.getDataFromString(it.mediaId ?: "")
-                    val id: Long= mediaIdExtra.id ?: -1
-                    val title: String = it.description.title.toString()
-                    val subTitle: String = it.description.subtitle.toString()
-                    val iconUri: Uri = it.description.iconUri ?: Uri.EMPTY
-                    val isBrowsable: Boolean = it.flags.equals(MediaBrowserCompat.MediaItem.FLAG_BROWSABLE)
-                    val mediaType = mediaIdExtra.mediaType ?: -1
-                    val dataSource = mediaIdExtra.dataSource
-                    MediaItemUI(mediaIdExtra = mediaIdExtra,id = id, title = title, subTitle = subTitle , iconUri = iconUri, isBrowsable = isBrowsable, dataSource = dataSource, mediaType = mediaType)
-                }
-                _allSongsCollapse.postValue(listMediaItemExtra)
-                isLoading.postValue(false)
+    init {
+        startLoadingData()
+    }
+
+    fun startLoadingData() {
+        viewModelScope.launch(Dispatchers.IO) {
+            isLoading.postValue(true)
+            val listMediaItemUISong = async {
+                songRepository
+                    .findAll(dataSource = DataSource.REMOTE)
+                    .take(5)
+                    .map { mapToMediaItemUI( it.toBrowserMediaItem(mediaType = MediaType.TYPE_SONG, dataSource = DataSource.REMOTE) ) }
             }
-        }
-        override fun onError(parentId: String) {
-            super.onError(parentId)
+            val listMediaItemUIAlbum = async {
+                albumRepository
+                    .findAll(dataSource = DataSource.REMOTE)
+                    .take(5)
+                    .map { mapToMediaItemUI( it.toBrowserMediaItem(mediaType = MediaType.TYPE_ALBUM, dataSource = DataSource.REMOTE) ) }
+            }
+            val listMediaItemUIArtist = async {
+                artistRepository
+                    .findAll(dataSource = DataSource.REMOTE)
+                    .take(5)
+                    .map { mapToMediaItemUI( it.toBrowserMediaItem(mediaType = MediaType.TYPE_ARTIST, dataSource = DataSource.REMOTE) ) }
+            }
+            val listMediaItemUIGenre = async {
+                genreRepository
+                    .findAll(dataSource = DataSource.REMOTE)
+                    .take(5)
+                    .map { mapToMediaItemUI( it.toBrowserMediaItem(mediaType = MediaType.TYPE_GENRE, dataSource = DataSource.REMOTE) ) }
+            }
+            awaitAll(listMediaItemUISong,listMediaItemUIAlbum,listMediaItemUIArtist,listMediaItemUIGenre)
+            _listMediaOnlineSection.postValue(
+                listOf(
+                    MediaOnlineItem(title = "Songs", listChild = listMediaItemUISong.await()),
+                    MediaOnlineItem(title = "Albums", listChild = listMediaItemUIAlbum.await()),
+                    MediaOnlineItem(title = "Artists", listChild = listMediaItemUIArtist.await()),
+                    MediaOnlineItem(title = "Genres", listChild = listMediaItemUIGenre.await()),
+                )
+            )
             isLoading.postValue(false)
         }
     }
 
-    init {
-        startLoadingData(MediaIdExtra(mediaType = MediaType.TYPE_ALL_SONGS, dataSource = DataSource.REMOTE))
-    }
-
-    fun getCurrentMediaIdExtra(position : Int): Parcelable?{
-        return allSongsCollapse.value?.get(position)?.mediaIdExtra
-    }
-    fun startLoadingData(mediaIdExtra: MediaIdExtra) {
-        if(currentMediaIdExtra != mediaIdExtra) {
-            currentMediaIdExtra = mediaIdExtra
-            isLoading.postValue(true)
-            mediaServiceConnection.subscribe(currentMediaIdExtra.toString(),subscriptionCallback)
-        }
+    fun mapToMediaItemUI(browserMediaItem: MediaBrowserCompat.MediaItem) : MediaItemUI{
+        val mediaIdExtra = MediaIdExtra.getDataFromString(browserMediaItem.mediaId ?: "")
+        val id: Long= mediaIdExtra.id ?: -1
+        val title: String = browserMediaItem.description.title.toString()
+        val subTitle: String = browserMediaItem.description.subtitle.toString()
+        val iconUri: Uri = browserMediaItem.description.iconUri ?: Uri.EMPTY
+        val isBrowsable: Boolean = browserMediaItem.flags.equals(MediaBrowserCompat.MediaItem.FLAG_BROWSABLE)
+        val mediaType = mediaIdExtra.mediaType ?: -1
+        val dataSource = mediaIdExtra.dataSource
+        return MediaItemUI(mediaIdExtra = mediaIdExtra,id = id, title = title, subTitle = subTitle , iconUri = iconUri, isBrowsable = isBrowsable, dataSource = dataSource, mediaType = mediaType)
     }
 
     override fun onCleared() {
         super.onCleared()
-        mediaServiceConnection.unsubscribe(currentMediaIdExtra.toString(),subscriptionCallback)
     }
 }

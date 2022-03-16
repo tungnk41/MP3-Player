@@ -60,5 +60,4 @@ class MediaItemHorizontalDiffUtil: DiffUtil.ItemCallback<MediaItemUI>() {
     override fun areContentsTheSame(oldItem: MediaItemUI, newItem: MediaItemUI): Boolean {
         return oldItem.iconUri == newItem.iconUri && oldItem.title == newItem.title
     }
-
 }

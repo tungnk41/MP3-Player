@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/tabOnline"
+    app:popUpTo="@id/tabOnlineMusicFragment"
     app:startDestination="@id/tabOnlineMusicFragment">
 
     <fragment
