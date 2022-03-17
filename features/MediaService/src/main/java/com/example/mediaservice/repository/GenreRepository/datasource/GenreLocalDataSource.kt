@@ -8,10 +8,10 @@ import com.example.mediaservice.repository.GenreRepository.GenreDataSource
 import com.example.mediaservice.repository.models.Album
 import com.example.mediaservice.repository.models.Genre
 import dagger.hilt.android.qualifiers.ApplicationContext
+import timber.log.Timber.d
 import javax.inject.Inject
 
-class GenreLocalDataSource @Inject constructor(@ApplicationContext val context: Context) :
-    GenreDataSource {
+class GenreLocalDataSource @Inject constructor(@ApplicationContext val context: Context) : GenreDataSource {
     override suspend fun findAll(): List<Genre> {
         val listGenre = mutableListOf<Genre>()
 
@@ -24,8 +24,7 @@ class GenreLocalDataSource @Inject constructor(@ApplicationContext val context: 
             MediaStore.Audio.Genres.NAME,
         )
         //Condition
-        val cursor: Cursor? = contentResolver.query(contentUri, projection, null, null, null)
-
+        val cursor: Cursor? = contentResolver.query(contentUri, projection, null, null, MediaStore.Audio.Genres.DEFAULT_SORT_ORDER)
         cursor?.let {
             if (cursor.moveToFirst()) {
                 do {
@@ -33,7 +32,9 @@ class GenreLocalDataSource @Inject constructor(@ApplicationContext val context: 
                     val name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Genres.NAME))
                     if(!setIdGenre.contains(id)) {
                         setIdGenre.add(id)
-                        listGenre.add(Genre(id,name))
+                        if (getSongCountForGenre(id) > 0){
+                            listGenre.add(Genre(id,name))
+                        }
                     }
                 } while (cursor.moveToNext())
             }
@@ -42,5 +43,21 @@ class GenreLocalDataSource @Inject constructor(@ApplicationContext val context: 
             }
         }
         return listGenre
+    }
+
+    private fun getSongCountForGenre(genreId: Long): Int{
+        var result = 0
+        val uri = MediaStore.Audio.Genres.Members.getContentUri("external", genreId)
+        val contentResolver: ContentResolver = context.contentResolver
+        val cursor: Cursor? = contentResolver.query(uri, null, null, null, null)
+        cursor?.let {
+            if (cursor.moveToFirst()) {
+                result = if(it.count <= 0) 0 else it.count
+            }
+            if (cursor != null) {
+                cursor.close()
+            }
+        }
+        return result
     }
 }

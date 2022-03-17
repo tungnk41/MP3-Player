@@ -14,6 +14,7 @@ import com.example.mediaservice.utils.DataSource
 import com.example.mediaservice.utils.MediaType.TYPE_ALL_SONGS
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
+import timber.log.Timber.d
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,6 +37,7 @@ class SongViewModel @Inject constructor(private val mediaServiceConnection: Medi
                         val isBrowsable: Boolean = it.flags.equals(MediaBrowserCompat.MediaItem.FLAG_BROWSABLE)
                         val mediaType = mediaIdExtra.mediaType ?: -1
                         val dataSource = mediaIdExtra.dataSource
+                        d(" title " + title)
                         MediaItemUI(mediaIdExtra = mediaIdExtra,id = id, title = title, subTitle = subTitle , iconUri = iconUri, isBrowsable = isBrowsable, dataSource = dataSource, mediaType = mediaType)
                     }
                 _mediaItems.postValue(listSongMediaItemUI)

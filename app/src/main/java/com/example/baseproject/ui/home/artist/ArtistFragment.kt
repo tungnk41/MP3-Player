@@ -30,8 +30,11 @@ class ArtistFragment : BaseFragment<FragmentArtistBinding,ArtistViewModel>(R.lay
             requireContext(),
             onClickListener = { position ->
                 Timber.d("Position $position")
-                if(position == 0){
-
+                val mediaIdExtra = viewModel.mediaItems.value?.get(position)?.mediaIdExtra
+                mediaIdExtra?.let {
+                    val bundle = Bundle()
+                    bundle.putParcelable("mediaIdExtra",it)
+                    homeNavigation.openArtistScreenToArtistDetailScreen(bundle)
                 }
             })
     }

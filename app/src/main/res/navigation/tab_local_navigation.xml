@@ -61,6 +61,15 @@
         android:name="com.example.baseproject.ui.home.album.AlbumFragment"
         android:label="Albums"
         tools:layout="@layout/fragment_album" >
+        <action
+            android:id="@+id/action_albumFragment_toAlbumDetailFragment"
+            app:destination="@id/albumDetailFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"
+            app:popUpTo="@id/albumFragment"
+            app:popUpToInclusive="false" />
     </fragment>
 
     <fragment
@@ -68,6 +77,15 @@
         android:name="com.example.baseproject.ui.home.artist.ArtistFragment"
         android:label="Artists"
         tools:layout="@layout/fragment_artist" >
+        <action
+            android:id="@+id/action_artistFragment_toArtistDetailFragment"
+            app:destination="@id/artistDetailFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"
+            app:popUpTo="@id/artistFragment"
+            app:popUpToInclusive="false" />
     </fragment>
 
     <fragment
@@ -75,6 +93,36 @@
         android:name="com.example.baseproject.ui.home.genre.GenreFragment"
         android:label="Genres"
         tools:layout="@layout/fragment_genre" >
+        <action
+            android:id="@+id/action_genreFragment_toGenreDetailFragment"
+            app:destination="@id/genreDetailFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"
+            app:popUpTo="@id/genreFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/albumDetailFragment"
+        android:name="com.example.baseproject.ui.home.albumDetail.AlbumDetailFragment"
+        android:label="Album Detail"
+        tools:layout="@layout/fragment_album_detail" >
+    </fragment>
+
+    <fragment
+        android:id="@+id/artistDetailFragment"
+        android:name="com.example.baseproject.ui.home.artistDetail.ArtistDetailFragment"
+        android:label="Artist Detail"
+        tools:layout="@layout/fragment_artist_detail" >
+    </fragment>
+
+    <fragment
+        android:id="@+id/genreDetailFragment"
+        android:name="com.example.baseproject.ui.home.GenreDetail.GenreDetailFragment"
+        android:label="Genre Detail"
+        tools:layout="@layout/fragment_genre_detail" >
     </fragment>
 
 </navigation>

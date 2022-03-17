@@ -39,4 +39,16 @@ class HomeNavigatorImpl @Inject constructor() : BaseNavigatorImpl(), HomeNavigat
         openScreen(R.id.action_onlineMusicFragment_toGenreFragment, bundle)
     }
 
+    override fun openAlbumScreenToAlbumDetailScreen(bundle: Bundle?) {
+        openScreen(R.id.action_albumFragment_toAlbumDetailFragment, bundle)
+    }
+
+    override fun openArtistScreenToArtistDetailScreen(bundle: Bundle?) {
+        openScreen(R.id.action_artistFragment_toArtistDetailFragment, bundle)
+    }
+
+    override fun openGenreScreenToGenreDetailScreen(bundle: Bundle?) {
+        openScreen(R.id.action_genreFragment_toGenreDetailFragment, bundle)
+    }
+
 }

@@ -12,6 +12,7 @@ import com.example.mediaservice.repository.models.Song
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import timber.log.Timber.d
 import javax.inject.Inject
 
 class SongLocalDataSource @Inject constructor(@ApplicationContext val context: Context) :
@@ -48,8 +49,8 @@ class SongLocalDataSource @Inject constructor(@ApplicationContext val context: C
             MediaStore.Audio.Media.DURATION,
 
             )
-        val selection = "${MediaStore.Audio.Media.IS_MUSIC}=1"
-        val cursor: Cursor? = contentResolver.query(MediaStore.Audio.Genres.Members.getContentUri("external",albumId), projection, selection, null, null)
+        val selection = "${MediaStore.Audio.Media.IS_MUSIC}=1 AND ${MediaStore.Audio.Media.ALBUM_ID}=$albumId"
+        val cursor: Cursor? = contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, selection, null, null)
 
         findAllByCursor(cursor)
     }
@@ -65,17 +66,16 @@ class SongLocalDataSource @Inject constructor(@ApplicationContext val context: C
             MediaStore.Audio.Media.ARTIST,
             MediaStore.Audio.Media.ARTIST_ID,
             MediaStore.Audio.Media.DURATION,
-
             )
-        val selection = "${MediaStore.Audio.Media.IS_MUSIC}=1"
-        val cursor: Cursor? = contentResolver.query(MediaStore.Audio.Genres.Members.getContentUri("external",artistId), projection, selection, null, null)
+        val selection = "${MediaStore.Audio.Media.IS_MUSIC}=1 AND ${MediaStore.Audio.Media.ARTIST_ID}=$artistId"
+        val cursor: Cursor? = contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, selection, null, null)
 
         findAllByCursor(cursor)
     }
 
     override suspend fun findAllByGenreId(genreId: Long): List<Song> = withContext(Dispatchers.IO){
         val contentResolver: ContentResolver = context.contentResolver
-
+        d("genreId " + genreId)
         val projection = arrayOf(
             MediaStore.Audio.Media._ID,
             MediaStore.Audio.Media.TITLE,
@@ -84,10 +84,9 @@ class SongLocalDataSource @Inject constructor(@ApplicationContext val context: C
             MediaStore.Audio.Media.ARTIST,
             MediaStore.Audio.Media.ARTIST_ID,
             MediaStore.Audio.Media.DURATION,
-
-            )
+        )
         val selection = "${MediaStore.Audio.Media.IS_MUSIC}=1"
-        val cursor: Cursor? = contentResolver.query(MediaStore.Audio.Genres.Members.getContentUri("external",genreId), projection, selection, null, null)
+        val cursor: Cursor? = contentResolver.query(MediaStore.Audio.Genres.Members.getContentUri("external",genreId), projection, selection, null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER)
 
         findAllByCursor(cursor)
     }

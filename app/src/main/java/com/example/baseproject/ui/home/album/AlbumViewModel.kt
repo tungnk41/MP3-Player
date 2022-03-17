@@ -45,10 +45,6 @@ class AlbumViewModel@Inject constructor(private val mediaServiceConnection: Medi
         }
     }
 
-    init {
-        d("AlbumViewModel init")
-    }
-
     fun startLoadingData(mediaIdExtra: MediaIdExtra) {
         if(currentMediaIdExtra.hashCode() != mediaIdExtra.hashCode()) {
             currentMediaIdExtra = mediaIdExtra

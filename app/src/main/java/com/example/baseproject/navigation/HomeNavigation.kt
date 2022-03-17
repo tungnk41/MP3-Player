@@ -20,4 +20,10 @@ interface HomeNavigation : BaseNavigator {
     fun openOnlineMusicScreenToArtistScreen(bundle: Bundle? = null)
 
     fun openOnlineMusicScreenToGenreScreen(bundle: Bundle? = null)
+
+    fun openAlbumScreenToAlbumDetailScreen(bundle: Bundle? = null)
+
+    fun openArtistScreenToArtistDetailScreen(bundle: Bundle? = null)
+
+    fun openGenreScreenToGenreDetailScreen(bundle: Bundle? = null)
 }

@@ -19,7 +19,6 @@ import javax.inject.Inject
 class GenreViewModel @Inject constructor(private val mediaServiceConnection: MediaServiceConnection) : BaseViewModel() {
 
     private var currentMediaIdExtra: MediaIdExtra? = null
-    private var isSubscribed = false
     private val _mediaItems = MutableLiveData<List<MediaItemUI>>(emptyList())
     val mediaItems : LiveData<List<MediaItemUI>> = _mediaItems
 

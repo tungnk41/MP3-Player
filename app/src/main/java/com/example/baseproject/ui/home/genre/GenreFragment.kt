@@ -8,6 +8,7 @@ import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentGenreBinding
 import com.example.baseproject.navigation.HomeNavigation
 import com.example.baseproject.ui.adapter.MediaItemHorizontalAdapter
+import com.example.baseproject.ui.adapter.MediaItemVerticalAdapter
 import com.example.core.base.BaseFragment
 import com.example.mediaservice.repository.models.MediaIdExtra
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,8 +31,11 @@ class GenreFragment : BaseFragment<FragmentGenreBinding, GenreViewModel>(R.layou
             requireContext(),
             onClickListener = { position ->
                 Timber.d("Position $position")
-                if(position == 0){
-
+                val mediaIdExtra = viewModel.mediaItems.value?.get(position)?.mediaIdExtra
+                mediaIdExtra?.let {
+                    val bundle = Bundle()
+                    bundle.putParcelable("mediaIdExtra",it)
+                    homeNavigation.openGenreScreenToGenreDetailScreen(bundle)
                 }
             })
     }
