@@ -1,8 +1,7 @@
-package com.example.baseproject.ui.home.album
+package com.example.baseproject.ui.home.genre
 
 import android.net.Uri
 import android.support.v4.media.MediaBrowserCompat
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -10,18 +9,17 @@ import com.example.baseproject.model.MediaItemUI
 import com.example.core.base.BaseViewModel
 import com.example.mediaservice.MediaServiceConnection
 import com.example.mediaservice.repository.models.MediaIdExtra
-import com.example.mediaservice.utils.DataSource
-import com.example.mediaservice.utils.MediaType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber.d
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class AlbumViewModel@Inject constructor(private val mediaServiceConnection: MediaServiceConnection) : BaseViewModel() {
-    private var currentMediaIdExtra: MediaIdExtra? = null
+class GenreViewModel @Inject constructor(private val mediaServiceConnection: MediaServiceConnection) : BaseViewModel() {
 
+    private var currentMediaIdExtra: MediaIdExtra? = null
+    private var isSubscribed = false
     private val _mediaItems = MutableLiveData<List<MediaItemUI>>(emptyList())
     val mediaItems : LiveData<List<MediaItemUI>> = _mediaItems
 
@@ -37,16 +35,13 @@ class AlbumViewModel@Inject constructor(private val mediaServiceConnection: Medi
                     val isBrowsable: Boolean = it.flags.equals(MediaBrowserCompat.MediaItem.FLAG_BROWSABLE)
                     val mediaType = mediaIdExtra.mediaType ?: -1
                     val dataSource = mediaIdExtra.dataSource
+                    Timber.d("onChildrenLoaded " + id + " ," + title)
                     MediaItemUI(mediaIdExtra = mediaIdExtra,id = id, title = title, subTitle = subTitle , iconUri = iconUri, isBrowsable = isBrowsable, dataSource = dataSource, mediaType = mediaType)
                 }
                 _mediaItems.postValue(listMediaItemExtra)
                 isLoading.postValue(false)
             }
         }
-    }
-
-    init {
-        d("AlbumViewModel init")
     }
 
     fun startLoadingData(mediaIdExtra: MediaIdExtra) {

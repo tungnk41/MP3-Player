@@ -29,6 +29,24 @@
             app:popExitAnim="@anim/slide_out_left"
             app:popUpTo="@id/tabLocalMusicFragment"
             app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_localMusicFragment_toArtistFragment"
+            app:destination="@id/artistFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"
+            app:popUpTo="@id/tabLocalMusicFragment"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_localMusicFragment_toGenreFragment"
+            app:destination="@id/genreFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"
+            app:popUpTo="@id/tabLocalMusicFragment"
+            app:popUpToInclusive="false" />
     </fragment>
 
     <fragment
@@ -43,6 +61,20 @@
         android:name="com.example.baseproject.ui.home.album.AlbumFragment"
         android:label="Albums"
         tools:layout="@layout/fragment_album" >
+    </fragment>
+
+    <fragment
+        android:id="@+id/artistFragment"
+        android:name="com.example.baseproject.ui.home.artist.ArtistFragment"
+        android:label="Artists"
+        tools:layout="@layout/fragment_artist" >
+    </fragment>
+
+    <fragment
+        android:id="@+id/genreFragment"
+        android:name="com.example.baseproject.ui.home.genre.GenreFragment"
+        android:label="Genres"
+        tools:layout="@layout/fragment_genre" >
     </fragment>
 
 </navigation>

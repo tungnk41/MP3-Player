@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import android.provider.MediaStore
 import com.example.mediaservice.repository.GenreRepository.GenreDataSource
+import com.example.mediaservice.repository.models.Album
 import com.example.mediaservice.repository.models.Genre
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -16,6 +17,7 @@ class GenreLocalDataSource @Inject constructor(@ApplicationContext val context: 
 
         val contentResolver: ContentResolver = context.contentResolver
         val contentUri = MediaStore.Audio.Genres.EXTERNAL_CONTENT_URI
+        val setIdGenre = hashSetOf<Long>()
         //Column Query
         val projection = arrayOf(
             MediaStore.Audio.Genres._ID,
@@ -29,7 +31,10 @@ class GenreLocalDataSource @Inject constructor(@ApplicationContext val context: 
                 do {
                     val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Genres._ID))
                     val name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Genres.NAME))
-                    listGenre.add(Genre(id,name))
+                    if(!setIdGenre.contains(id)) {
+                        setIdGenre.add(id)
+                        listGenre.add(Genre(id,name))
+                    }
                 } while (cursor.moveToNext())
             }
             if (cursor != null) {

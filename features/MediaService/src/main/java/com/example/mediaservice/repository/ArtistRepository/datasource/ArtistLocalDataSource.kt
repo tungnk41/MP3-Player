@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import android.provider.MediaStore
 import com.example.mediaservice.repository.ArtistRepository.ArtistDataSource
+import com.example.mediaservice.repository.models.Album
 import com.example.mediaservice.repository.models.Artist
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -15,7 +16,7 @@ class ArtistLocalDataSource @Inject constructor(@ApplicationContext val context:
         val listArtist = mutableListOf<Artist>()
         val contentResolver: ContentResolver = context.contentResolver
         val contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-
+        val setIdArtist = hashSetOf<Long>()
         //Column Query
         val projection = arrayOf(
             MediaStore.Audio.Media.ARTIST_ID,
@@ -29,7 +30,10 @@ class ArtistLocalDataSource @Inject constructor(@ApplicationContext val context:
                 do {
                     val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST_ID))
                     val name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST))
-                    listArtist.add(Artist(id,name))
+                    if(!setIdArtist.contains(id)) {
+                        setIdArtist.add(id)
+                        listArtist.add(Artist(id,name))
+                    }
                 } while (cursor.moveToNext())
             }
             if (cursor != null) {

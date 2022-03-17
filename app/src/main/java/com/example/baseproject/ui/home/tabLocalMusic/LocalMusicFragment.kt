@@ -18,6 +18,13 @@ import javax.inject.Inject
 class LocalMusicFragment :
     BaseFragment<FragmentLocalMusicBinding, LocalMusicViewModel>(R.layout.fragment_local_music) {
 
+    companion object {
+        const val SONGS = 0
+        const val ALBUMS = 1
+        const val ARTISTS = 2
+        const val GENRES = 3
+    }
+
     @Inject
     lateinit var homeNavigation: HomeNavigation
 
@@ -29,15 +36,25 @@ class LocalMusicFragment :
             requireContext(),
             onClickListener = { position ->
                 d("Position $position")
-                if(position == 0){
+                if(position == SONGS){
                     val bundle = Bundle()
                     bundle.putParcelable("mediaIdExtra",viewModel.getCurrentMediaIdExtra(position))
                     homeNavigation.openLocalMusicScreenToSongScreen(bundle)
                 }
-                if(position == 1){
+                if(position == ALBUMS){
                     val bundle = Bundle()
                     bundle.putParcelable("mediaIdExtra",viewModel.getCurrentMediaIdExtra(position))
                     homeNavigation.openLocalMusicScreenToAlbumScreen(bundle)
+                }
+                if(position == ARTISTS){
+                    val bundle = Bundle()
+                    bundle.putParcelable("mediaIdExtra",viewModel.getCurrentMediaIdExtra(position))
+                    homeNavigation.openLocalMusicScreenToArtistScreen(bundle)
+                }
+                if(position == GENRES){
+                    val bundle = Bundle()
+                    bundle.putParcelable("mediaIdExtra",viewModel.getCurrentMediaIdExtra(position))
+                    homeNavigation.openLocalMusicScreenToGenreScreen(bundle)
                 }
             })
     }

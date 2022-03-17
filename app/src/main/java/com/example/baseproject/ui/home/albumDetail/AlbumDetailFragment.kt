@@ -15,6 +15,5 @@ class AlbumDetailFragment: BaseFragment<FragmentAlbumDetailBinding,AlbumDetailVi
     lateinit var homeNavigation: HomeNavigation
 
     private val viewModel by viewModels<AlbumDetailViewModel>()
-
     override fun getVM(): AlbumDetailViewModel = viewModel
 }

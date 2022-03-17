@@ -49,9 +49,9 @@ class SongViewModel @Inject constructor(private val mediaServiceConnection: Medi
     }
 
     fun startLoadingData(mediaIdExtra : MediaIdExtra) {
-        if(currentMediaIdExtra != mediaIdExtra) {
-            isLoading.value = true
+        if(currentMediaIdExtra.hashCode() != mediaIdExtra.hashCode()) {
             currentMediaIdExtra = mediaIdExtra
+            isLoading.value = true
             mediaServiceConnection.subscribe(currentMediaIdExtra.toString(),subscriptionCallback)
         }
     }

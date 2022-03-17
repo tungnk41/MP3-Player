@@ -1,29 +1,27 @@
-package com.example.baseproject.ui.home.album
+package com.example.baseproject.ui.home.artist
 
 import android.os.Bundle
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.baseproject.R
-import com.example.baseproject.databinding.FragmentAlbumBinding
+import com.example.baseproject.databinding.FragmentArtistBinding
 import com.example.baseproject.navigation.HomeNavigation
 import com.example.baseproject.ui.adapter.MediaItemHorizontalAdapter
 import com.example.core.base.BaseFragment
 import com.example.mediaservice.repository.models.MediaIdExtra
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
-import timber.log.Timber.d
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AlbumFragment: BaseFragment<FragmentAlbumBinding,AlbumViewModel>(R.layout.fragment_album) {
+class ArtistFragment : BaseFragment<FragmentArtistBinding,ArtistViewModel>(R.layout.fragment_artist) {
 
     @Inject
     lateinit var homeNavigation: HomeNavigation
 
-    private val viewModel: AlbumViewModel by viewModels()
-    override fun getVM(): AlbumViewModel = viewModel
+    private val viewModel by viewModels<ArtistViewModel>()
+    override fun getVM(): ArtistViewModel = viewModel
 
     private var parentMediaIdExtra: MediaIdExtra? = null
 
@@ -53,12 +51,12 @@ class AlbumFragment: BaseFragment<FragmentAlbumBinding,AlbumViewModel>(R.layout.
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
 
-        binding.rvListAlbum.setHasFixedSize(false)
-        if(!mAdapter.hasObservers()){
-            mAdapter.setHasStableIds(true)
-        }
-        (binding.rvListAlbum.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
-        binding.rvListAlbum.adapter = mAdapter
+//        binding.rvListArtist.setHasFixedSize(false)
+//        if(!mAdapter.hasObservers()){
+//            mAdapter.setHasStableIds(true)
+//        }
+        (binding.rvListArtist.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+        binding.rvListArtist.adapter = mAdapter
 
     }
 
@@ -68,9 +66,5 @@ class AlbumFragment: BaseFragment<FragmentAlbumBinding,AlbumViewModel>(R.layout.
         viewModel.mediaItems.observe(this, Observer {
             mAdapter.submitList(it)
         })
-    }
-
-    override fun setOnClick() {
-        super.setOnClick()
     }
 }

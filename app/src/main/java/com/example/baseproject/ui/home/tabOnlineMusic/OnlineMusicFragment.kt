@@ -35,7 +35,6 @@ class OnlineMusicFragment :
         const val ALBUMS = 1
         const val ARTISTS = 2
         const val GENRES = 3
-
     }
 
     @Inject
@@ -51,7 +50,25 @@ class OnlineMusicFragment :
                 if(parentPos == SONGS) {
                     val bundle = Bundle()
                     bundle.putParcelable("mediaIdExtra",MediaIdExtra(mediaType = com.example.mediaservice.utils.MediaType.TYPE_ALL_SONGS, dataSource = DataSource.REMOTE))
-                    homeNavigation.openOnlineMusicScreenToSongcreen(bundle)
+                    homeNavigation.openOnlineMusicScreenToSongScreen(bundle)
+                }
+                else if(parentPos == ALBUMS) {
+                    val bundle = Bundle()
+                    bundle.putParcelable("mediaIdExtra",MediaIdExtra(mediaType = com.example.mediaservice.utils.MediaType.TYPE_ALL_ALBUMS, dataSource = DataSource.REMOTE))
+                    homeNavigation.openOnlineMusicScreenToAlbumScreen(bundle)
+                }
+                else if(parentPos == ARTISTS) {
+                    val bundle = Bundle()
+                    bundle.putParcelable("mediaIdExtra",MediaIdExtra(mediaType = com.example.mediaservice.utils.MediaType.TYPE_ALL_ARTISTS, dataSource = DataSource.REMOTE))
+                    homeNavigation.openOnlineMusicScreenToArtistScreen(bundle)
+                }
+                else if(parentPos == GENRES) {
+                    val bundle = Bundle()
+                    bundle.putParcelable("mediaIdExtra",MediaIdExtra(mediaType = com.example.mediaservice.utils.MediaType.TYPE_ALL_GENRES, dataSource = DataSource.REMOTE))
+                    homeNavigation.openOnlineMusicScreenToGenreScreen(bundle)
+                }
+                else {
+                    d("Invalid position $parentPos")
                 }
             },
             onItemClickListener = { parentPos, childPos ->

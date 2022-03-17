@@ -9,5 +9,15 @@ interface HomeNavigation : BaseNavigator {
 
     fun openLocalMusicScreenToAlbumScreen(bundle: Bundle? = null)
 
-    fun openOnlineMusicScreenToSongcreen(bundle: Bundle? = null)
+    fun openLocalMusicScreenToArtistScreen(bundle: Bundle? = null)
+
+    fun openLocalMusicScreenToGenreScreen(bundle: Bundle? = null)
+
+    fun openOnlineMusicScreenToSongScreen(bundle: Bundle? = null)
+
+    fun openOnlineMusicScreenToAlbumScreen(bundle: Bundle? = null)
+
+    fun openOnlineMusicScreenToArtistScreen(bundle: Bundle? = null)
+
+    fun openOnlineMusicScreenToGenreScreen(bundle: Bundle? = null)
 }

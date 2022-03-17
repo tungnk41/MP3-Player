@@ -24,7 +24,7 @@
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
             android:text="Title"
-            android:maxLines="2"
+            android:maxLines="1"
             android:ellipsize="end"
             android:textSize="@dimen/text_size_14"/>
 

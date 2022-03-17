@@ -15,8 +15,28 @@ class HomeNavigatorImpl @Inject constructor() : BaseNavigatorImpl(), HomeNavigat
         openScreen(R.id.action_localMusicFragment_toAlbumFragment, bundle)
     }
 
-    override fun openOnlineMusicScreenToSongcreen(bundle: Bundle?) {
+    override fun openLocalMusicScreenToArtistScreen(bundle: Bundle?) {
+        openScreen(R.id.action_localMusicFragment_toArtistFragment, bundle)
+    }
+
+    override fun openLocalMusicScreenToGenreScreen(bundle: Bundle?) {
+        openScreen(R.id.action_localMusicFragment_toGenreFragment, bundle)
+    }
+
+    override fun openOnlineMusicScreenToSongScreen(bundle: Bundle?) {
         openScreen(R.id.action_onlineMusicFragment_toSongFragment, bundle)
+    }
+
+    override fun openOnlineMusicScreenToAlbumScreen(bundle: Bundle?) {
+        openScreen(R.id.action_onlineMusicFragment_toAlbumFragment, bundle)
+    }
+
+    override fun openOnlineMusicScreenToArtistScreen(bundle: Bundle?) {
+        openScreen(R.id.action_onlineMusicFragment_toArtistFragment, bundle)
+    }
+
+    override fun openOnlineMusicScreenToGenreScreen(bundle: Bundle?) {
+        openScreen(R.id.action_onlineMusicFragment_toGenreFragment, bundle)
     }
 
 }
