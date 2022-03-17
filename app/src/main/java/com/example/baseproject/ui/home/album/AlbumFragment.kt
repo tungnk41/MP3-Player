@@ -33,10 +33,11 @@ class AlbumFragment: BaseFragment<FragmentAlbumBinding,AlbumViewModel>(R.layout.
             onClickListener = { position ->
                 Timber.d("Position $position")
                 val mediaIdExtra = viewModel.mediaItems.value?.get(position)?.mediaIdExtra
+                val title = viewModel.mediaItems.value?.get(position)?.title
                 mediaIdExtra?.let {
                     val bundle = Bundle()
                     bundle.putParcelable("mediaIdExtra",it)
-                    bundle.putString("title",viewModel.mediaItems.value?.get(position)?.title)
+                    bundle.putString("title",title)
                     homeNavigation.openAlbumScreenToAlbumDetailScreen(bundle)
                 }
             })

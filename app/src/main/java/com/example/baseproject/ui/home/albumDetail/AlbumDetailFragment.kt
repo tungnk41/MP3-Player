@@ -1,6 +1,7 @@
 package com.example.baseproject.ui.home.albumDetail
 
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.SimpleItemAnimator
@@ -13,6 +14,7 @@ import com.example.core.base.BaseFragment
 import com.example.mediaservice.repository.models.MediaIdExtra
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
+import timber.log.Timber.d
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -25,7 +27,6 @@ class AlbumDetailFragment: BaseFragment<FragmentAlbumDetailBinding,AlbumDetailVi
     override fun getVM(): AlbumDetailViewModel = viewModel
 
     private var parentMediaIdExtra: MediaIdExtra? = null
-    private var title: String? = null
 
     private val mAdapter: MediaItemVerticalAdapter by lazy {
         MediaItemVerticalAdapter(
@@ -41,14 +42,14 @@ class AlbumDetailFragment: BaseFragment<FragmentAlbumDetailBinding,AlbumDetailVi
     override fun setArguments(args: Bundle?) {
         super.setArguments(args)
         parentMediaIdExtra = args?.getParcelable<MediaIdExtra>("mediaIdExtra")
-        title = args?.getString("title")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        d("onCreate")
+
         parentMediaIdExtra?.let {
             viewModel.startLoadingData(it)
-            homeNavigation.navController?.currentDestination?.label = title
         }
     }
 
@@ -61,11 +62,11 @@ class AlbumDetailFragment: BaseFragment<FragmentAlbumDetailBinding,AlbumDetailVi
         }
         (binding.rvListAlbumSong.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         binding.rvListAlbumSong.adapter = mAdapter
-
     }
 
     override fun bindingStateView() {
         super.bindingStateView()
+
         viewModel.mediaItems.observe(this, Observer {
             mAdapter.submitList(it)
         })

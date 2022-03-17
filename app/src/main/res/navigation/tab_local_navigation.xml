@@ -107,22 +107,31 @@
     <fragment
         android:id="@+id/albumDetailFragment"
         android:name="com.example.baseproject.ui.home.albumDetail.AlbumDetailFragment"
-        android:label="Album Detail"
+        android:label="{title}"
         tools:layout="@layout/fragment_album_detail" >
+        <argument
+            android:name="title"
+            app:argType="string"/>
     </fragment>
 
     <fragment
         android:id="@+id/artistDetailFragment"
         android:name="com.example.baseproject.ui.home.artistDetail.ArtistDetailFragment"
-        android:label="Artist Detail"
+        android:label="{title}"
         tools:layout="@layout/fragment_artist_detail" >
+        <argument
+            android:name="title"
+            app:argType="string"/>
     </fragment>
 
     <fragment
         android:id="@+id/genreDetailFragment"
         android:name="com.example.baseproject.ui.home.GenreDetail.GenreDetailFragment"
-        android:label="Genre Detail"
+        android:label="{title}"
         tools:layout="@layout/fragment_genre_detail" >
+        <argument
+            android:name="title"
+            app:argType="string"/>
     </fragment>
 
 </navigation>

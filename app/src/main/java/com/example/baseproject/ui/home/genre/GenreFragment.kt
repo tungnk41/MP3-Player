@@ -32,9 +32,11 @@ class GenreFragment : BaseFragment<FragmentGenreBinding, GenreViewModel>(R.layou
             onClickListener = { position ->
                 Timber.d("Position $position")
                 val mediaIdExtra = viewModel.mediaItems.value?.get(position)?.mediaIdExtra
+                val title = viewModel.mediaItems.value?.get(position)?.title
                 mediaIdExtra?.let {
                     val bundle = Bundle()
                     bundle.putParcelable("mediaIdExtra",it)
+                    bundle.putString("title",title)
                     homeNavigation.openGenreScreenToGenreDetailScreen(bundle)
                 }
             })
