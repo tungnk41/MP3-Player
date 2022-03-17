@@ -53,7 +53,10 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
     private lateinit var mediaNotification: MediaNotification
     private lateinit var mediaSessionConnector: MediaSessionConnector
     private val serviceJob = SupervisorJob()
-    private val serviceScope = CoroutineScope(Dispatchers.Default + serviceJob)
+    private val serviceExceptionHandler = CoroutineExceptionHandler{_,throwable ->
+        d("Service exception")
+    }
+    private val serviceScope = CoroutineScope(Dispatchers.Default + serviceJob + serviceExceptionHandler)
     private val userId : Long = -1
 
     private var cachedlocalListSong: List<MediaMetadataCompat> = listOf()
@@ -183,7 +186,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
         val parentDataSource = mediaIdExtra.dataSource //DataSource.LOCAL or REMOTE
 
         currenParentMediaIdExtra = mediaIdExtra
-
+        mediaItems = listOf()
         //allow calling result.sendResult from another thread
         result.detach()
         serviceScope.launch {

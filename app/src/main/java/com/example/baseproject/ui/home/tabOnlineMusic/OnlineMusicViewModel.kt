@@ -6,10 +6,12 @@ import android.support.v4.media.MediaBrowserCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.baseproject.model.Banner
 import com.example.baseproject.model.MediaItemUI
 import com.example.baseproject.model.MediaOnlineItem
 import com.example.core.base.BaseViewModel
 import com.example.mediaservice.MediaServiceConnection
+import com.example.mediaservice.extensions.displayIconUri
 import com.example.mediaservice.extensions.toBrowserMediaItem
 import com.example.mediaservice.repository.AlbumRepository.AlbumRepository
 import com.example.mediaservice.repository.ArtistRepository.ArtistRepository
@@ -19,10 +21,7 @@ import com.example.mediaservice.repository.models.MediaIdExtra
 import com.example.mediaservice.utils.DataSource
 import com.example.mediaservice.utils.MediaType
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import timber.log.Timber.d
 import javax.inject.Inject
 
@@ -34,30 +33,37 @@ class OnlineMusicViewModel @Inject constructor(
     private val artistRepository: ArtistRepository,
     private val genreRepository: GenreRepository
     ) : BaseViewModel() {
-
     private var currentMediaIdExtra: MediaIdExtra? = null
+    private val exceptionHandler = CoroutineExceptionHandler{_,throwable ->
+        d("OnlineMusicViewModel exception")
+        isLoading.postValue(false)
+    }
 
+    private var _listBannerData = mutableListOf<Banner>()
     private val _listMediaOnlineSection = MutableLiveData<List<MediaOnlineItem>>(emptyList())
     val listMediaOnlineSection : LiveData<List<MediaOnlineItem>> = _listMediaOnlineSection
+
+    private val _listBanner = MutableLiveData<List<Banner>>(emptyList())
+    val listBanner : LiveData<List<Banner>> = _listBanner
 
     init {
         startLoadingData()
     }
 
     fun startLoadingData() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO + exceptionHandler) {
             isLoading.postValue(true)
             val listMediaItemUISong = async {
                 songRepository
                     .findAll(dataSource = DataSource.REMOTE)
                     .take(7)
-                    .map { mapToMediaItemUI( it.toBrowserMediaItem(mediaType = MediaType.TYPE_SONG, parentMediaType = MediaType.TYPE_ALL_SONGS, dataSource = DataSource.REMOTE) ) }
+                    .map { mapToMediaItemUI( it.toBrowserMediaItem(mediaType = MediaType.TYPE_SONG, parentMediaType = MediaType.TYPE_ALL_SONGS, dataSource = DataSource.REMOTE))}
             }
             val listMediaItemUIAlbum = async {
                 albumRepository
                     .findAll(dataSource = DataSource.REMOTE)
                     .take(7)
-                    .map { mapToMediaItemUI( it.toBrowserMediaItem(mediaType = MediaType.TYPE_ALBUM,parentMediaType = MediaType.TYPE_ALL_ALBUMS, dataSource = DataSource.REMOTE) ) }
+                    .map { mapToMediaItemUI( it.toBrowserMediaItem(mediaType = MediaType.TYPE_ALBUM,parentMediaType = MediaType.TYPE_ALL_ALBUMS, dataSource = DataSource.REMOTE)).also { _listBannerData.add(Banner(it.iconUri))} }
             }
             val listMediaItemUIArtist = async {
                 artistRepository
@@ -80,6 +86,7 @@ class OnlineMusicViewModel @Inject constructor(
                     MediaOnlineItem(title = "Genres", listChild = listMediaItemUIGenre.await()),
                 )
             )
+            _listBanner.postValue(_listBannerData.toList())
             isLoading.postValue(false)
         }
     }

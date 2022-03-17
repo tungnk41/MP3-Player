@@ -102,13 +102,9 @@ class OnlineMusicFragment :
     override fun bindingStateView() {
         super.bindingStateView()
 
-        bannerAdapter.submitList(listOf(
-            Banner("https://storage.googleapis.com/uamp/The_Kyoto_Connection_-_Wake_Up/art.jpg"),
-            Banner("https://storage.googleapis.com/uamp/Kai_Engel_-_Irsens_Tale/art.jpg"),
-            Banner("https://storage.googleapis.com/automotive-media/album_art.jpg"),
-            Banner("https://storage.googleapis.com/automotive-media/album_art_2.jpg"),
-        ))
-
+        viewModel.listBanner.observe(this, Observer {
+            bannerAdapter.submitList(it)
+        })
 
         viewModel.listMediaOnlineSection.observe(this, Observer {
             mAdapter.submitList(it)

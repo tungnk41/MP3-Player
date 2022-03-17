@@ -1,3 +1,5 @@
 package com.example.baseproject.model
 
-data class Banner(val imageUrl: String)
+import android.net.Uri
+
+data class Banner(val imageUrl: Uri)
