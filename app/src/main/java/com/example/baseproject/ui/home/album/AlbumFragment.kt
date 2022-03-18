@@ -58,10 +58,10 @@ class AlbumFragment: BaseFragment<FragmentAlbumBinding,AlbumViewModel>(R.layout.
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
 
-        binding.rvListAlbum.setHasFixedSize(false)
-        if(!mAdapter.hasObservers()){
-            mAdapter.setHasStableIds(true)
-        }
+//        binding.rvListAlbum.setHasFixedSize(false)
+//        if(!mAdapter.hasObservers()){
+//            mAdapter.setHasStableIds(true)
+//        }
         (binding.rvListAlbum.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         binding.rvListAlbum.adapter = mAdapter
 

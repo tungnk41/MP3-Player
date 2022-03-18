@@ -6,6 +6,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.baseproject.R
+import com.example.baseproject.container.MainViewModel
 import com.example.baseproject.databinding.FragmentAlbumDetailBinding
 import com.example.baseproject.navigation.HomeNavigation
 import com.example.baseproject.ui.adapter.MediaItemHorizontalAdapter
@@ -32,10 +33,7 @@ class AlbumDetailFragment: BaseFragment<FragmentAlbumDetailBinding,AlbumDetailVi
         MediaItemVerticalAdapter(
             requireContext(),
             onClickListener = { position ->
-                Timber.d("Position $position")
-                if(position == 0){
-
-                }
+                viewModel.playAtIndex(position)
             })
     }
 

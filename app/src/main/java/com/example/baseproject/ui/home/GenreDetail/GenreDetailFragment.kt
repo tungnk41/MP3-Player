@@ -29,10 +29,7 @@ class GenreDetailFragment : BaseFragment<FragmentGenreDetailBinding,GenreDetailV
         MediaItemVerticalAdapter(
             requireContext(),
             onClickListener = { position ->
-                Timber.d("Position $position")
-                if(position == 0){
-
-                }
+                viewModel.playAtIndex(position)
             })
     }
 

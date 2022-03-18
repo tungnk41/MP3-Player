@@ -1,6 +1,7 @@
 package com.example.baseproject.ui.home.albumDetail
 
 import android.net.Uri
+import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -54,6 +55,12 @@ class AlbumDetailViewModel @Inject constructor(private val mediaServiceConnectio
     override fun onCleared() {
         super.onCleared()
         mediaServiceConnection.unsubscribe(currentMediaIdExtra.toString(),subscriptionCallback)
+    }
+
+    fun playAtIndex(index: Int){
+        val bundle = Bundle()
+        bundle.putInt("index", index)
+        mediaServiceConnection.transportControls.playFromMediaId(mediaItems.value?.get(index)?.mediaIdExtra.toString(), bundle)
     }
 
 }
