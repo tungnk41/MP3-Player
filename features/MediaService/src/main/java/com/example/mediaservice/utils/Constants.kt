@@ -17,6 +17,7 @@ object MediaType {
 }
 
 object DataSource {
+    const val NONE = 0
     const val LOCAL = 1
     const val REMOTE = 2
 }

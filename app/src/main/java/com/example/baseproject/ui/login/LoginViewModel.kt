@@ -15,8 +15,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.baseproject.model.MediaItemUI
 import com.example.core.base.BaseViewModel
 import com.example.mediaservice.MediaServiceConnection
+import com.example.mediaservice.extensions.*
 import com.example.mediaservice.utils.*
-import com.example.mediaservice.extensions.currentPlayBackPosition
+import com.example.mediaservice.repository.PlaylistRepository.PlaylistRepository
 import com.example.mediaservice.repository.models.MediaIdExtra
 import com.example.mediaservice.repository.models.Playlist
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,7 +27,7 @@ import timber.log.Timber.d
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(private val mediaServiceConnection: MediaServiceConnection) : BaseViewModel(){
+class LoginViewModel @Inject constructor(private val mediaServiceConnection: MediaServiceConnection,private val playlistRepository: PlaylistRepository) : BaseViewModel(){
 
     override fun onCleared() {
         super.onCleared()

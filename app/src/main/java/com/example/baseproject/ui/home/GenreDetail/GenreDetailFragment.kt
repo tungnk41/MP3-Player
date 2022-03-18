@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.SimpleItemAnimator
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentGenreDetailBinding
 import com.example.baseproject.navigation.HomeNavigation
@@ -61,6 +63,14 @@ class GenreDetailFragment : BaseFragment<FragmentGenreDetailBinding,GenreDetailV
         super.bindingStateView()
         viewModel.mediaItems.observe(this, Observer {
             mAdapter.submitList(it)
+
+            if(it.size > 0){
+                Glide.with(binding.root)
+                    .load(it[0].iconUri)
+                    .placeholder(R.drawable.ic_default_art_24)
+                    .transform(CenterCrop())
+                    .into(binding.imgGenreBanner)
+            }
         })
     }
 }

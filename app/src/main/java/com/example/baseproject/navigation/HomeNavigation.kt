@@ -26,4 +26,6 @@ interface HomeNavigation : BaseNavigator {
     fun openArtistScreenToArtistDetailScreen(bundle: Bundle? = null)
 
     fun openGenreScreenToGenreDetailScreen(bundle: Bundle? = null)
+
+    fun openLocalMusicScreenToCreatePlaylistScreen(bundle: Bundle? = null)
 }

@@ -42,9 +42,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MediaPlayerService : MediaBrowserServiceCompat() {
-    companion object {
-        val TAG = "MediaPlayerService"
-    }
 
     private lateinit var currentPlayer: MediaPlayer
     private lateinit var mediaSession: MediaSessionCompat
@@ -57,7 +54,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
         d("Service exception")
     }
     private val serviceScope = CoroutineScope(Dispatchers.Default + serviceJob + serviceExceptionHandler)
-    private val userId : Long = -1
+    private val userId : Long = 1
 
     private var cachedlocalListSong: List<MediaMetadataCompat> = listOf()
     private var cachedremoteListSong: List<MediaMetadataCompat> = listOf()
@@ -80,7 +77,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
 
     override fun onCreate() {
         super.onCreate()
-        Log.d(TAG, "onCreate: ")
+        d( "onCreate: ")
         currentPlayer = MediaPlayer(this)
         currentPlayer.setPlayerStateListener(playerStateListener)
         initMediaSession()
@@ -115,7 +112,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
             false,
             object : ContentObserver(null) {
                 override fun onChange(selfChange: Boolean, uri: Uri?) {
-                    Log.d(TAG, "onChange: " + uri)
+                    d( "onChange: " + uri)
                 }
             })
     }
@@ -123,13 +120,13 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent == null) return START_STICKY
-        Log.d(TAG, "onStartCommand: action" + intent?.action)
+        d("onStartCommand: action" + intent?.action)
         return START_STICKY
     }
 
 
     override fun onDestroy() {
-        Log.d(TAG, "onDestroy: ")
+        d( "onDestroy: ")
         mediaSession.run {
             isActive = false
             release()
@@ -141,7 +138,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
 
     override fun onTaskRemoved(rootIntent: Intent?) {
         super.onTaskRemoved(rootIntent)
-        Log.d(TAG, "onTaskRemoved: ")
+        d( "onTaskRemoved: ")
         if(!currentPlayer.isPlaying()) {
             currentPlayer.stop()
         }
@@ -210,7 +207,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
                             mediaItems = genreRepository.findAll(parentDataSource).map {it.toBrowserMediaItem(MediaType.TYPE_GENRE,parentMediaType,parentDataSource)}
                         }
                         MediaType.TYPE_ALL_PLAYLISTS -> {
-                            mediaItems = playlistRepository.findAll(parentDataSource,userId).map { it.toBrowserMediaItem(MediaType.TYPE_PLAYLIST,parentMediaType,parentDataSource) }
+                            mediaItems = playlistRepository.findAll(userId).map { it.toBrowserMediaItem(MediaType.TYPE_PLAYLIST,parentMediaType,DataSource.NONE) }
                         }
                         MediaType.TYPE_ALBUM -> {
                             val listSong = songRepository.findAllByAlbumId(parentId ?: -1, parentDataSource)
@@ -235,7 +232,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
                     }
                 }
             } catch (e: Exception) {
-                Log.d(TAG, "onLoadChildren: $e")
+                d( "onLoadChildren: $e")
             }
             result.sendResult(mediaItems.toMutableList())
         }
@@ -245,31 +242,31 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
         return listOf(
             MediaBrowserCompat.MediaItem(
                 MediaDescriptionCompat.Builder()
-                    .setMediaId(MediaIdExtra(mediaType = MediaType.TYPE_ALL_SONGS, id = 1, dataSource = DataSource.LOCAL).toString())
+                    .setMediaId(MediaIdExtra(mediaType = MediaType.TYPE_ALL_SONGS, dataSource = DataSource.LOCAL).toString())
                     .setTitle("Songs").build(),
                 MediaBrowserCompat.MediaItem.FLAG_BROWSABLE
             ),
             MediaBrowserCompat.MediaItem(
                 MediaDescriptionCompat.Builder()
-                    .setMediaId(MediaIdExtra(mediaType = MediaType.TYPE_ALL_ALBUMS,id = 2, dataSource = DataSource.LOCAL).toString())
+                    .setMediaId(MediaIdExtra(mediaType = MediaType.TYPE_ALL_ALBUMS, dataSource = DataSource.LOCAL).toString())
                     .setTitle("Albums").build(),
                 MediaBrowserCompat.MediaItem.FLAG_BROWSABLE
             ),
             MediaBrowserCompat.MediaItem(
                 MediaDescriptionCompat.Builder()
-                    .setMediaId(MediaIdExtra(mediaType = MediaType.TYPE_ALL_ARTISTS,id = 3, dataSource = DataSource.LOCAL).toString())
+                    .setMediaId(MediaIdExtra(mediaType = MediaType.TYPE_ALL_ARTISTS, dataSource = DataSource.LOCAL).toString())
                     .setTitle("Artists").build(),
                 MediaBrowserCompat.MediaItem.FLAG_BROWSABLE
             ),
             MediaBrowserCompat.MediaItem(
                 MediaDescriptionCompat.Builder()
-                    .setMediaId(MediaIdExtra(mediaType = MediaType.TYPE_ALL_GENRES,id = 4, dataSource = DataSource.LOCAL).toString())
+                    .setMediaId(MediaIdExtra(mediaType = MediaType.TYPE_ALL_GENRES, dataSource = DataSource.LOCAL).toString())
                     .setTitle("Genres").build(),
                 MediaBrowserCompat.MediaItem.FLAG_BROWSABLE
             ),
             MediaBrowserCompat.MediaItem(
                 MediaDescriptionCompat.Builder()
-                    .setMediaId(MediaIdExtra(mediaType = MediaType.TYPE_ALL_PLAYLISTS,id = 5, dataSource = DataSource.LOCAL).toString())
+                    .setMediaId(MediaIdExtra(mediaType = MediaType.TYPE_ALL_PLAYLISTS, dataSource = DataSource.NONE).toString())
                     .setTitle("Playlists").build(),
                 MediaBrowserCompat.MediaItem.FLAG_BROWSABLE
             ),
@@ -311,7 +308,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
                             PlaybackStateCompat.ACTION_PLAY_FROM_URI
 
         override fun onPrepare(playWhenReady: Boolean) {
-            Log.d(TAG, "onPrepare: ")
+            d( "onPrepare: ")
         }
 
         override fun onPrepareFromMediaId(
@@ -349,7 +346,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
         }
 
         override fun onPrepareFromSearch(query: String, playWhenReady: Boolean, extras: Bundle?) {
-            Log.d(TAG, "onPrepareFromSearch: " + query)
+            d( "onPrepareFromSearch: " + query)
 
         }
 
@@ -359,7 +356,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
             when(command) {
                 CMD_ADD_PLAYLIST -> {
                     val playlist = extras?.getParcelable<Playlist>(KEY_PLAYLIST)
-                    Log.d(TAG, "onCommand: " + playlist.toString())
+                    d("onCommand: " + playlist.toString())
                     serviceScope.launch {
                         playlist?.let {
                             playlistRepository.insert(it, DataSource.LOCAL)
@@ -373,7 +370,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
 
     private val playerStateListener = object : Player.Listener {
         override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-            Log.d(TAG, "onPlayerStateChanged: $playbackState + $playWhenReady")
+            d( "onPlayerStateChanged: $playbackState + $playWhenReady")
             when (playbackState) {
                 Player.STATE_IDLE -> {
 

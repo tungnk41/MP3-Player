@@ -9,6 +9,8 @@ import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentLocalMusicBinding
 import com.example.baseproject.navigation.HomeNavigation
 import com.example.baseproject.ui.adapter.MediaItemHorizontalAdapter
+import com.example.baseproject.ui.adapter.MediaItemVerticalAdapter
+import com.example.baseproject.ui.adapter.PlaylistAdapter
 import com.example.core.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber.d
@@ -59,6 +61,14 @@ class LocalMusicFragment :
             })
     }
 
+    private val playlistAdapter: PlaylistAdapter by lazy {
+        PlaylistAdapter(
+            requireContext(),
+            onClickListener = { position ->
+
+            })
+    }
+
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
 
@@ -69,6 +79,9 @@ class LocalMusicFragment :
         (binding.rvListMediaItem.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         binding.rvListMediaItem.adapter = mAdapter
 
+        (binding.rvPlaylist.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+        binding.rvPlaylist.adapter = playlistAdapter
+
     }
 
     override fun bindingStateView() {
@@ -77,10 +90,19 @@ class LocalMusicFragment :
         viewModel.mediaItems.observe(this, Observer {
             mAdapter.submitList(it)
         })
+
+        viewModel.playlist.observe(this, Observer {
+            playlistAdapter.submitList(it)
+        })
+
     }
 
     override fun setOnClick() {
         super.setOnClick()
+
+        binding.btnCreatePlaylist.setOnClickListener {
+            homeNavigation.openLocalMusicScreenToCreatePlaylistScreen()
+        }
 
     }
 }

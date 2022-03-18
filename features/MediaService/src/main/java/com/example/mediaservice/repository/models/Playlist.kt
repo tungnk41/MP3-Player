@@ -11,9 +11,8 @@ import kotlinx.android.parcel.Parcelize
 @Entity(tableName = "playlist")
 @Parcelize
 data class Playlist(
-
     @PrimaryKey(autoGenerate = true)
-    val id: Long = -1,
+    val id: Long = 0,
     val title: String = "",
     val iconUri: String = "",
     val userId: Long

@@ -11,14 +11,13 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class PlaylistRepository @Inject constructor(@LocalDataSource private val localDataSource: PlaylistDataSource, @RemoteDataSource private val remoteDataSource: PlaylistDataSource) {
-    suspend fun findAll(dataSource: Int,userId: Long) : List<MediaMetadataCompat> = withContext(Dispatchers.Default){
-        if(dataSource == DataSource.LOCAL) {
-             findAllLocalData(userId)
-        }
-        else {
-             findAllRemoteData(userId)
+    suspend fun findAll(userId: Long): List<MediaMetadataCompat> =
+        withContext(Dispatchers.Default) {
+            val listPlaylist = mutableListOf<List<Playlist>>()
+            listPlaylist.add(findAllRemoteData(userId))
+            listPlaylist.add(findAllLocalData(userId))
+            listPlaylist.flatten()
         }.map { it.toMediaMetadataCompat() }
-    }
 
     suspend fun insert(playlist: Playlist,dataSource: Int) = withContext(Dispatchers.Default) {
         if(dataSource == DataSource.LOCAL) {

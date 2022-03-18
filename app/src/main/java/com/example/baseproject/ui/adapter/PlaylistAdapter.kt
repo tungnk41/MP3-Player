@@ -9,29 +9,30 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.baseproject.R
 import com.example.baseproject.databinding.AdapterMediaItemVerticalBinding
+import com.example.baseproject.databinding.AdapterMediaPlaylistBinding
 import com.example.baseproject.model.MediaItemUI
 
-class MediaItemVerticalAdapter (
+class PlaylistAdapter (
     val context: Context,
     val onClickListener: (Int) -> Unit,
-): ListAdapter<MediaItemUI, MediaItemVerticalHolder>(MediaItemVerticalDiffUtil()) {
+): ListAdapter<MediaItemUI, PlaylistHolder>(PlaylistDiffUtil()) {
 
     private val layoutInflater by lazy {
         LayoutInflater.from(context)
     }
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaItemVerticalHolder {
-        return MediaItemVerticalHolder(AdapterMediaItemVerticalBinding.inflate(layoutInflater,parent,false), onClickListener)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistHolder {
+        return PlaylistHolder(AdapterMediaPlaylistBinding.inflate(layoutInflater,parent,false), onClickListener)
     }
 
-    override fun onBindViewHolder(holder: MediaItemVerticalHolder, position: Int) {
+    override fun onBindViewHolder(holder: PlaylistHolder, position: Int) {
         holder.bindData(getItem(position))
     }
 
 }
 
 
-class MediaItemVerticalHolder (
-    val binding: AdapterMediaItemVerticalBinding,
+class PlaylistHolder (
+    val binding: AdapterMediaPlaylistBinding,
     val onClickListener: (Int) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
 
@@ -43,7 +44,6 @@ class MediaItemVerticalHolder (
 
     fun bindData(data: MediaItemUI) {
         binding.tvTitle.text = data.title
-        binding.tvSubTitle.text = data.subTitle
 
         Glide.with(binding.root)
             .load(data.iconUri)
@@ -53,7 +53,7 @@ class MediaItemVerticalHolder (
     }
 }
 
-class MediaItemVerticalDiffUtil: DiffUtil.ItemCallback<MediaItemUI>() {
+class PlaylistDiffUtil: DiffUtil.ItemCallback<MediaItemUI>() {
     override fun areItemsTheSame(oldItem: MediaItemUI, newItem: MediaItemUI): Boolean {
         return oldItem.id == newItem.id && oldItem.dataSource == newItem.dataSource
     }
