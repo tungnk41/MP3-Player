@@ -8,11 +8,13 @@ import com.example.mediaservice.repository.GenreRepository.GenreDataSource
 import com.example.mediaservice.repository.models.Album
 import com.example.mediaservice.repository.models.Genre
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import timber.log.Timber.d
 import javax.inject.Inject
 
 class GenreLocalDataSource @Inject constructor(@ApplicationContext val context: Context) : GenreDataSource {
-    override suspend fun findAll(): List<Genre> {
+    override suspend fun findAll(): List<Genre> = withContext(Dispatchers.IO){
         val listGenre = mutableListOf<Genre>()
 
         val contentResolver: ContentResolver = context.contentResolver
@@ -42,10 +44,10 @@ class GenreLocalDataSource @Inject constructor(@ApplicationContext val context: 
                 cursor.close()
             }
         }
-        return listGenre
+        listGenre
     }
 
-    private fun getSongCountForGenre(genreId: Long): Int{
+    private suspend fun getSongCountForGenre(genreId: Long): Int = withContext(Dispatchers.IO){
         var result = 0
         val uri = MediaStore.Audio.Genres.Members.getContentUri("external", genreId)
         val contentResolver: ContentResolver = context.contentResolver
@@ -58,6 +60,6 @@ class GenreLocalDataSource @Inject constructor(@ApplicationContext val context: 
                 cursor.close()
             }
         }
-        return result
+        result
     }
 }

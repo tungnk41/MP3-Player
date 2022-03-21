@@ -55,7 +55,6 @@ class SongFragment: BaseFragment<FragmentSongBinding, SongViewModel>(R.layout.fr
         (binding.rvListAllSong.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         binding.rvListAllSong.adapter = mAdapter
 
-
     }
 
     override fun setOnClick() {

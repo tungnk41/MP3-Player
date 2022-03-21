@@ -14,6 +14,7 @@ import com.example.baseproject.databinding.FragmentMainPlayingBinding
 import com.example.baseproject.navigation.AppNavigation
 import com.example.baseproject.utils.PROGRESS_BAR_MAX_VALUE
 import com.example.core.base.BaseFragment
+import com.example.mediaservice.repository.models.MediaIdExtra
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import timber.log.Timber.d
@@ -28,6 +29,7 @@ class MainPlayingFragment : BaseFragment<FragmentMainPlayingBinding,MainPlayingV
     private val viewModel: MainPlayingViewModel by viewModels()
     private val mainViewModel: MainViewModel by activityViewModels()
     private var isPlayingUI: Boolean = false
+    private var isFavorite: Boolean = false
 
     override fun getVM(): MainPlayingViewModel = viewModel
 
@@ -43,6 +45,8 @@ class MainPlayingFragment : BaseFragment<FragmentMainPlayingBinding,MainPlayingV
         mainViewModel.mediaMetadata.observe(this, Observer {
             binding.tvTitleMainPlaying.text = it.description.title
             binding.tvSubTitleMainPlaying.text = it.description.subtitle
+
+//            isFavorite = (it.favorite != 0L)
 
             Glide.with(binding.root)
                 .load(it.description.iconUri)
@@ -132,6 +136,11 @@ class MainPlayingFragment : BaseFragment<FragmentMainPlayingBinding,MainPlayingV
 
         binding.btnShuffleMainPlaying.setOnClickListener {
             mainViewModel.nextShuffleMode()
+        }
+
+        binding.btnFavorite.setOnClickListener {
+            isFavorite = !isFavorite
+            binding.btnFavorite.setImageResource( if(isFavorite) R.drawable.ic_favorite_24 else R.drawable.ic_favorite_off_24)
         }
     }
 

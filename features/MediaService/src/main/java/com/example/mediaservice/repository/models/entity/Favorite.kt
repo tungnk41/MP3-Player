@@ -1,4 +1,4 @@
-package com.example.mediaservice.database.entity
+package com.example.mediaservice.repository.models.entity
 
 import android.os.Parcelable
 import androidx.room.Entity
@@ -12,5 +12,6 @@ data class Favorite(
     val id: Long,
     val userId: Long,
     val songId: Long,
-    val remoteTable: Int, //True = 1, False = 0
+    val value: Boolean,
+    val isRemoteDataSource: Boolean
 ): Parcelable

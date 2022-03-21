@@ -36,3 +36,7 @@ inline val PlaybackStateCompat.currentPlayBackPosition: Long
     } else {
         position
     }
+
+val EMPTY_PLAYBACK_STATE: PlaybackStateCompat = PlaybackStateCompat.Builder()
+    .setState(PlaybackStateCompat.STATE_NONE, 0, 0f)
+    .build()

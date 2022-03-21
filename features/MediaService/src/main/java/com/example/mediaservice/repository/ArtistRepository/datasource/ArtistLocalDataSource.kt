@@ -8,11 +8,13 @@ import com.example.mediaservice.repository.ArtistRepository.ArtistDataSource
 import com.example.mediaservice.repository.models.Album
 import com.example.mediaservice.repository.models.Artist
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class ArtistLocalDataSource @Inject constructor(@ApplicationContext val context: Context) :
     ArtistDataSource {
-    override suspend fun findAll(): List<Artist> {
+    override suspend fun findAll(): List<Artist> = withContext(Dispatchers.IO){
         val listArtist = mutableListOf<Artist>()
         val contentResolver: ContentResolver = context.contentResolver
         val contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
@@ -40,6 +42,6 @@ class ArtistLocalDataSource @Inject constructor(@ApplicationContext val context:
                 cursor.close()
             }
         }
-        return listArtist
+        listArtist
     }
 }

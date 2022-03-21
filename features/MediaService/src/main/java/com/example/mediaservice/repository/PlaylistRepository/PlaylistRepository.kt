@@ -19,13 +19,9 @@ class PlaylistRepository @Inject constructor(@LocalDataSource private val localD
             listPlaylist.flatten()
         }.map { it.toMediaMetadataCompat() }
 
-    suspend fun insert(playlist: Playlist,dataSource: Int) = withContext(Dispatchers.Default) {
-        if(dataSource == DataSource.LOCAL) {
-            insertLocalData(playlist)
-        }
-        else {
-            insertRemoteData(playlist)
-        }
+    suspend fun insert(playlist: Playlist) = withContext(Dispatchers.Default) {
+        insertRemoteData(playlist)
+        insertLocalData(playlist)
     }
 
     private suspend fun findAllRemoteData(userId: Long) : List<Playlist> = remoteDataSource.findAll(userId)

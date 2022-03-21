@@ -46,6 +46,7 @@ class MediaNotification (private val context: Context, sessionToken: MediaSessio
         notificationManager.setUseRewindAction(false)
     }
 
+
     fun hideNotification() {
         notificationManager.setPlayer(null)
     }

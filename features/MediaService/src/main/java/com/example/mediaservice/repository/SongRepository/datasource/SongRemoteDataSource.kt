@@ -31,22 +31,19 @@ class SongRemoteDataSource @Inject constructor(private val musicServiceApi: Medi
 
     //#############################################
 
-    private suspend fun findAllWithArtist(): List<Song> {
+    private suspend fun findAllWithArtist(): List<Song> = withContext(Dispatchers.IO){
         val allSong = musicServiceApi.getAllSong()?.body() ?: listOf()
         val allArtist = musicServiceApi.getAllArtist()?.body() ?: listOf()
 
         val mapArtist = mutableMapOf<Long,String>()
 
-        withContext(Dispatchers.Default) {
-            allArtist.forEach { artist ->
-                mapArtist.put(artist.id,artist.title)
-            }
-
-            allSong.forEach { song ->
-                song.artist = mapArtist.get(song.artistId).toString()
-            }
+        allArtist.forEach { artist ->
+            mapArtist.put(artist.id,artist.title)
+        }
+        allSong.forEach { song ->
+            song.artist = mapArtist.get(song.artistId).toString()
         }
 
-        return allSong
+        allSong
     }
 }

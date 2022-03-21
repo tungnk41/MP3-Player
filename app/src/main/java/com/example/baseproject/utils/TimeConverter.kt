@@ -8,9 +8,9 @@ fun convertToTimeString(ms: Long): String {
     val minute = (totalSecond % 3600) / 60
     val second = (totalSecond % 60)
 
-    val hourStr = if (hour > 10) hour.toString() else "0$hour"
-    val minuteStr = if (minute > 10) minute.toString() else "0$minute"
-    val secondStr = if (second > 10) second.toString() else "0$second"
+    val hourStr = if (hour < 10) "0$hour" else hour.toString()
+    val minuteStr = if (minute < 10) "0$minute" else minute.toString()
+    val secondStr = if (second < 10) "0$second" else second.toString()
 
     return if (hour > 0) ("$hourStr : $minuteStr:$secondStr") else ("$minuteStr:$secondStr")
 }

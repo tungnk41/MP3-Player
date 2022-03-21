@@ -47,6 +47,33 @@
             app:popExitAnim="@anim/slide_out_left"
             app:popUpTo="@id/tabOnlineMusicFragment"
             app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_onlineMusicFragment_toAlbumDetailFragment"
+            app:destination="@id/albumDetailFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"
+            app:popUpTo="@id/tabOnlineMusicFragment"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_onlineMusicFragment_toArtistDetailFragment"
+            app:destination="@id/artistDetailFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"
+            app:popUpTo="@id/tabOnlineMusicFragment"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_onlineMusicFragment_toGenreDetailFragment"
+            app:destination="@id/genreDetailFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"
+            app:popUpTo="@id/tabOnlineMusicFragment"
+            app:popUpToInclusive="false" />
     </fragment>
 
     <fragment

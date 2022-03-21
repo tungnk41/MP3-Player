@@ -6,6 +6,8 @@ import android.support.v4.media.MediaMetadataCompat
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.mediaservice.extensions.*
+import com.example.mediaservice.utils.DataSource
+import com.example.mediaservice.utils.MediaType
 import kotlinx.android.parcel.Parcelize
 
 @Entity(tableName = "playlist")
@@ -18,9 +20,9 @@ data class Playlist(
     val userId: Long
 ) : Parcelable {
 
-    fun toMediaMetadataCompat(): MediaMetadataCompat {
+    fun toMediaMetadataCompat(dataSource: Int = DataSource.NONE): MediaMetadataCompat {
         val builder = MediaMetadataCompat.Builder()
-        builder.id = id.toString()
+        builder.id = MediaIdExtra(id = id, mediaType = MediaType.TYPE_PLAYLIST, dataSource = dataSource).toString()
         builder.title = title
         builder.displayIconUri = iconUri
         builder.flag = MediaBrowserCompat.MediaItem.FLAG_BROWSABLE

@@ -47,32 +47,92 @@ class OnlineMusicFragment :
         MediaOnlineSectionAdapter(requireContext(),
             onExpandedClickListener = { parentPos ->
                 d("onExpandedClickListener $parentPos")
-                if(parentPos == SONGS) {
-                    val bundle = Bundle()
-                    bundle.putParcelable("mediaIdExtra",MediaIdExtra(mediaType = com.example.mediaservice.utils.MediaType.TYPE_ALL_SONGS, dataSource = DataSource.REMOTE))
-                    homeNavigation.openOnlineMusicScreenToSongScreen(bundle)
-                }
-                else if(parentPos == ALBUMS) {
-                    val bundle = Bundle()
-                    bundle.putParcelable("mediaIdExtra",MediaIdExtra(mediaType = com.example.mediaservice.utils.MediaType.TYPE_ALL_ALBUMS, dataSource = DataSource.REMOTE))
-                    homeNavigation.openOnlineMusicScreenToAlbumScreen(bundle)
-                }
-                else if(parentPos == ARTISTS) {
-                    val bundle = Bundle()
-                    bundle.putParcelable("mediaIdExtra",MediaIdExtra(mediaType = com.example.mediaservice.utils.MediaType.TYPE_ALL_ARTISTS, dataSource = DataSource.REMOTE))
-                    homeNavigation.openOnlineMusicScreenToArtistScreen(bundle)
-                }
-                else if(parentPos == GENRES) {
-                    val bundle = Bundle()
-                    bundle.putParcelable("mediaIdExtra",MediaIdExtra(mediaType = com.example.mediaservice.utils.MediaType.TYPE_ALL_GENRES, dataSource = DataSource.REMOTE))
-                    homeNavigation.openOnlineMusicScreenToGenreScreen(bundle)
-                }
-                else {
-                    d("Invalid position $parentPos")
+                when(parentPos) {
+                    SONGS -> {
+                        val bundle = Bundle()
+                        bundle.putParcelable(
+                            "mediaIdExtra",
+                            MediaIdExtra(
+                                mediaType = com.example.mediaservice.utils.MediaType.TYPE_ALL_SONGS,
+                                dataSource = DataSource.REMOTE
+                            )
+                        )
+                        homeNavigation.openOnlineMusicScreenToSongScreen(bundle)
+                    }
+                    ALBUMS -> {
+                        val bundle = Bundle()
+                        bundle.putParcelable(
+                            "mediaIdExtra",
+                            MediaIdExtra(
+                                mediaType = com.example.mediaservice.utils.MediaType.TYPE_ALL_ALBUMS,
+                                dataSource = DataSource.REMOTE
+                            )
+                        )
+                        homeNavigation.openOnlineMusicScreenToAlbumScreen(bundle)
+                    }
+                    ARTISTS -> {
+                        val bundle = Bundle()
+                        bundle.putParcelable(
+                            "mediaIdExtra",
+                            MediaIdExtra(
+                                mediaType = com.example.mediaservice.utils.MediaType.TYPE_ALL_ARTISTS,
+                                dataSource = DataSource.REMOTE
+                            )
+                        )
+                        homeNavigation.openOnlineMusicScreenToArtistScreen(bundle)
+                    }
+                    GENRES -> {
+                        val bundle = Bundle()
+                        bundle.putParcelable(
+                            "mediaIdExtra",
+                            MediaIdExtra(
+                                mediaType = com.example.mediaservice.utils.MediaType.TYPE_ALL_GENRES,
+                                dataSource = DataSource.REMOTE
+                            )
+                        )
+                        homeNavigation.openOnlineMusicScreenToGenreScreen(bundle)
+                    }
+                    else -> {
+                        d("Invalid position $parentPos")
+                    }
                 }
             },
             onItemClickListener = { parentPos, childPos ->
-                d("onItemClickListener $parentPos $childPos")
+                when(parentPos) {
+                    SONGS -> {
+
+                    }
+                    ALBUMS -> {
+                        val mediaIdExtra = viewModel.mListMediaItemUIAlbum?.get(childPos)?.mediaIdExtra
+                        val title = viewModel.mListMediaItemUIAlbum?.get(childPos)?.title
+                        mediaIdExtra?.let {
+                            val bundle = Bundle()
+                            bundle.putParcelable("mediaIdExtra",it)
+                            bundle.putString("title",title)
+                            homeNavigation.openOnlineMusicScreenToAlbumDetailScreen(bundle)
+                        }
+                    }
+                    ARTISTS -> {
+                        val mediaIdExtra = viewModel.mListMediaItemUIArtist?.get(childPos)?.mediaIdExtra
+                        val title = viewModel.mListMediaItemUIArtist?.get(childPos)?.title
+                        mediaIdExtra?.let {
+                            val bundle = Bundle()
+                            bundle.putParcelable("mediaIdExtra",it)
+                            bundle.putString("title",title)
+                            homeNavigation.openOnlineMusicScreenToArtistDetailScreen(bundle)
+                        }
+                    }
+                    GENRES -> {
+                        val mediaIdExtra = viewModel.mListMediaItemUIGenre?.get(childPos)?.mediaIdExtra
+                        val title = viewModel.mListMediaItemUIGenre?.get(childPos)?.title
+                        mediaIdExtra?.let {
+                            val bundle = Bundle()
+                            bundle.putParcelable("mediaIdExtra",it)
+                            bundle.putString("title",title)
+                            homeNavigation.openOnlineMusicScreenToGenreDetailScreen(bundle)
+                        }
+                    }
+                }
             })
     }
 

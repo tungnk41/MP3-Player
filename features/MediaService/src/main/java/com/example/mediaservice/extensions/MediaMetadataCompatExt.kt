@@ -266,11 +266,21 @@ fun MediaMetadataCompat.toExoPlayerMediaItem(): com.google.android.exoplayer2.Me
     }.build()
 }
 
-fun MediaMetadataCompat.toBrowserMediaItem(mediaType: Int,parentMediaType: Int, dataSource: Int) : MediaBrowserCompat.MediaItem {
+fun MediaMetadataCompat.toBrowserMediaItem(parentMediaType: Int? = null) : MediaBrowserCompat.MediaItem {
+    var mediaIdExtra : MediaIdExtra? = null
+    if(parentMediaType != null) {
+        mediaIdExtra = MediaIdExtra.getDataFromString(id ?: "")
+        mediaIdExtra.parentMediaType = parentMediaType
+    }
     val mediaDescriptionBuilder = MediaDescriptionCompat.Builder()
-        .setMediaId(MediaIdExtra(parentMediaType,mediaType,id?.toLong(),dataSource).toString())
+        .setMediaId(mediaIdExtra?.toString() ?: id)
         .setTitle(title)
         .setSubtitle(artist)
         .setIconUri(Uri.parse(displayIconUri))
     return MediaBrowserCompat.MediaItem(mediaDescriptionBuilder.build(), flag.toInt())
 }
+
+val EMPTY_MEDIA_METADATA_COMPAT: MediaMetadataCompat = MediaMetadataCompat.Builder()
+    .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, "")
+    .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, 0)
+    .build()

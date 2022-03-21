@@ -95,7 +95,7 @@ class SongLocalDataSource @Inject constructor(@ApplicationContext val context: C
         return emptyList()
     }
 
-    private suspend fun findAllByCursor(cursor: Cursor?) : List<Song> {
+    private suspend fun findAllByCursor(cursor: Cursor?) : List<Song> = withContext(Dispatchers.IO) {
         val listSong = mutableListOf<Song>()
         cursor?.let {
             if (cursor.moveToFirst()) {
@@ -136,6 +136,6 @@ class SongLocalDataSource @Inject constructor(@ApplicationContext val context: C
                 cursor.close()
             }
         }
-        return listSong
+        listSong
     }
 }

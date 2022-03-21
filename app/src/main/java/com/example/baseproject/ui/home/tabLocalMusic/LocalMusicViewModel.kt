@@ -73,9 +73,9 @@ class LocalMusicViewModel @Inject constructor(private val mediaServiceConnection
             mediaServiceConnection.subscribe(mediaIdExtra.toString(),subscriptionCallback)
         }
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Default) {
             val playlistMediaItem = playlistRepository.findAll(1)
-                .map { it.toBrowserMediaItem(MediaType.TYPE_PLAYLIST,MediaType.TYPE_ALL_PLAYLISTS, dataSource = DataSource.LOCAL) }
+                .map { it.toBrowserMediaItem() }
                 .map {
                     val mediaIdExtra = MediaIdExtra.getDataFromString(it.mediaId ?: "")
                     val id: Long= mediaIdExtra.id ?: -1

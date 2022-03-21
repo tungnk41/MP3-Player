@@ -18,7 +18,7 @@ class SongRepository @Inject constructor(@LocalDataSource private val localDataS
                 findAllLocalData()
             } else {
                 findAllRemoteData()
-            }.map { it.toMediaMetadataCompat() }
+            }.map { it.toMediaMetadataCompat(dataSource) }
         }
     }
 
@@ -29,7 +29,7 @@ class SongRepository @Inject constructor(@LocalDataSource private val localDataS
             } else {
                 findAllRemoteDataByAlbumId(albumId)
             }
-        }.map { it.toMediaMetadataCompat() }
+        }.map { it.toMediaMetadataCompat(dataSource) }
     }
 
     suspend fun findAllByArtistId(artistId: Long,dataSource: Int) : List<MediaMetadataCompat> {
@@ -39,7 +39,7 @@ class SongRepository @Inject constructor(@LocalDataSource private val localDataS
             } else {
                 findAllRemoteDataByArtistId(artistId)
             }
-        }.map { it.toMediaMetadataCompat() }
+        }.map { it.toMediaMetadataCompat(dataSource) }
     }
 
     suspend fun findAllByGenreId(genreId: Long,dataSource: Int) : List<MediaMetadataCompat> {
@@ -49,7 +49,7 @@ class SongRepository @Inject constructor(@LocalDataSource private val localDataS
             } else {
                 findAllRemoteDataByGenreId(genreId)
             }
-        }.map { it.toMediaMetadataCompat() }
+        }.map { it.toMediaMetadataCompat(dataSource) }
     }
 
     suspend fun findAllByPlaylistId(playlistId : Long, dataSource: Int) : List<MediaMetadataCompat> {
@@ -59,7 +59,7 @@ class SongRepository @Inject constructor(@LocalDataSource private val localDataS
             } else {
                 findAllRemoteDataByPlaylistId(playlistId)
             }
-        }.map { it.toMediaMetadataCompat() }
+        }.map { it.toMediaMetadataCompat(dataSource) }
     }
 
     private suspend fun findAllRemoteData() : List<Song> = remoteDataSource.findAll()

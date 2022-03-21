@@ -20,7 +20,7 @@ class ArtistRepository @Inject constructor(
                 findAllLocalData()
             } else {
                 findAllRemoteData()
-            }.map { it.toMediaMetadataCompat() }
+            }.map { it.toMediaMetadataCompat(dataSource) }
         }
     }
 

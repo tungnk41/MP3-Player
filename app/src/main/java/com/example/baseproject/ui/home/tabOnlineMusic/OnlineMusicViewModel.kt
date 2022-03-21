@@ -46,6 +46,11 @@ class OnlineMusicViewModel @Inject constructor(
     private val _listBanner = MutableLiveData<List<Banner>>(emptyList())
     val listBanner : LiveData<List<Banner>> = _listBanner
 
+    var mListMediaItemUISong : List<MediaItemUI>? = null
+    var mListMediaItemUIAlbum : List<MediaItemUI>? = null
+    var mListMediaItemUIArtist : List<MediaItemUI>? = null
+    var mListMediaItemUIGenre : List<MediaItemUI>? = null
+
     init {
         startLoadingData()
     }
@@ -57,27 +62,32 @@ class OnlineMusicViewModel @Inject constructor(
                 songRepository
                     .findAll(dataSource = DataSource.REMOTE)
                     .take(7)
-                    .map { mapToMediaItemUI( it.toBrowserMediaItem(mediaType = MediaType.TYPE_SONG, parentMediaType = MediaType.TYPE_ALL_SONGS, dataSource = DataSource.REMOTE))}
+                    .map { mapToMediaItemUI( it.toBrowserMediaItem())}
             }
             val listMediaItemUIAlbum = async {
                 albumRepository
                     .findAll(dataSource = DataSource.REMOTE)
                     .take(7)
-                    .map { mapToMediaItemUI( it.toBrowserMediaItem(mediaType = MediaType.TYPE_ALBUM,parentMediaType = MediaType.TYPE_ALL_ALBUMS, dataSource = DataSource.REMOTE)).also { _listBannerData.add(Banner(it.iconUri))} }
+                    .map { mapToMediaItemUI( it.toBrowserMediaItem()).also { _listBannerData.add(Banner(it.iconUri))} }
             }
             val listMediaItemUIArtist = async {
                 artistRepository
                     .findAll(dataSource = DataSource.REMOTE)
                     .take(7)
-                    .map { mapToMediaItemUI( it.toBrowserMediaItem(mediaType = MediaType.TYPE_ARTIST,parentMediaType = MediaType.TYPE_ALL_ARTISTS, dataSource = DataSource.REMOTE) ) }
+                    .map { mapToMediaItemUI( it.toBrowserMediaItem() ) }
             }
             val listMediaItemUIGenre = async {
                 genreRepository
                     .findAll(dataSource = DataSource.REMOTE)
                     .take(7)
-                    .map { mapToMediaItemUI( it.toBrowserMediaItem(mediaType = MediaType.TYPE_GENRE,parentMediaType = MediaType.TYPE_ALL_GENRES, dataSource = DataSource.REMOTE) ) }
+                    .map { mapToMediaItemUI( it.toBrowserMediaItem() ) }
             }
-            awaitAll(listMediaItemUISong,listMediaItemUIAlbum,listMediaItemUIArtist,listMediaItemUIGenre)
+            awaitAll(listMediaItemUISong, listMediaItemUIAlbum, listMediaItemUIArtist, listMediaItemUIGenre
+            )
+            mListMediaItemUISong = listMediaItemUISong.await()
+            mListMediaItemUIAlbum = listMediaItemUIAlbum.await()
+            mListMediaItemUIArtist = listMediaItemUIArtist.await()
+            mListMediaItemUIGenre = listMediaItemUIGenre.await()
             _listMediaOnlineSection.postValue(
                 listOf(
                     MediaOnlineItem(title = "Songs", listChild = listMediaItemUISong.await()),

@@ -27,6 +27,7 @@ class SongViewModel @Inject constructor(private val mediaServiceConnection: Medi
 
     private val subscriptionCallback = object: MediaBrowserCompat.SubscriptionCallback(){
         override fun onChildrenLoaded(parentId: String, children: MutableList<MediaBrowserCompat.MediaItem>) {
+            d("onChildrenLoaded start")
             viewModelScope.launch(Dispatchers.Default) {
                  listSongMediaItemUI = children.map{
                         val mediaIdExtra = MediaIdExtra.getDataFromString(it.mediaId ?: "")
@@ -37,7 +38,6 @@ class SongViewModel @Inject constructor(private val mediaServiceConnection: Medi
                         val isBrowsable: Boolean = it.flags.equals(MediaBrowserCompat.MediaItem.FLAG_BROWSABLE)
                         val mediaType = mediaIdExtra.mediaType ?: -1
                         val dataSource = mediaIdExtra.dataSource
-                        d(" title " + title)
                         MediaItemUI(mediaIdExtra = mediaIdExtra,id = id, title = title, subTitle = subTitle , iconUri = iconUri, isBrowsable = isBrowsable, dataSource = dataSource, mediaType = mediaType)
                     }
                 _mediaItems.postValue(listSongMediaItemUI)

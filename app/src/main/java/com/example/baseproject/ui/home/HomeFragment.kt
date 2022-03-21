@@ -77,7 +77,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
 
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
             if(destination.id == R.id.tabOnlineMusicFragment || destination.id == R.id.tabLocalMusicFragment) {
-                d("addOnDestinationChangedListener " + destination.id)
                 binding.tbToolbar.visibility = View.GONE
             }else{
                 binding.tbToolbar.visibility = View.VISIBLE

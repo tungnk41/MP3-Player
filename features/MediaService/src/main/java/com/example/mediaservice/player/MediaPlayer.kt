@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.support.v4.media.MediaMetadataCompat
 import android.util.Log
+import com.example.mediaservice.extensions.EMPTY_MEDIA_METADATA_COMPAT
 import com.example.mediaservice.extensions.mediaUri
 import com.example.mediaservice.extensions.toExoPlayerMediaItem
 import com.google.android.exoplayer2.C
@@ -25,8 +26,8 @@ import java.io.File
 
 class MediaPlayer(private val context : Context) {
     private lateinit var currentPlayer: ExoPlayer
-    private lateinit var playListMediaSource: List<MediaSource>
-    private lateinit var playListMediaMetadataCompat: List<MediaMetadataCompat>
+    private var playListMediaSource: List<MediaSource>? = null
+    private var playListMediaMetadataCompat: List<MediaMetadataCompat>? = null
     private var playerStateListener : Player.Listener? = null
     private val databaseProvider = StandaloneDatabaseProvider(context)
 
@@ -65,7 +66,7 @@ class MediaPlayer(private val context : Context) {
                     .createMediaSource(mediaMetadataCompat.toExoPlayerMediaItem())
             }
         }
-        currentPlayer.setMediaSources(playListMediaSource)
+        currentPlayer.setMediaSources(playListMediaSource!!)
         currentPlayer.prepare()
     }
 
@@ -110,7 +111,7 @@ class MediaPlayer(private val context : Context) {
     }
 
     fun currentMediaMetadataCompat() : MediaMetadataCompat{
-        return playListMediaMetadataCompat[currentIndex()]
+        return playListMediaMetadataCompat?.get(currentIndex()) ?: EMPTY_MEDIA_METADATA_COMPAT
     }
 
     fun isPlaying() : Boolean {
@@ -141,7 +142,7 @@ class MediaPlayer(private val context : Context) {
     }
 
     fun prefetchRemoteData() {
-        playListMediaSource.forEach {
+        playListMediaSource?.forEach {
             it.mediaItem.localConfiguration?.uri?.let { uri ->
                 Timber.d("prefetchRemoteData: $uri")
                 if(!uri.toString().startsWith("content://")){

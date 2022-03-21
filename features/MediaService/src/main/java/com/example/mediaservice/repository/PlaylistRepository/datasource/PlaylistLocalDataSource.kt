@@ -16,11 +16,11 @@ class PlaylistLocalDataSource @Inject constructor(private val playListDao: PlayL
         playListDao.insert(playlist)
     }
 
-    override suspend fun update(playlist: Playlist) {
+    override suspend fun update(playlist: Playlist) = withContext(Dispatchers.IO) {
         playListDao.update(playlist)
     }
 
-    override suspend fun delete(playlist: Playlist) {
+    override suspend fun delete(playlist: Playlist) = withContext(Dispatchers.IO) {
         playListDao.delete(playlist)
     }
 }

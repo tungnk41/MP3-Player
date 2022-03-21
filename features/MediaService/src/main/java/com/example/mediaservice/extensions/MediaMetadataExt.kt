@@ -1,6 +1,7 @@
 package com.example.mediaservice.extensions
 
 import android.support.v4.media.MediaMetadataCompat
+import com.example.mediaservice.repository.models.entity.Favorite
 import com.google.android.exoplayer2.MediaMetadata
 
 fun MediaMetadata.toMediaMetadataCompat(duration: Long)  : MediaMetadataCompat {

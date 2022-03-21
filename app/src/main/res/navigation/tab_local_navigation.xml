@@ -56,6 +56,15 @@
             app:popExitAnim="@anim/slide_out_left"
             app:popUpTo="@id/tabLocalMusicFragment"
             app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_localMusicFragment_toPlaylistDetailFragment"
+            app:destination="@id/playlistDetailFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"
+            app:popUpTo="@id/tabLocalMusicFragment"
+            app:popUpToInclusive="false" />
     </fragment>
 
     <fragment
@@ -146,8 +155,30 @@
     <fragment
         android:id="@+id/createPlaylistFragment"
         android:name="com.example.baseproject.ui.home.createPlaylist.CreatePlaylistFragment"
-        android:label=""
+        android:label="{title}"
         tools:layout="@layout/fragment_create_playlist" >
+        <argument
+            android:name="title"
+            app:argType="string"/>
+        <action
+            android:id="@+id/action_createPlaylistFragment_toPlaylistDetailFragment"
+            app:destination="@id/playlistDetailFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"
+            app:popUpTo="@id/tabLocalMusicFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/playlistDetailFragment"
+        android:name="com.example.baseproject.ui.home.playlistDetail.PlaylistDetailFragment"
+        android:label="{title}"
+        tools:layout="@layout/fragment_playlist_detail" >
+        <argument
+            android:name="title"
+            app:argType="string"/>
     </fragment>
 
 </navigation>

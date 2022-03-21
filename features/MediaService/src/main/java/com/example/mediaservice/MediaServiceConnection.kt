@@ -12,8 +12,8 @@ import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.mediaservice.extensions.artist
-import com.example.mediaservice.extensions.title
+import com.example.mediaservice.extensions.EMPTY_MEDIA_METADATA_COMPAT
+import com.example.mediaservice.extensions.EMPTY_PLAYBACK_STATE
 import com.example.mediaservice.utils.NETWORK_FAILURE
 import timber.log.Timber
 import timber.log.Timber.d
@@ -35,7 +35,7 @@ class MediaServiceConnection @Inject constructor(val context: Context, serviceCo
     private var mPlaybackState = MutableLiveData<PlaybackStateCompat>().apply { postValue(EMPTY_PLAYBACK_STATE) }
     val playbackState: LiveData<PlaybackStateCompat> = mPlaybackState
 
-    private var mMediaMetadataCompat = MutableLiveData<MediaMetadataCompat>().apply { postValue(EMPTY_MEDIA_METADATA) }
+    private var mMediaMetadataCompat = MutableLiveData<MediaMetadataCompat>().apply { postValue(EMPTY_MEDIA_METADATA_COMPAT) }
     val mediaMetadataCompat: LiveData<MediaMetadataCompat> = mMediaMetadataCompat
 
     private var mIsConnected = MutableLiveData<Boolean>().apply { postValue(false) }
@@ -112,7 +112,7 @@ class MediaServiceConnection @Inject constructor(val context: Context, serviceCo
         }
 
         override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
-            mMediaMetadataCompat.postValue(metadata ?: EMPTY_MEDIA_METADATA)
+            mMediaMetadataCompat.postValue(metadata ?: EMPTY_MEDIA_METADATA_COMPAT)
         }
 
         override fun onRepeatModeChanged(repeatMode: Int) {
@@ -135,15 +135,3 @@ class MediaServiceConnection @Inject constructor(val context: Context, serviceCo
         }
     }
 }
-
-
-@Suppress("PropertyName")
-val EMPTY_PLAYBACK_STATE: PlaybackStateCompat = PlaybackStateCompat.Builder()
-    .setState(PlaybackStateCompat.STATE_NONE, 0, 0f)
-    .build()
-
-@Suppress("PropertyName")
-val EMPTY_MEDIA_METADATA: MediaMetadataCompat = MediaMetadataCompat.Builder()
-    .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, "")
-    .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, 0)
-    .build()

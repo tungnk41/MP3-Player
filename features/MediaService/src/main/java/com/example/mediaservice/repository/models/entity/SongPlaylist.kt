@@ -1,4 +1,4 @@
-package com.example.mediaservice.database.entity
+package com.example.mediaservice.repository.models.entity
 
 import android.os.Parcelable
 import androidx.room.Entity
