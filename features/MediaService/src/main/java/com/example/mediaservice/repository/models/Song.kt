@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit
 
 @Parcelize
 data class Song(
-    var id: Long = 0,
+    val id: Long = 0,
     val title: String = "",
     var album: String = "",
     val albumId: Long = 0,
@@ -24,7 +24,8 @@ data class Song(
     val mediaUri: String = "",
     @SerializedName("image")
     val iconUri: String = "",
-    var duration: Long = 0,
+    val duration: Long = 0,
+    val favorite: Int = 0
 ) : Parcelable
 {
     fun toMediaMetadataCompat(dataSource: Int) :  MediaMetadataCompat{
@@ -38,6 +39,7 @@ data class Song(
         builder.albumArtUri = iconUri
         builder.displayIconUri = iconUri
         builder.duration = duration
+        builder.favorite = favorite
         builder.flag = FLAG_PLAYABLE
         return builder.build()
     }

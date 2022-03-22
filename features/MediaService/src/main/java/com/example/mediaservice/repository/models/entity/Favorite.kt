@@ -8,10 +8,9 @@ import kotlinx.android.parcel.Parcelize
 @Entity(tableName = "favorite")
 @Parcelize
 data class Favorite(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long,
-    val userId: Long,
+    @PrimaryKey
     val songId: Long,
-    val value: Boolean,
-    val isRemoteDataSource: Boolean
+    val userId: Long,
+    val deviceId: Long,
+    var value: Int,
 ): Parcelable

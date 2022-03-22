@@ -14,6 +14,7 @@ import com.example.baseproject.databinding.FragmentMainPlayingBinding
 import com.example.baseproject.navigation.AppNavigation
 import com.example.baseproject.utils.PROGRESS_BAR_MAX_VALUE
 import com.example.core.base.BaseFragment
+import com.example.mediaservice.extensions.favorite
 import com.example.mediaservice.repository.models.MediaIdExtra
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -46,7 +47,8 @@ class MainPlayingFragment : BaseFragment<FragmentMainPlayingBinding,MainPlayingV
             binding.tvTitleMainPlaying.text = it.description.title
             binding.tvSubTitleMainPlaying.text = it.description.subtitle
 
-//            isFavorite = (it.favorite != 0L)
+            isFavorite = (it.favorite != 0L)
+            updateFavoriteState(isFavorite)
 
             Glide.with(binding.root)
                 .load(it.description.iconUri)
@@ -140,7 +142,8 @@ class MainPlayingFragment : BaseFragment<FragmentMainPlayingBinding,MainPlayingV
 
         binding.btnFavorite.setOnClickListener {
             isFavorite = !isFavorite
-            binding.btnFavorite.setImageResource( if(isFavorite) R.drawable.ic_favorite_24 else R.drawable.ic_favorite_off_24)
+            updateFavoriteState(isFavorite)
+            viewModel.sendCmdUpdateFavorite()
         }
     }
 
@@ -154,5 +157,9 @@ class MainPlayingFragment : BaseFragment<FragmentMainPlayingBinding,MainPlayingV
     override fun onPause() {
         super.onPause()
         mainViewModel.stopUpdateProgress()
+    }
+
+    private fun updateFavoriteState(isFavorite: Boolean) {
+        binding.btnFavorite.setImageResource( if(isFavorite) R.drawable.ic_favorite_24 else R.drawable.ic_favorite_off_24)
     }
 }

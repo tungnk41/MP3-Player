@@ -13,7 +13,6 @@ import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.media.MediaBrowserServiceCompat
 import com.example.mediaservice.extensions.*
@@ -22,21 +21,20 @@ import com.example.mediaservice.notification.MediaNotification
 import com.example.mediaservice.player.MediaPlayer
 import com.example.mediaservice.repository.AlbumRepository.AlbumRepository
 import com.example.mediaservice.repository.ArtistRepository.ArtistRepository
+import com.example.mediaservice.repository.FavoriteRepository.FavoriteRepository
 import com.example.mediaservice.repository.GenreRepository.GenreRepository
 import com.example.mediaservice.repository.PlaylistRepository.PlaylistRepository
 import com.example.mediaservice.repository.SongRepository.SongRepository
 import com.example.mediaservice.repository.models.MediaIdExtra
 import com.example.mediaservice.repository.models.Playlist
-import com.example.mediaservice.utils.MediaType.TYPE_ALBUM
-import com.example.mediaservice.utils.MediaType.TYPE_ALL_SONGS
-import com.google.android.exoplayer2.MediaMetadata
+import com.example.mediaservice.repository.models.entity.Favorite
+import com.example.mediaservice.session.UserSessionInfo
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
-import timber.log.Timber
 import timber.log.Timber.d
 import javax.inject.Inject
 
@@ -50,11 +48,10 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
     private lateinit var mediaNotification: MediaNotification
     private lateinit var mediaSessionConnector: MediaSessionConnector
     private val serviceJob = SupervisorJob()
-    private val serviceExceptionHandler = CoroutineExceptionHandler{_,throwable ->
+    private val serviceExceptionHandler = CoroutineExceptionHandler{ _, _ ->
         d("Service exception")
     }
     private val serviceScope = CoroutineScope(Dispatchers.Default + serviceJob + serviceExceptionHandler)
-    private val userId : Long = 1
 
     private var cachedlocalListSong: List<MediaMetadataCompat> = listOf()
     private var cachedremoteListSong: List<MediaMetadataCompat> = listOf()
@@ -74,12 +71,17 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
     lateinit var genreRepository: GenreRepository
     @Inject
     lateinit var playlistRepository: PlaylistRepository
+    @Inject
+    lateinit var favoriteRepository: FavoriteRepository
+    @Inject
+    lateinit var userSessionInfo: UserSessionInfo
 
     override fun onCreate() {
         super.onCreate()
         d( "onCreate: ")
         currentPlayer = MediaPlayer(this)
         currentPlayer.setPlayerStateListener(playerStateListener)
+        userSessionInfo.create(userId = 1, deviceId = 1)
         initMediaSession()
 
         mediaNotification = MediaNotification(
@@ -94,7 +96,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
         mediaSessionConnector.setMediaMetadataProvider(object : MediaSessionConnector.MediaMetadataProvider{
             override fun getMetadata(player: Player): MediaMetadataCompat {
                 val duration = currentPlayer.getDuration()
-                val builder = MediaMetadataCompat.Builder(currentPlayer.currentMediaMetadataCompat())
+                val builder = MediaMetadataCompat.Builder(currentPlayer.currentItem())
                 if(duration > 0) {
                     builder.duration = duration
                 }
@@ -212,7 +214,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
                             mediaItems = genreRepository.findAll(parentDataSource).map {it.toBrowserMediaItem()}
                         }
                         MediaType.TYPE_ALL_PLAYLISTS -> {
-                            mediaItems = playlistRepository.findAll(userId).map { it.toBrowserMediaItem() }
+                            mediaItems = playlistRepository.findAll(userSessionInfo.userId).map { it.toBrowserMediaItem() }
                         }
                         MediaType.TYPE_ALBUM -> {
                             val listSong = songRepository.findAllByAlbumId(parentId ?: -1, parentDataSource)
@@ -360,11 +362,22 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
             when(command) {
                 CMD_ADD_PLAYLIST -> {
                     val playlist = extras?.getParcelable<Playlist>(KEY_PLAYLIST)
-                    d("onCommand: " + playlist.toString())
                     serviceScope.launch {
                         playlist?.let {
                             playlistRepository.insert(it)
                         }
+                    }
+                }
+                CMD_CLICK_FAVORITE -> {
+                    val favorite = if(currentPlayer.currentItem().favorite == 1L) 0 else 1
+                    val mediaIdExtra = MediaIdExtra.getDataFromString(currentPlayer.currentItem().id ?: "")
+                    val songId = mediaIdExtra.id ?: -1
+                    val dataSource = mediaIdExtra.dataSource
+                    val builder = MediaMetadataCompat.Builder(currentPlayer.currentItem())
+                    builder.favorite = favorite
+                    currentPlayer.updateCurrentItem(builder.build())
+                    serviceScope.launch {
+                        favoriteRepository.insert(Favorite(userId = userSessionInfo.userId, deviceId = userSessionInfo.deviceId, songId = songId, value = favorite), dataSource = dataSource)
                     }
                 }
             }

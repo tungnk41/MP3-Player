@@ -24,6 +24,7 @@ class SplashViewModel @Inject constructor() : BaseViewModel() {
         handler.removeCallbacksAndMessages(null)
         super.onCleared()
     }
+
 }
 
 sealed class SplashActionState {

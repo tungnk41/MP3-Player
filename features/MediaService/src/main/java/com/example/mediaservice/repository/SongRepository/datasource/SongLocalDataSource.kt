@@ -7,6 +7,9 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import com.example.mediaservice.module.LocalDataSource
+import com.example.mediaservice.repository.FavoriteRepository.FavoriteDataSource
+import com.example.mediaservice.repository.FavoriteRepository.datasource.FavoriteLocalDataSource
 import com.example.mediaservice.repository.SongRepository.SongDataSource
 import com.example.mediaservice.repository.models.Song
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -15,7 +18,7 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber.d
 import javax.inject.Inject
 
-class SongLocalDataSource @Inject constructor(@ApplicationContext val context: Context) :
+class SongLocalDataSource @Inject constructor(@ApplicationContext val context: Context,@LocalDataSource private val favoriteDataSource: FavoriteDataSource) :
     SongDataSource {
 
     override suspend fun findAll() : List<Song>  = withContext(Dispatchers.IO){
@@ -118,6 +121,8 @@ class SongLocalDataSource @Inject constructor(@ApplicationContext val context: C
                     }
 //              val albumArtBitmap = context.getContentResolver().loadThumbnail(imageUri, Size(100, 100), null)
 
+                    val favorite = favoriteDataSource.findBySongId(id)
+
                     val song = Song(
                         id = id,
                         title = title,
@@ -127,7 +132,8 @@ class SongLocalDataSource @Inject constructor(@ApplicationContext val context: C
                         artistId = artistId,
                         mediaUri = songUri.toString(),
                         iconUri = image,
-                        duration = duration
+                        duration = duration,
+                        favorite = favorite?.value ?: 0
                     )
                     listSong.add(song)
                 } while (cursor.moveToNext())

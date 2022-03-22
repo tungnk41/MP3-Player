@@ -7,8 +7,11 @@ import com.example.mediaservice.repository.models.entity.Favorite
 @Dao
 interface FavoriteDao {
 
-    @Query("SELECT * FROM favorite WHERE userId = :userId")
-    suspend fun findAllByUserId(userId: Long) : List<Favorite>
+    @Query("SELECT * FROM favorite WHERE userId = :userId AND deviceId = :deviceId")
+    suspend fun findAll(userId: Long, deviceId: Long) : List<Favorite>
+
+    @Query("SELECT * FROM favorite WHERE userId = :userId AND deviceId = :deviceId AND songId = :songId")
+    suspend fun findBySongId(userId: Long, deviceId: Long, songId: Long) : Favorite
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(favorite: Favorite) : Long

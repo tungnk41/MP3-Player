@@ -5,6 +5,7 @@ import android.net.Uri
 import android.support.v4.media.MediaMetadataCompat
 import android.util.Log
 import com.example.mediaservice.extensions.EMPTY_MEDIA_METADATA_COMPAT
+import com.example.mediaservice.extensions.favorite
 import com.example.mediaservice.extensions.mediaUri
 import com.example.mediaservice.extensions.toExoPlayerMediaItem
 import com.google.android.exoplayer2.C
@@ -27,7 +28,7 @@ import java.io.File
 class MediaPlayer(private val context : Context) {
     private lateinit var currentPlayer: ExoPlayer
     private var playListMediaSource: List<MediaSource>? = null
-    private var playListMediaMetadataCompat: List<MediaMetadataCompat>? = null
+    private var playListMediaMetadataCompat: MutableList<MediaMetadataCompat> = mutableListOf()
     private var playerStateListener : Player.Listener? = null
     private val databaseProvider = StandaloneDatabaseProvider(context)
 
@@ -55,7 +56,8 @@ class MediaPlayer(private val context : Context) {
     }
 
     fun setPlayList(list : List<MediaMetadataCompat>) {
-        playListMediaMetadataCompat = list
+        playListMediaMetadataCompat.clear()
+        playListMediaMetadataCompat.addAll(list)
         playListMediaSource = list.map { mediaMetadataCompat ->
             if(mediaMetadataCompat.mediaUri?.startsWith("content://") == true) {
                 ProgressiveMediaSource.Factory(dataSourceFactory)
@@ -70,7 +72,7 @@ class MediaPlayer(private val context : Context) {
         currentPlayer.prepare()
     }
 
-    fun playListMediaMetadataCompat() = playListMediaMetadataCompat
+    fun playListMediaMetadataCompat() = playListMediaMetadataCompat.toList()
 
     fun playAtIndex(index : Int) {
         currentPlayer.seekTo(index,0)
@@ -102,6 +104,10 @@ class MediaPlayer(private val context : Context) {
         currentPlayer.stop()
     }
 
+    fun isPlaying() : Boolean {
+        return currentPlayer.isPlaying
+    }
+
     fun currentPosition() : Long {
         return currentPlayer.currentPosition
     }
@@ -110,12 +116,17 @@ class MediaPlayer(private val context : Context) {
         return currentPlayer.currentMediaItemIndex
     }
 
-    fun currentMediaMetadataCompat() : MediaMetadataCompat{
-        return playListMediaMetadataCompat?.get(currentIndex()) ?: EMPTY_MEDIA_METADATA_COMPAT
+    fun currentItem() : MediaMetadataCompat{
+        if(playListMediaMetadataCompat.size > 0 && currentIndex() < playListMediaMetadataCompat.size) {
+            return playListMediaMetadataCompat[currentIndex()]
+        }
+        return EMPTY_MEDIA_METADATA_COMPAT
     }
 
-    fun isPlaying() : Boolean {
-        return currentPlayer.isPlaying
+    fun updateCurrentItem(mediaMetadataCompat: MediaMetadataCompat) {
+        if(playListMediaMetadataCompat.size > 0 && currentIndex() < playListMediaMetadataCompat.size) {
+            playListMediaMetadataCompat[currentIndex()] = mediaMetadataCompat
+        }
     }
 
     private fun initExoPlayer() {

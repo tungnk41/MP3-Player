@@ -155,11 +155,8 @@
     <fragment
         android:id="@+id/createPlaylistFragment"
         android:name="com.example.baseproject.ui.home.createPlaylist.CreatePlaylistFragment"
-        android:label="{title}"
+        android:label="Create Playlist"
         tools:layout="@layout/fragment_create_playlist" >
-        <argument
-            android:name="title"
-            app:argType="string"/>
         <action
             android:id="@+id/action_createPlaylistFragment_toPlaylistDetailFragment"
             app:destination="@id/playlistDetailFragment"
