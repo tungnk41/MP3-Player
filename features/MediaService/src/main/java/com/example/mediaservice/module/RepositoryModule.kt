@@ -12,6 +12,7 @@ import com.example.mediaservice.repository.PlaylistRepository.PlaylistDataSource
 import com.example.mediaservice.repository.PlaylistRepository.PlaylistRepository
 import com.example.mediaservice.repository.SongRepository.SongDataSource
 import com.example.mediaservice.repository.SongRepository.SongRepository
+import com.example.mediaservice.session.UserSessionInfo
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -58,9 +59,10 @@ object RepositoryModule {
     @Singleton
     fun providePlaylistRepository(
         @LocalDataSource localDataSource: PlaylistDataSource,
-        @RemoteDataSource remoteDataSource: PlaylistDataSource
+        @RemoteDataSource remoteDataSource: PlaylistDataSource,
+        userSessionInfo: UserSessionInfo
     ): PlaylistRepository =
-        PlaylistRepository(localDataSource, remoteDataSource)
+        PlaylistRepository(localDataSource, remoteDataSource, userSessionInfo)
 
     @Provides
     @Singleton

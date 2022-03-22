@@ -214,7 +214,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
                             mediaItems = genreRepository.findAll(parentDataSource).map {it.toBrowserMediaItem()}
                         }
                         MediaType.TYPE_ALL_PLAYLISTS -> {
-                            mediaItems = playlistRepository.findAll(userSessionInfo.userId).map { it.toBrowserMediaItem() }
+                            mediaItems = playlistRepository.findAll().map { it.toBrowserMediaItem() }
                         }
                         MediaType.TYPE_ALBUM -> {
                             val listSong = songRepository.findAllByAlbumId(parentId ?: -1, parentDataSource)
@@ -271,12 +271,12 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
                     .setTitle("Genres").build(),
                 MediaBrowserCompat.MediaItem.FLAG_BROWSABLE
             ),
-            MediaBrowserCompat.MediaItem(
-                MediaDescriptionCompat.Builder()
-                    .setMediaId(MediaIdExtra(mediaType = MediaType.TYPE_ALL_PLAYLISTS, dataSource = DataSource.NONE).toString())
-                    .setTitle("Playlists").build(),
-                MediaBrowserCompat.MediaItem.FLAG_BROWSABLE
-            ),
+//            MediaBrowserCompat.MediaItem(
+//                MediaDescriptionCompat.Builder()
+//                    .setMediaId(MediaIdExtra(mediaType = MediaType.TYPE_ALL_PLAYLISTS, dataSource = DataSource.NONE).toString())
+//                    .setTitle("Playlists").build(),
+//                MediaBrowserCompat.MediaItem.FLAG_BROWSABLE
+//            ),
         )
     }
     /* Callback*/
@@ -358,13 +358,16 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
 
         override fun onPrepareFromUri(uri: Uri, playWhenReady: Boolean, extras: Bundle?) = Unit
 
-        override fun onCommand(player: Player, command: String, extras: Bundle?, cb: ResultReceiver?): Boolean {
+        override fun onCommand(player: Player, command: String, extras: Bundle?, callback: ResultReceiver?): Boolean {
             when(command) {
-                CMD_ADD_PLAYLIST -> {
-                    val playlist = extras?.getParcelable<Playlist>(KEY_PLAYLIST)
+                CMD_CREATE_PLAYLIST -> {
+                    val title = extras?.getString(KEY_PLAYLIST)
                     serviceScope.launch {
-                        playlist?.let {
-                            playlistRepository.insert(it)
+                        title?.let {
+                            val playListId = playlistRepository.insert(Playlist(title = title, iconUri = "", userId = userSessionInfo.userId))
+                            val bundle = Bundle()
+                            bundle.putLong("playListId",playListId)
+                            callback?.send(200, bundle)
                         }
                     }
                 }

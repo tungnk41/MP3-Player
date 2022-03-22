@@ -4,8 +4,9 @@ import com.example.mediaservice.repository.PlaylistRepository.PlaylistDataSource
 import com.example.mediaservice.repository.models.Playlist
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class PlaylistRemoteDataSource : PlaylistDataSource{
+class PlaylistRemoteDataSource @Inject constructor() : PlaylistDataSource{
     override suspend fun findAll(userId: Long): List<Playlist> = withContext(Dispatchers.IO){
         emptyList()
     }

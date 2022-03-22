@@ -5,17 +5,22 @@ import com.example.mediaservice.utils.DataSource.LOCAL
 import com.example.mediaservice.module.LocalDataSource
 import com.example.mediaservice.module.RemoteDataSource
 import com.example.mediaservice.repository.models.Playlist
+import com.example.mediaservice.session.UserSessionInfo
 import com.example.mediaservice.utils.DataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class PlaylistRepository @Inject constructor(@LocalDataSource private val localDataSource: PlaylistDataSource, @RemoteDataSource private val remoteDataSource: PlaylistDataSource) {
-    suspend fun findAll(userId: Long): List<MediaMetadataCompat> =
+class PlaylistRepository @Inject constructor(
+    @LocalDataSource private val localDataSource: PlaylistDataSource,
+    @RemoteDataSource private val remoteDataSource: PlaylistDataSource,
+    private val userSessionInfo: UserSessionInfo
+    ) {
+    suspend fun findAll(): List<MediaMetadataCompat> =
         withContext(Dispatchers.Default) {
             val listPlaylist = mutableListOf<List<Playlist>>()
-            listPlaylist.add(findAllRemoteData(userId))
-            listPlaylist.add(findAllLocalData(userId))
+            listPlaylist.add(findAllRemoteData(userSessionInfo.userId))
+            listPlaylist.add(findAllLocalData(userSessionInfo.userId))
             listPlaylist.flatten()
         }.map { it.toMediaMetadataCompat() }
 

@@ -25,6 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LocalMusicViewModel @Inject constructor(private val mediaServiceConnection: MediaServiceConnection, private val playlistRepository: PlaylistRepository) : BaseViewModel() {
 
+    var isFirstInit = true
     private val rootMediaIdExtra = mediaServiceConnection.rootMediaId
     private var currentMediaIdExtra: MediaIdExtra? = null
 
@@ -71,10 +72,14 @@ class LocalMusicViewModel @Inject constructor(private val mediaServiceConnection
             isLoading.postValue(true)
             currentMediaIdExtra = mediaIdExtra
             mediaServiceConnection.subscribe(mediaIdExtra.toString(),subscriptionCallback)
+            startLoadingPlaylist()
+            isFirstInit = false
         }
+    }
 
+    fun startLoadingPlaylist() {
         viewModelScope.launch(Dispatchers.Default) {
-            val playlistMediaItem = playlistRepository.findAll(1)
+            val playlistMediaItem = playlistRepository.findAll()
                 .map { it.toBrowserMediaItem() }
                 .map {
                     val mediaIdExtra = MediaIdExtra.getDataFromString(it.mediaId ?: "")
@@ -87,6 +92,7 @@ class LocalMusicViewModel @Inject constructor(private val mediaServiceConnection
                     val dataSource = mediaIdExtra.dataSource
                     MediaItemUI(mediaIdExtra = mediaIdExtra,id = id, title = title, subTitle = subTitle , iconUri = iconUri, isBrowsable = isBrowsable, dataSource = dataSource, mediaType = mediaType)
                 }
+            d("playlistMediaItem " + playlistMediaItem.toString())
             _playlist.postValue(playlistMediaItem)
         }
     }

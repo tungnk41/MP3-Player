@@ -14,6 +14,7 @@ import com.example.mediaservice.repository.GenreRepository.datasource.GenreLocal
 import com.example.mediaservice.repository.GenreRepository.datasource.GenreRemoteDataSource
 import com.example.mediaservice.repository.PlaylistRepository.PlaylistDataSource
 import com.example.mediaservice.repository.PlaylistRepository.datasource.PlaylistLocalDataSource
+import com.example.mediaservice.repository.PlaylistRepository.datasource.PlaylistRemoteDataSource
 import com.example.mediaservice.repository.SongRepository.SongDataSource
 import com.example.mediaservice.repository.SongRepository.datasource.SongLocalDataSource
 import com.example.mediaservice.repository.SongRepository.datasource.SongRemoteDataSource
@@ -73,7 +74,7 @@ abstract class DataSourceModule{
 
     @RemoteDataSource
     @Binds
-    abstract fun bindPlaylistRemoteDataSource(remoteDataSource: PlaylistLocalDataSource): PlaylistDataSource
+    abstract fun bindPlaylistRemoteDataSource(remoteDataSource: PlaylistRemoteDataSource): PlaylistDataSource
 
     @LocalDataSource
     @Binds

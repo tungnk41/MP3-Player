@@ -30,10 +30,10 @@ const val NETWORK_FAILURE = "NETWORK_FAILURE"
 const val DATABASE_NAME = "mediaservice.db"
 
 
-const val CMD_ADD_PLAYLIST = "com.example.mediaservice.add.playlist"
+const val CMD_CREATE_PLAYLIST = "com.example.mediaservice.add.playlist"
 const val KEY_PLAYLIST = "playlist"
 
 const val CMD_CLICK_FAVORITE = "com.example.mediaservice.click.favorite"
-const val KEY_CLICK_FAVORITE = "favorite"
+const val KEY_FAVORITE = "favorite"
 
 

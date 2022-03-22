@@ -30,6 +30,21 @@ class CreatePlaylistFragment : BaseFragment<FragmentCreatePlaylistBinding,Create
 
         })
     }
+
+    override fun bindingStateView() {
+        super.bindingStateView()
+
+        viewModel.createPlaylistCompleted.observe(this, Observer {
+            if(it) {
+                homeNavigation.openCreatePlaylistScreenToPlaylistDetailScreen(Bundle()
+                    .apply {
+                        putString("title",viewModel.playlistTitle)
+                        putParcelable("mediaIdExtra",viewModel.mediaIdExtra)
+                    }
+                )
+            }
+        })
+    }
     override fun setOnClick() {
         super.setOnClick()
         binding.btnCreatePlaylist.setOnClickListener {

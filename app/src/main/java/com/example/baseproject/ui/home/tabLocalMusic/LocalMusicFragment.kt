@@ -65,12 +65,19 @@ class LocalMusicFragment :
         PlaylistAdapter(
             requireContext(),
             onClickListener = { position ->
-
+                val bundle = Bundle()
+                bundle.putParcelable("mediaIdExtra",viewModel.playlist.value?.get(position)?.mediaIdExtra)
+                bundle.putString("title", viewModel.playlist.value?.get(position)?.title)
+                homeNavigation.openLocalMusicScreenToPlaylistDetailScreen(bundle)
             })
     }
 
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
+
+        if(!viewModel.isFirstInit){
+            viewModel.startLoadingPlaylist()
+        }
 
         binding.rvListMediaItem.setHasFixedSize(false)
         if(!mAdapter.hasObservers()){
@@ -81,7 +88,6 @@ class LocalMusicFragment :
 
         (binding.rvPlaylist.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         binding.rvPlaylist.adapter = playlistAdapter
-
     }
 
     override fun bindingStateView() {
@@ -94,7 +100,6 @@ class LocalMusicFragment :
         viewModel.playlist.observe(this, Observer {
             playlistAdapter.submitList(it)
         })
-
     }
 
     override fun setOnClick() {
