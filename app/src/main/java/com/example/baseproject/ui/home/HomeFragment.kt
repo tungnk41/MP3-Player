@@ -17,22 +17,20 @@ import com.example.baseproject.navigation.AppNavigation
 import com.example.baseproject.navigation.HomeNavigation
 import com.example.baseproject.ui.bottomController.BottomControllerFragment
 import com.example.core.base.BaseFragment
+import com.example.core.base.BaseFragmentNotRequireViewModel
+import com.example.mediaservice.extensions.EMPTY_MEDIA_METADATA_COMPAT
+import com.example.mediaservice.extensions.EMPTY_PLAYBACK_STATE
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
-import timber.log.Timber.d
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.fragment_home) {
+class HomeFragment : BaseFragmentNotRequireViewModel<FragmentHomeBinding>(R.layout.fragment_home) {
 
     @Inject
     lateinit var appNavigation: AppNavigation
-
     @Inject
     lateinit var homeNavigation: HomeNavigation
 
-    private val viewModel: HomeViewModel by viewModels()
-    override fun getVM(): HomeViewModel = viewModel
     private val mainViewModel: MainViewModel by activityViewModels()
 
 
@@ -50,8 +48,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
     override fun bindingStateView() {
         super.bindingStateView()
 
-        mainViewModel.isPlaying.observe(this, Observer { isPlaying ->
-            if(isPlaying){
+        mainViewModel.mediaMetadata.observe(this, Observer { metadata ->
+            if(metadata == EMPTY_MEDIA_METADATA_COMPAT){
+                binding.bottomController.visibility = View.GONE
+            }
+            else {
                 binding.bottomController.visibility = View.VISIBLE
             }
         })
@@ -73,7 +74,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
 
         binding.bottomNav.setupWithNavController(navController)
         binding.tbToolbar.setupWithNavController(navController,appBarConfiguration)
-
 
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
             if(destination.id == R.id.tabOnlineMusicFragment || destination.id == R.id.tabLocalMusicFragment) {

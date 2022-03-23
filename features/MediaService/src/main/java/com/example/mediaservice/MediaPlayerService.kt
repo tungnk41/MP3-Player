@@ -58,7 +58,6 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
     private var cachedplaylistListSong: List<MediaMetadataCompat> = listOf()
     private var currentFocusListSong: List<MediaMetadataCompat> = listOf()
     private var isNeedToApplyNewListSong = false
-    private var currenParentMediaIdExtra: MediaIdExtra? = null
 
 
     @Inject
@@ -78,7 +77,6 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
 
     override fun onCreate() {
         super.onCreate()
-        d( "onCreate: ")
         currentPlayer = MediaPlayer(this)
         currentPlayer.setPlayerStateListener(playerStateListener)
         userSessionInfo.create(userId = 1, deviceId = 1)
@@ -148,6 +146,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
         d( "onTaskRemoved: ")
         if(!currentPlayer.isPlaying()) {
             currentPlayer.stop()
+            stopSelf()
         }
     }
 
@@ -189,7 +188,6 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
         val parentMediaType = mediaIdExtra.mediaType //MediaType.TYPE_SONG,MediaType.TYPE_ALBUM ...
         val parentDataSource = mediaIdExtra.dataSource //DataSource.LOCAL or REMOTE
 
-        currenParentMediaIdExtra = mediaIdExtra
         mediaItems = listOf()
         //allow calling result.sendResult from another thread
         result.detach()
@@ -379,6 +377,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
                     val builder = MediaMetadataCompat.Builder(currentPlayer.currentItem())
                     builder.favorite = favorite
                     currentPlayer.updateCurrentItem(builder.build())
+                    updateSessionMediaMetadata(builder.build())
                     serviceScope.launch {
                         favoriteRepository.insert(Favorite(userId = userSessionInfo.userId, deviceId = userSessionInfo.deviceId, songId = songId, value = favorite), dataSource = dataSource)
                     }
@@ -446,5 +445,9 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
             }
         }
         return listSong
+    }
+
+    private fun updateSessionMediaMetadata(mediaMetadataCompat: MediaMetadataCompat){
+        mediaSession.setMetadata(mediaMetadataCompat)
     }
 }

@@ -34,7 +34,6 @@ class GenreViewModel @Inject constructor(private val mediaServiceConnection: Med
                     val isBrowsable: Boolean = it.flags.equals(MediaBrowserCompat.MediaItem.FLAG_BROWSABLE)
                     val mediaType = mediaIdExtra.mediaType ?: -1
                     val dataSource = mediaIdExtra.dataSource
-                    Timber.d("onChildrenLoaded " + id + " ," + title)
                     MediaItemUI(mediaIdExtra = mediaIdExtra,id = id, title = title, subTitle = subTitle , iconUri = iconUri, isBrowsable = isBrowsable, dataSource = dataSource, mediaType = mediaType)
                 }
                 _mediaItems.postValue(listMediaItemExtra)

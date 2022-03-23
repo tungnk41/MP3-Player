@@ -20,12 +20,9 @@ import java.lang.Exception
 
 class MediaNotification (private val context: Context, sessionToken: MediaSessionCompat.Token, notificationListener: PlayerNotificationManager.NotificationListener) {
 
-    private var player: Player? = null
     private val serviceJob = SupervisorJob()
     private val serviceScope = CoroutineScope(Dispatchers.Main + serviceJob)
     private var notificationManager: PlayerNotificationManager
-    private val platformNotificationManager: NotificationManager =
-        context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     init {
         val mediaController = MediaControllerCompat(context, sessionToken)

@@ -31,7 +31,6 @@ class AlbumFragment: BaseFragment<FragmentAlbumBinding,AlbumViewModel>(R.layout.
         MediaItemHorizontalAdapter(
             requireContext(),
             onClickListener = { position ->
-                Timber.d("Position $position")
                 val mediaIdExtra = viewModel.mediaItems.value?.get(position)?.mediaIdExtra
                 val title = viewModel.mediaItems.value?.get(position)?.title
                 mediaIdExtra?.let {

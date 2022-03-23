@@ -92,14 +92,12 @@ class LocalMusicViewModel @Inject constructor(private val mediaServiceConnection
                     val dataSource = mediaIdExtra.dataSource
                     MediaItemUI(mediaIdExtra = mediaIdExtra,id = id, title = title, subTitle = subTitle , iconUri = iconUri, isBrowsable = isBrowsable, dataSource = dataSource, mediaType = mediaType)
                 }
-            d("playlistMediaItem " + playlistMediaItem.toString())
             _playlist.postValue(playlistMediaItem)
         }
     }
 
     override fun onCleared() {
         super.onCleared()
-        d("onCleared")
         mediaServiceConnection.unsubscribe(currentMediaIdExtra.toString(),subscriptionCallback)
     }
 

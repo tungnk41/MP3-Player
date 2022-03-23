@@ -29,8 +29,6 @@ class MainPlayingFragment : BaseFragment<FragmentMainPlayingBinding,MainPlayingV
 
     private val viewModel: MainPlayingViewModel by viewModels()
     private val mainViewModel: MainViewModel by activityViewModels()
-    private var isPlayingUI: Boolean = false
-    private var isFavorite: Boolean = false
 
     override fun getVM(): MainPlayingViewModel = viewModel
 
@@ -47,8 +45,7 @@ class MainPlayingFragment : BaseFragment<FragmentMainPlayingBinding,MainPlayingV
             binding.tvTitleMainPlaying.text = it.description.title
             binding.tvSubTitleMainPlaying.text = it.description.subtitle
 
-            isFavorite = (it.favorite != 0L)
-            updateFavoriteState(isFavorite)
+            updateFavoriteState((it.favorite != 0L))
 
             Glide.with(binding.root)
                 .load(it.description.iconUri)
@@ -64,7 +61,6 @@ class MainPlayingFragment : BaseFragment<FragmentMainPlayingBinding,MainPlayingV
                 binding.btnPlayPauseMainPlaying.setImageResource(R.drawable.ic_play_24)
                 mainViewModel.stopUpdateProgress()
             }
-            isPlayingUI = isPlaying
         })
 
         mainViewModel.currentPositionUI.observe(this, Observer {
@@ -141,16 +137,7 @@ class MainPlayingFragment : BaseFragment<FragmentMainPlayingBinding,MainPlayingV
         }
 
         binding.btnFavorite.setOnClickListener {
-            isFavorite = !isFavorite
-            updateFavoriteState(isFavorite)
             viewModel.sendCmdUpdateFavorite()
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if(isPlayingUI){
-            mainViewModel.startUpdateProgress()
         }
     }
 

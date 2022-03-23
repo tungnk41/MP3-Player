@@ -27,7 +27,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OnlineMusicViewModel @Inject constructor(
-    private val mediaServiceConnection: MediaServiceConnection,
     private val songRepository: SongRepository,
     private val albumRepository: AlbumRepository,
     private val artistRepository: ArtistRepository,
@@ -113,7 +112,4 @@ class OnlineMusicViewModel @Inject constructor(
         return MediaItemUI(mediaIdExtra = mediaIdExtra,id = id, title = title, subTitle = subTitle , iconUri = iconUri, isBrowsable = isBrowsable, dataSource = dataSource, mediaType = mediaType)
     }
 
-    override fun onCleared() {
-        super.onCleared()
-    }
 }

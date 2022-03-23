@@ -38,7 +38,6 @@ class ArtistDetailViewModel @Inject constructor(private val mediaServiceConnecti
                     val dataSource = mediaIdExtra.dataSource
                     MediaItemUI(mediaIdExtra = mediaIdExtra,id = id, title = title, subTitle = subTitle , iconUri = iconUri, isBrowsable = isBrowsable, dataSource = dataSource, mediaType = mediaType)
                 }
-                Timber.d("onChildrenLoaded " + listMediaItemExtra.toString())
                 _mediaItems.postValue(listMediaItemExtra)
                 isLoading.postValue(false)
             }

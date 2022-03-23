@@ -46,8 +46,6 @@ class AlbumDetailFragment: BaseFragment<FragmentAlbumDetailBinding,AlbumDetailVi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        d("onCreate")
-
         parentMediaIdExtra?.let {
             viewModel.startLoadingData(it)
         }

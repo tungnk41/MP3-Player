@@ -37,7 +37,6 @@ class AlbumDetailViewModel @Inject constructor(private val mediaServiceConnectio
                     val dataSource = mediaIdExtra.dataSource
                     MediaItemUI(mediaIdExtra = mediaIdExtra,id = id, title = title, subTitle = subTitle , iconUri = iconUri, isBrowsable = isBrowsable, dataSource = dataSource, mediaType = mediaType)
                 }
-                d("onChildrenLoaded " + listMediaItemExtra.toString())
                 _mediaItems.postValue(listMediaItemExtra)
                 isLoading.postValue(false)
             }
