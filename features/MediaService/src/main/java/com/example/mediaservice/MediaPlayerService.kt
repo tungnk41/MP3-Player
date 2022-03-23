@@ -97,6 +97,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
                 val builder = MediaMetadataCompat.Builder(currentPlayer.currentItem())
                 if(duration > 0) {
                     builder.duration = duration
+                    currentPlayer.updateCurrentItem(builder.build())
                 }
                 return builder.build()
             }
@@ -124,7 +125,6 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
 
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if (intent == null) return START_STICKY
         d("onStartCommand: action" + intent?.action)
         return START_NOT_STICKY
     }
