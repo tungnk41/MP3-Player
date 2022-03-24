@@ -1,7 +1,5 @@
 package com.example.mediaservice.repository.GenreRepository
 
-import android.support.v4.media.MediaMetadataCompat
-import com.example.mediaservice.utils.DataSource.LOCAL
 import com.example.mediaservice.module.LocalDataSource
 import com.example.mediaservice.module.RemoteDataSource
 import com.example.mediaservice.repository.models.Genre
@@ -14,13 +12,13 @@ class GenreRepository @Inject constructor(
     @LocalDataSource private val localDataSource: GenreDataSource,
     @RemoteDataSource private val remoteDataSource: GenreDataSource
 ) {
-    suspend fun findAll(dataSource : Int) : List<MediaMetadataCompat>{
+    suspend fun findAll(dataSource : Int) : List<Genre>{
         return withContext(Dispatchers.Default){
             if(dataSource == DataSource.LOCAL) {
                 findAllLocalData()
             } else {
                 findAllRemoteData()
-            }.map { it.toMediaMetadataCompat(dataSource) }
+            }
         }
     }
 

@@ -7,6 +7,7 @@ import android.provider.MediaStore
 import com.example.mediaservice.repository.ArtistRepository.ArtistDataSource
 import com.example.mediaservice.repository.models.Album
 import com.example.mediaservice.repository.models.Artist
+import com.example.mediaservice.utils.DataSource
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -34,7 +35,7 @@ class ArtistLocalDataSource @Inject constructor(@ApplicationContext val context:
                     val name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST))
                     if(!setIdArtist.contains(id)) {
                         setIdArtist.add(id)
-                        listArtist.add(Artist(id,name))
+                        listArtist.add(Artist(id = id,title = name, dataSource = DataSource.LOCAL))
                     }
                 } while (cursor.moveToNext())
             }

@@ -14,13 +14,13 @@ class AlbumRepository @Inject constructor(
     @LocalDataSource private val localDataSource: AlbumDataSource,
     @RemoteDataSource private val remoteDataSource: AlbumDataSource
 ) {
-    suspend fun findAll(dataSource : Int) : List<MediaMetadataCompat>{
+    suspend fun findAll(dataSource : Int) : List<Album>{
         return withContext(Dispatchers.Default){
             if(dataSource == DataSource.LOCAL) {
                 findAllLocalData()
             } else {
                 findAllRemoteData()
-            }.map { it.toMediaMetadataCompat(dataSource) }
+            }
         }
     }
 

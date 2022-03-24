@@ -3,6 +3,7 @@ package com.example.mediaservice.repository.SongRepository.datasource
 import com.example.mediaservice.network.MediaApiInterface
 import com.example.mediaservice.repository.SongRepository.SongDataSource
 import com.example.mediaservice.repository.models.Song
+import com.example.mediaservice.utils.DataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -10,32 +11,32 @@ import javax.inject.Inject
 class SongRemoteDataSource @Inject constructor(private val musicServiceApi: MediaApiInterface) :
     SongDataSource {
     override suspend fun findAll(): List<Song> = withContext(Dispatchers.IO){
-        findAllWithArtist()
+        prepareAllSong()
     }
 
     override suspend fun findAllByAlbumId(albumId: Long): List<Song> = withContext(Dispatchers.IO){
-        musicServiceApi.getAllSong()?.body()?.filter { it.albumId == albumId } ?: listOf()
+        prepareAllSong().filter { it.albumId == albumId }
     }
 
     override suspend fun findAllByArtistId(artistId: Long): List<Song> = withContext(Dispatchers.IO){
-        musicServiceApi.getAllSong()?.body()?.filter { it.artistId == artistId } ?: listOf()
+        prepareAllSong().filter { it.artistId == artistId }
     }
 
     override suspend fun findAllByGenreId(genreId: Long): List<Song> = withContext(Dispatchers.IO){
-        musicServiceApi.getAllSong()?.body()?.filter { it.genreId == genreId } ?: listOf()
+        prepareAllSong().filter { it.genreId == genreId }
     }
 
-    override suspend fun findAllByPlaylistId(playlistId: Long): List<Song> {
-       return emptyList()
+    override suspend fun findAllByPlaylistId(playlistId: Long): List<Song> = withContext(Dispatchers.IO) {
+        emptyList()
     }
 
-    override suspend fun addSongToPlaylist(playlistId: Long, songId: Long) {
+    override suspend fun addSongToPlaylist(playlistId: Long, songId: Long) = withContext(Dispatchers.IO) {
 
     }
 
     //#############################################
 
-    private suspend fun findAllWithArtist(): List<Song> = withContext(Dispatchers.IO){
+    private suspend fun prepareAllSong() : List<Song> = withContext(Dispatchers.IO) {
         val allSong = musicServiceApi.getAllSong()?.body() ?: listOf()
         val allArtist = musicServiceApi.getAllArtist()?.body() ?: listOf()
 
@@ -45,9 +46,9 @@ class SongRemoteDataSource @Inject constructor(private val musicServiceApi: Medi
             mapArtist.put(artist.id,artist.title)
         }
         allSong.forEach { song ->
-            song.artist = mapArtist.get(song.artistId).toString()
+            song.artist = mapArtist[song.artistId].toString()
+            song.dataSource = DataSource.REMOTE
         }
-
         allSong
     }
 }

@@ -14,6 +14,7 @@ import com.example.mediaservice.repository.FavoriteRepository.datasource.Favorit
 import com.example.mediaservice.repository.SongRepository.SongDataSource
 import com.example.mediaservice.repository.models.Song
 import com.example.mediaservice.repository.models.entity.SongPlaylist
+import com.example.mediaservice.utils.DataSource
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -139,7 +140,8 @@ class SongLocalDataSource @Inject constructor(@ApplicationContext val context: C
                         mediaUri = songUri.toString(),
                         iconUri = image,
                         duration = duration,
-                        favorite = favorite?.value ?: 0
+                        favorite = favorite?.value ?: 0,
+                        dataSource = DataSource.LOCAL
                     )
                     listSong.add(song)
                 } while (cursor.moveToNext())

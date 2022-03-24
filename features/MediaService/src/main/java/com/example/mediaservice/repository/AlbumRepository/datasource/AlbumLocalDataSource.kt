@@ -9,6 +9,7 @@ import android.os.Build
 import android.provider.MediaStore
 import com.example.mediaservice.repository.AlbumRepository.AlbumDataSource
 import com.example.mediaservice.repository.models.Album
+import com.example.mediaservice.utils.DataSource
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
@@ -37,16 +38,16 @@ class AlbumLocalDataSource @Inject constructor(@ApplicationContext val context: 
                 do {
                     val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID))
                     val name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM))
-                    var image = ""
+                    var imageUri = ""
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                         val albumArtUri = Uri.parse("content://media/external/audio/albumart")
-                        image = ContentUris.withAppendedId(albumArtUri,id).toString()
+                        imageUri = ContentUris.withAppendedId(albumArtUri,id).toString()
                     } else {
-                        image = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM_ART))
+                        imageUri = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM_ART))
                     }
                     if(!setIdAlbum.contains(id)) {
                         setIdAlbum.add(id)
-                        listAlbum.add(Album(id,name,image))
+                        listAlbum.add(Album(id = id,title = name, iconUri = imageUri, dataSource = DataSource.LOCAL))
                     }
                 } while (cursor.moveToNext())
             }

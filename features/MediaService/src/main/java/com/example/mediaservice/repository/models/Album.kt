@@ -1,7 +1,9 @@
 package com.example.mediaservice.repository.models
 
+import android.net.Uri
 import android.os.Parcelable
 import android.support.v4.media.MediaBrowserCompat
+import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
 import com.example.mediaservice.extensions.*
 import com.example.mediaservice.utils.DataSource
@@ -16,16 +18,17 @@ data class Album(
     val title: String = "",
     @SerializedName("image")
     val iconUri: String = "",
-    val totalSong: String = ""
+    val totalSong: String = "",
+    var dataSource: Int
 ) : Parcelable {
 
-    fun toMediaMetadataCompat(dataSource: Int = DataSource.LOCAL): MediaMetadataCompat {
-        val builder = MediaMetadataCompat.Builder()
-        builder.id = MediaIdExtra(id = id, mediaType = MediaType.TYPE_ALBUM, dataSource = dataSource).toString()
-        builder.title = title
-        builder.albumArtUri = iconUri
-        builder.displayIconUri = iconUri
-        builder.flag = MediaBrowserCompat.MediaItem.FLAG_BROWSABLE
-        return builder.build()
+    fun toBrowserMediaItem(parentMediaType: Int) : MediaBrowserCompat.MediaItem {
+        val mediaDescriptionBuilder = MediaDescriptionCompat.Builder()
+            .setMediaId(MediaIdExtra(id = id,parentMediaType = parentMediaType, mediaType = MediaType.TYPE_SONG, dataSource = dataSource).toString())
+            .setTitle(title)
+            .setIconUri(Uri.parse(iconUri))
+        return MediaBrowserCompat.MediaItem(mediaDescriptionBuilder.build(),
+            MediaBrowserCompat.MediaItem.FLAG_BROWSABLE
+        )
     }
 }

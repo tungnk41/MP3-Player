@@ -2,12 +2,6 @@ package com.example.mediaservice.player
 
 import android.content.Context
 import android.net.Uri
-import android.support.v4.media.MediaMetadataCompat
-import android.util.Log
-import com.example.mediaservice.extensions.EMPTY_MEDIA_METADATA_COMPAT
-import com.example.mediaservice.extensions.favorite
-import com.example.mediaservice.extensions.mediaUri
-import com.example.mediaservice.extensions.toExoPlayerMediaItem
 import com.example.mediaservice.repository.models.Song
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
@@ -24,6 +18,7 @@ import com.google.android.exoplayer2.upstream.cache.CacheWriter
 import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor
 import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import timber.log.Timber
+import timber.log.Timber.d
 import java.io.File
 
 class MediaPlayer(private val context : Context) {
@@ -117,8 +112,11 @@ class MediaPlayer(private val context : Context) {
         return currentPlayer.currentMediaItemIndex
     }
 
-    fun currentItem() : Song{
-        return listSong[currentIndex()]
+    fun currentItem() : Song?{
+        if(currentIndex()>=0 && currentIndex() < listSong.size) {
+            return listSong[currentIndex()]
+        }
+        return null
     }
 
     fun updateCurrentItem(song: Song) {
@@ -166,7 +164,7 @@ class MediaPlayer(private val context : Context) {
                         null,
                         CacheWriter.ProgressListener { requestLength, bytesCached, newBytesCached ->
                             val downloadPercentage = (bytesCached * 100.0 / requestLength)
-                            Log.d("TAG", "prefetchRemoteData: $downloadPercentage")
+                            d("prefetchRemoteData: $downloadPercentage")
                         }
                     ).cache()
                 }

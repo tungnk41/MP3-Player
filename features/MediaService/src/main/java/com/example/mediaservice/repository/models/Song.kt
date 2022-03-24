@@ -30,9 +30,11 @@ data class Song(
     val mediaUri: String = "",
     @SerializedName("image")
     val iconUri: String = "",
-    val duration: Long = 0,
-    val favorite: Int = 0
+    var duration: Long = 0,
+    var favorite: Int = 0,
+    var dataSource: Int,
 ) : Parcelable {
+
     fun toMediaMetadataCompat(): MediaMetadataCompat {
         val builder = MediaMetadataCompat.Builder()
         builder.id = id.toString()
@@ -70,7 +72,7 @@ data class Song(
         }.build()
     }
 
-    fun toBrowserMediaItem(parentMediaType: Int, dataSource: Int) : MediaBrowserCompat.MediaItem {
+    fun toBrowserMediaItem(parentMediaType: Int) : MediaBrowserCompat.MediaItem {
         val mediaDescriptionBuilder = MediaDescriptionCompat.Builder()
             .setMediaId(MediaIdExtra(id = id,parentMediaType = parentMediaType, mediaType = MediaType.TYPE_SONG, dataSource = dataSource).toString())
             .setTitle(title)

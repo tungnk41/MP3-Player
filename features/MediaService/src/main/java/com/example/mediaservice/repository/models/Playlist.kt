@@ -1,7 +1,9 @@
 package com.example.mediaservice.repository.models
 
+import android.net.Uri
 import android.os.Parcelable
 import android.support.v4.media.MediaBrowserCompat
+import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -20,12 +22,13 @@ data class Playlist(
     val userId: Long
 ) : Parcelable {
 
-    fun toMediaMetadataCompat(dataSource: Int = DataSource.NONE): MediaMetadataCompat {
-        val builder = MediaMetadataCompat.Builder()
-        builder.id = MediaIdExtra(id = id, mediaType = MediaType.TYPE_PLAYLIST, dataSource = dataSource).toString()
-        builder.title = title
-        builder.displayIconUri = iconUri
-        builder.flag = MediaBrowserCompat.MediaItem.FLAG_BROWSABLE
-        return builder.build()
+    fun toBrowserMediaItem(parentMediaType: Int) : MediaBrowserCompat.MediaItem {
+        val mediaDescriptionBuilder = MediaDescriptionCompat.Builder()
+            .setMediaId(MediaIdExtra(id = id,parentMediaType = parentMediaType, mediaType = MediaType.TYPE_SONG, dataSource = DataSource.NONE).toString())
+            .setTitle(title)
+            .setIconUri(Uri.parse(iconUri))
+        return MediaBrowserCompat.MediaItem(mediaDescriptionBuilder.build(),
+            MediaBrowserCompat.MediaItem.FLAG_BROWSABLE
+        )
     }
 }

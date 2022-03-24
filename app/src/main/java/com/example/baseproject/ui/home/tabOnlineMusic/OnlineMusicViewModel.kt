@@ -10,9 +10,6 @@ import com.example.baseproject.model.Banner
 import com.example.baseproject.model.MediaItemUI
 import com.example.baseproject.model.MediaOnlineItem
 import com.example.core.base.BaseViewModel
-import com.example.mediaservice.MediaServiceConnection
-import com.example.mediaservice.extensions.displayIconUri
-import com.example.mediaservice.extensions.toBrowserMediaItem
 import com.example.mediaservice.repository.AlbumRepository.AlbumRepository
 import com.example.mediaservice.repository.ArtistRepository.ArtistRepository
 import com.example.mediaservice.repository.GenreRepository.GenreRepository
@@ -61,25 +58,25 @@ class OnlineMusicViewModel @Inject constructor(
                 songRepository
                     .findAll(dataSource = DataSource.REMOTE)
                     .take(7)
-                    .map { mapToMediaItemUI( it.toBrowserMediaItem())}
+                    .map { mapToMediaItemUI( it.toBrowserMediaItem(DataSource.REMOTE))}
             }
             val listMediaItemUIAlbum = async {
                 albumRepository
                     .findAll(dataSource = DataSource.REMOTE)
                     .take(7)
-                    .map { mapToMediaItemUI( it.toBrowserMediaItem()).also { _listBannerData.add(Banner(it.iconUri))} }
+                    .map { mapToMediaItemUI( it.toBrowserMediaItem(DataSource.REMOTE)).also { _listBannerData.add(Banner(it.iconUri))} }
             }
             val listMediaItemUIArtist = async {
                 artistRepository
                     .findAll(dataSource = DataSource.REMOTE)
                     .take(7)
-                    .map { mapToMediaItemUI( it.toBrowserMediaItem() ) }
+                    .map { mapToMediaItemUI( it.toBrowserMediaItem(DataSource.REMOTE) ) }
             }
             val listMediaItemUIGenre = async {
                 genreRepository
                     .findAll(dataSource = DataSource.REMOTE)
                     .take(7)
-                    .map { mapToMediaItemUI( it.toBrowserMediaItem() ) }
+                    .map { mapToMediaItemUI( it.toBrowserMediaItem(DataSource.REMOTE) ) }
             }
             awaitAll(listMediaItemUISong, listMediaItemUIAlbum, listMediaItemUIArtist, listMediaItemUIGenre
             )

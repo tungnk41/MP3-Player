@@ -16,13 +16,13 @@ class PlaylistRepository @Inject constructor(
     @RemoteDataSource private val remoteDataSource: PlaylistDataSource,
     private val userSessionInfo: UserSessionInfo
     ) {
-    suspend fun findAll(): List<MediaMetadataCompat> =
+    suspend fun findAll(): List<Playlist> =
         withContext(Dispatchers.Default) {
             val listPlaylist = mutableListOf<List<Playlist>>()
             listPlaylist.add(findAllRemoteData(userSessionInfo.userId))
             listPlaylist.add(findAllLocalData(userSessionInfo.userId))
             listPlaylist.flatten()
-        }.map { it.toMediaMetadataCompat() }
+        }
 
     suspend fun insert(playlist: Playlist) = withContext(Dispatchers.Default) {
         insertRemoteData(playlist)

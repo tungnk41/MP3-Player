@@ -244,41 +244,41 @@ inline var MediaMetadataCompat.Builder.favorite: Int
     }
 
 
-fun MediaMetadataCompat.toExoPlayerMetadata(): com.google.android.exoplayer2.MediaMetadata {
-    return with(MediaMetadata.Builder()) {
-        setTitle(title)
-        setArtist(artist)
-        setAlbumTitle(album)
-        setArtworkUri(Uri.parse(albumArtUri))
-        val extras = Bundle()
-        extras.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration)
-        setExtras(extras)
-    }.build()
-}
-
-
-fun MediaMetadataCompat.toExoPlayerMediaItem(): com.google.android.exoplayer2.MediaItem {
-    return with(com.google.android.exoplayer2.MediaItem.Builder()) {
-        setMediaId(id ?: "")
-        setUri(mediaUri)
-        setMimeType(MimeTypes.AUDIO_MPEG)
-        setMediaMetadata(toExoPlayerMetadata())
-    }.build()
-}
-
-fun MediaMetadataCompat.toBrowserMediaItem(parentMediaType: Int? = null) : MediaBrowserCompat.MediaItem {
-    var mediaIdExtra : MediaIdExtra? = null
-    if(parentMediaType != null) {
-        mediaIdExtra = MediaIdExtra.getDataFromString(id ?: "")
-        mediaIdExtra.parentMediaType = parentMediaType
-    }
-    val mediaDescriptionBuilder = MediaDescriptionCompat.Builder()
-        .setMediaId(mediaIdExtra?.toString() ?: id)
-        .setTitle(title)
-        .setSubtitle(artist)
-        .setIconUri(Uri.parse(displayIconUri))
-    return MediaBrowserCompat.MediaItem(mediaDescriptionBuilder.build(), flag.toInt())
-}
+//fun MediaMetadataCompat.toExoPlayerMetadata(): com.google.android.exoplayer2.MediaMetadata {
+//    return with(MediaMetadata.Builder()) {
+//        setTitle(title)
+//        setArtist(artist)
+//        setAlbumTitle(album)
+//        setArtworkUri(Uri.parse(albumArtUri))
+//        val extras = Bundle()
+//        extras.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration)
+//        setExtras(extras)
+//    }.build()
+//}
+//
+//
+//fun MediaMetadataCompat.toExoPlayerMediaItem(): com.google.android.exoplayer2.MediaItem {
+//    return with(com.google.android.exoplayer2.MediaItem.Builder()) {
+//        setMediaId(id ?: "")
+//        setUri(mediaUri)
+//        setMimeType(MimeTypes.AUDIO_MPEG)
+//        setMediaMetadata(toExoPlayerMetadata())
+//    }.build()
+//}
+//
+//fun MediaMetadataCompat.toBrowserMediaItem(parentMediaType: Int? = null) : MediaBrowserCompat.MediaItem {
+//    var mediaIdExtra : MediaIdExtra? = null
+//    if(parentMediaType != null) {
+//        mediaIdExtra = MediaIdExtra.getDataFromString(id ?: "")
+//        mediaIdExtra.parentMediaType = parentMediaType
+//    }
+//    val mediaDescriptionBuilder = MediaDescriptionCompat.Builder()
+//        .setMediaId(mediaIdExtra?.toString() ?: id)
+//        .setTitle(title)
+//        .setSubtitle(artist)
+//        .setIconUri(Uri.parse(displayIconUri))
+//    return MediaBrowserCompat.MediaItem(mediaDescriptionBuilder.build(), flag.toInt())
+//}
 
 val EMPTY_MEDIA_METADATA_COMPAT: MediaMetadataCompat = MediaMetadataCompat.Builder()
     .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, "")

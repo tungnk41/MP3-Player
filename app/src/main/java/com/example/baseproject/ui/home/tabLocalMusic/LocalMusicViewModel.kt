@@ -10,12 +10,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.baseproject.model.MediaItemUI
 import com.example.core.base.BaseViewModel
 import com.example.mediaservice.MediaServiceConnection
-import com.example.mediaservice.extensions.toBrowserMediaItem
 import com.example.mediaservice.repository.PlaylistRepository.PlaylistRepository
 import com.example.mediaservice.repository.models.MediaIdExtra
-import com.example.mediaservice.repository.models.Playlist
 import com.example.mediaservice.utils.DataSource
-import com.example.mediaservice.utils.MediaType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -80,7 +77,7 @@ class LocalMusicViewModel @Inject constructor(private val mediaServiceConnection
     fun startLoadingPlaylist() {
         viewModelScope.launch(Dispatchers.Default) {
             val playlistMediaItem = playlistRepository.findAll()
-                .map { it.toBrowserMediaItem() }
+                .map { it.toBrowserMediaItem(DataSource.LOCAL) }
                 .map {
                     val mediaIdExtra = MediaIdExtra.getDataFromString(it.mediaId ?: "")
                     val id: Long= mediaIdExtra.id ?: -1

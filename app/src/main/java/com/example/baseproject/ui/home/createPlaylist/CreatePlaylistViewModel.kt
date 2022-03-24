@@ -12,7 +12,7 @@ import com.example.mediaservice.repository.models.Playlist
 import com.example.mediaservice.utils.CMD_CREATE_PLAYLIST
 import com.example.mediaservice.utils.DataSource
 import com.example.mediaservice.utils.DataSource.LOCAL
-import com.example.mediaservice.utils.KEY_PLAYLIST
+import com.example.mediaservice.utils.KEY_PLAYLIST_TITLE
 import com.example.mediaservice.utils.MediaType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -30,7 +30,8 @@ class CreatePlaylistViewModel @Inject constructor(private val mediaServiceConnec
         viewModelScope.launch {
             isLoading.postValue(true)
             _createPlaylistCompleted.postValue(false)
-            mediaServiceConnection.sendCommand(CMD_CREATE_PLAYLIST, Bundle().apply { putString(KEY_PLAYLIST,title) }, resultCallback = { resultCode, bundle ->
+            mediaServiceConnection.sendCommand(CMD_CREATE_PLAYLIST, Bundle().apply { putString(
+                KEY_PLAYLIST_TITLE,title) }, resultCallback = { resultCode, bundle ->
                 if(resultCode == 200) {
                     val playlistId = bundle?.getLong("playListId") ?: -1
                     playlistTitle = title

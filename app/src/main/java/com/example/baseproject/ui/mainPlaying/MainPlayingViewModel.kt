@@ -11,7 +11,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainPlayingViewModel @Inject constructor(private val mediaServiceConnection: MediaServiceConnection) : BaseViewModel() {
 
-    fun sendCmdUpdateFavorite(mediaIdExtra: String) {
-        mediaServiceConnection.sendCommand(CMD_CLICK_FAVORITE, Bundle().apply { putString(KEY_MEDIA_ID,mediaIdExtra) })
+    fun sendCmdUpdateFavorite() {
+        mediaServiceConnection.sendCommand(CMD_CLICK_FAVORITE, null)
     }
 }

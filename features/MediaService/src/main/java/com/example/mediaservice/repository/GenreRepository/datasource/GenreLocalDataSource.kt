@@ -7,6 +7,7 @@ import android.provider.MediaStore
 import com.example.mediaservice.repository.GenreRepository.GenreDataSource
 import com.example.mediaservice.repository.models.Album
 import com.example.mediaservice.repository.models.Genre
+import com.example.mediaservice.utils.DataSource
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -35,7 +36,7 @@ class GenreLocalDataSource @Inject constructor(@ApplicationContext val context: 
                     if(!setIdGenre.contains(id)) {
                         setIdGenre.add(id)
                         if (getSongCountForGenre(id) > 0){
-                            listGenre.add(Genre(id,name))
+                            listGenre.add(Genre(id = id, title = name, dataSource = DataSource.LOCAL))
                         }
                     }
                 } while (cursor.moveToNext())
