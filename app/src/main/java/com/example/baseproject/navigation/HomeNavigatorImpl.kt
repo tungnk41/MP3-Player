@@ -75,5 +75,9 @@ class HomeNavigatorImpl @Inject constructor() : BaseNavigatorImpl(), HomeNavigat
         openScreen(R.id.action_onlineMusicFragment_toAlbumDetailFragment, bundle)
     }
 
+    override fun openPlaylistDetailScreenToAddSongScreen(bundle: Bundle?) {
+        openScreen(R.id.action_playlistDetailFragment_toAddSongFragment, bundle)
+    }
+
 
 }

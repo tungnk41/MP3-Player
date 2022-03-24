@@ -27,6 +27,7 @@ import com.example.mediaservice.repository.PlaylistRepository.PlaylistRepository
 import com.example.mediaservice.repository.SongRepository.SongRepository
 import com.example.mediaservice.repository.models.MediaIdExtra
 import com.example.mediaservice.repository.models.Playlist
+import com.example.mediaservice.repository.models.Song
 import com.example.mediaservice.repository.models.entity.Favorite
 import com.example.mediaservice.session.UserSessionInfo
 import com.google.android.exoplayer2.Player
@@ -53,10 +54,10 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
     }
     private val serviceScope = CoroutineScope(Dispatchers.Default + serviceJob + serviceExceptionHandler)
 
-    private var cachedlocalListSong: List<MediaMetadataCompat> = listOf()
-    private var cachedremoteListSong: List<MediaMetadataCompat> = listOf()
-    private var cachedplaylistListSong: List<MediaMetadataCompat> = listOf()
-    private var currentFocusListSong: List<MediaMetadataCompat> = listOf()
+    private var cachedlocalListSong: List<Song> = listOf()
+    private var cachedremoteListSong: List<Song> = listOf()
+    private var cachedplaylistListSong: List<Song> = listOf()
+    private var currentFocusListSong: List<Song> = listOf()
     private var isNeedToApplyNewListSong = false
 
 
@@ -94,19 +95,24 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
         mediaSessionConnector.setMediaMetadataProvider(object : MediaSessionConnector.MediaMetadataProvider{
             override fun getMetadata(player: Player): MediaMetadataCompat {
                 val duration = currentPlayer.getDuration()
-                val builder = MediaMetadataCompat.Builder(currentPlayer.currentItem())
+                val builder = MediaMetadataCompat.Builder(currentPlayer.currentItem()?.toMediaMetadataCompat() ?: EMPTY_MEDIA_METADATA_COMPAT)
                 if(duration > 0) {
                     builder.duration = duration
-                    currentPlayer.updateCurrentItem(builder.build())
+                    currentPlayer.updateCurrentItem(currentPlayer.currentItem().copy(duration = duration))
                 }
                 return builder.build()
             }
         })
         mediaSessionConnector.setQueueNavigator(object : TimelineQueueNavigator(mediaSession) {
             override fun getMediaDescription(player: Player, windowIndex: Int): MediaDescriptionCompat {
-                val currentPlaylist = currentPlayer.playListMediaMetadataCompat()
-                if (currentPlaylist != null && windowIndex < currentPlaylist.size) {
-                    return currentPlaylist[windowIndex].description
+                val listSong = currentPlayer.listSong()
+                if (listSong != null && windowIndex < listSong.size) {
+                    val song = listSong[windowIndex]
+                    val descriptionBuilder = MediaDescriptionCompat.Builder()
+                    descriptionBuilder.setTitle(song.title)
+                    descriptionBuilder.setSubtitle(song.artist)
+                    descriptionBuilder.setIconUri(Uri.parse(song.iconUri))
+                    return descriptionBuilder.build()
                 }
                 return MediaDescriptionCompat.Builder().build()
             }
@@ -199,7 +205,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
                     when (parentMediaType) {
                         MediaType.TYPE_ALL_SONGS -> {
                             val listSong = songRepository.findAll(parentDataSource)
-                            mediaItems = listSong.map { it.toBrowserMediaItem() }
+                            mediaItems = listSong.map { it.toBrowserMediaItem(parentMediaType = parentMediaType, dataSource = parentDataSource) }
                             cacheListSong(parentMediaType,parentDataSource,listSong)
                         }
                         MediaType.TYPE_ALL_ALBUMS -> {
@@ -216,22 +222,22 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
                         }
                         MediaType.TYPE_ALBUM -> {
                             val listSong = songRepository.findAllByAlbumId(parentId ?: -1, parentDataSource)
-                            mediaItems = listSong.map { it.toBrowserMediaItem() }
+                            mediaItems = listSong.map { it.toBrowserMediaItem(parentMediaType = parentMediaType, dataSource = parentDataSource) }
                             cacheListSong(parentMediaType,parentDataSource,listSong)
                         }
                         MediaType.TYPE_ARTIST -> {
                             val listSong = songRepository.findAllByArtistId(parentId ?: -1, parentDataSource)
-                            mediaItems = listSong.map { it.toBrowserMediaItem() }
+                            mediaItems = listSong.map { it.toBrowserMediaItem(parentMediaType = parentMediaType, dataSource = parentDataSource) }
                             cacheListSong(parentMediaType,parentDataSource,listSong)
                         }
                         MediaType.TYPE_GENRE -> {
                             val listSong = songRepository.findAllByGenreId(parentId ?: -1, parentDataSource)
-                            mediaItems = listSong.map { it.toBrowserMediaItem() }
+                            mediaItems = listSong.map { it.toBrowserMediaItem(parentMediaType = parentMediaType, dataSource = parentDataSource) }
                             cacheListSong(parentMediaType,parentDataSource,listSong)
                         }
                         MediaType.TYPE_PLAYLIST -> {
                             val listSong = songRepository.findAllByPlaylistId(parentId ?: -1, parentDataSource)
-                            mediaItems = listSong.map { it.toBrowserMediaItem(parentMediaType) }
+                            mediaItems = listSong.map { it.toBrowserMediaItem(parentMediaType = parentMediaType, dataSource = parentDataSource) }
                             cacheListSong(parentMediaType,parentDataSource,listSong)
                         }
                     }
@@ -359,7 +365,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
         override fun onCommand(player: Player, command: String, extras: Bundle?, callback: ResultReceiver?): Boolean {
             when(command) {
                 CMD_CREATE_PLAYLIST -> {
-                    val title = extras?.getString(KEY_PLAYLIST)
+                    val title = extras?.getString(KEY_PLAYLIST_TITLE)
                     serviceScope.launch {
                         title?.let {
                             val playListId = playlistRepository.insert(Playlist(title = title, iconUri = "", userId = userSessionInfo.userId))
@@ -370,13 +376,13 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
                     }
                 }
                 CMD_CLICK_FAVORITE -> {
-                    val favorite = if(currentPlayer.currentItem().favorite == 1L) 0 else 1
-                    val mediaIdExtra = MediaIdExtra.getDataFromString(currentPlayer.currentItem().id ?: "")
+                    val mediaIdExtra = MediaIdExtra.getDataFromString(extras?.getString(KEY_MEDIA_ID) ?: "")
+                    val favorite = if(currentPlayer.currentItem().favorite == 1) 0 else 1
                     val songId = mediaIdExtra.id ?: -1
                     val dataSource = mediaIdExtra.dataSource
-                    val builder = MediaMetadataCompat.Builder(currentPlayer.currentItem())
+                    val builder = MediaMetadataCompat.Builder(currentPlayer.currentItem().toMediaMetadataCompat())
                     builder.favorite = favorite
-                    currentPlayer.updateCurrentItem(builder.build())
+                    currentPlayer.updateCurrentItem(currentPlayer.currentItem().copy(favorite = favorite))
                     updateSessionMediaMetadata(builder.build())
                     serviceScope.launch {
                         favoriteRepository.insert(Favorite(userId = userSessionInfo.userId, deviceId = userSessionInfo.deviceId, songId = songId, value = favorite), dataSource = dataSource)
@@ -414,7 +420,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
         }
     }
 
-    private fun cacheListSong(parentMediaType: Int, parentDataSource: Int, listSong: List<MediaMetadataCompat>){
+    private fun cacheListSong(parentMediaType: Int, parentDataSource: Int, listSong: List<Song>){
         if(parentMediaType == MediaType.TYPE_PLAYLIST) {
             cachedplaylistListSong = listSong
         }
@@ -430,8 +436,8 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
         isNeedToApplyNewListSong = true
     }
 
-    private fun getListSongToPlay(parentMediaType: Int, parentDataSource: Int) : List<MediaMetadataCompat> {
-        var listSong = listOf<MediaMetadataCompat>()
+    private fun getListSongToPlay(parentMediaType: Int, parentDataSource: Int) : List<Song> {
+        var listSong = listOf<Song>()
 
         if(parentMediaType == MediaType.TYPE_PLAYLIST) {
             listSong = cachedplaylistListSong

@@ -8,6 +8,7 @@ import com.example.mediaservice.extensions.EMPTY_MEDIA_METADATA_COMPAT
 import com.example.mediaservice.extensions.favorite
 import com.example.mediaservice.extensions.mediaUri
 import com.example.mediaservice.extensions.toExoPlayerMediaItem
+import com.example.mediaservice.repository.models.Song
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
@@ -27,8 +28,8 @@ import java.io.File
 
 class MediaPlayer(private val context : Context) {
     private lateinit var currentPlayer: ExoPlayer
-    private var playListMediaSource: List<MediaSource>? = null
-    private var playListMediaMetadataCompat: MutableList<MediaMetadataCompat> = mutableListOf()
+    private var listMediaSource: List<MediaSource>? = null
+    private var listSong: MutableList<Song> = mutableListOf()
     private var playerStateListener : Player.Listener? = null
     private val databaseProvider = StandaloneDatabaseProvider(context)
 
@@ -55,11 +56,11 @@ class MediaPlayer(private val context : Context) {
 
     }
 
-    fun setPlayList(list : List<MediaMetadataCompat>) {
-        playListMediaMetadataCompat.clear()
-        playListMediaMetadataCompat.addAll(list)
-        playListMediaSource = list.map { mediaMetadataCompat ->
-            if(mediaMetadataCompat.mediaUri?.startsWith("content://") == true) {
+    fun setPlayList(list : List<Song>) {
+        listSong.clear()
+        listSong.addAll(list)
+        listMediaSource = list.map { mediaMetadataCompat ->
+            if(mediaMetadataCompat.mediaUri?.startsWith("content://")) {
                 ProgressiveMediaSource.Factory(dataSourceFactory)
                     .createMediaSource(mediaMetadataCompat.toExoPlayerMediaItem())
             }
@@ -68,11 +69,11 @@ class MediaPlayer(private val context : Context) {
                     .createMediaSource(mediaMetadataCompat.toExoPlayerMediaItem())
             }
         }
-        currentPlayer.setMediaSources(playListMediaSource!!)
+        currentPlayer.setMediaSources(listMediaSource!!)
         currentPlayer.prepare()
     }
 
-    fun playListMediaMetadataCompat() = playListMediaMetadataCompat.toList()
+    fun listSong() = listSong.toList()
 
     fun playAtIndex(index : Int) {
         currentPlayer.seekTo(index,0)
@@ -116,16 +117,13 @@ class MediaPlayer(private val context : Context) {
         return currentPlayer.currentMediaItemIndex
     }
 
-    fun currentItem() : MediaMetadataCompat{
-        if(playListMediaMetadataCompat.size > 0 && currentIndex() < playListMediaMetadataCompat.size) {
-            return playListMediaMetadataCompat[currentIndex()]
-        }
-        return EMPTY_MEDIA_METADATA_COMPAT
+    fun currentItem() : Song{
+        return listSong[currentIndex()]
     }
 
-    fun updateCurrentItem(mediaMetadataCompat: MediaMetadataCompat) {
-        if(playListMediaMetadataCompat.size > 0 && currentIndex() < playListMediaMetadataCompat.size) {
-            playListMediaMetadataCompat[currentIndex()] = mediaMetadataCompat
+    fun updateCurrentItem(song: Song) {
+        if(listSong.size > 0 && currentIndex() < listSong.size) {
+            listSong[currentIndex()] = song
         }
     }
 
@@ -153,7 +151,7 @@ class MediaPlayer(private val context : Context) {
     }
 
     fun prefetchRemoteData() {
-        playListMediaSource?.forEach {
+        listMediaSource?.forEach {
             it.mediaItem.localConfiguration?.uri?.let { uri ->
                 Timber.d("prefetchRemoteData: $uri")
                 if(!uri.toString().startsWith("content://")){

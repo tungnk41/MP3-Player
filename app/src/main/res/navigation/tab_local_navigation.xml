@@ -176,6 +176,22 @@
         <argument
             android:name="title"
             app:argType="string"/>
+        <action
+            android:id="@+id/action_playlistDetailFragment_toAddSongFragment"
+            app:destination="@id/addSongFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"
+            app:popUpTo="@id/playlistDetailFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addSongFragment"
+        android:name="com.example.baseproject.ui.home.addSong.AddSongFragment"
+        android:label="Add Song"
+        tools:layout="@layout/fragment_add_song" >
     </fragment>
 
 </navigation>

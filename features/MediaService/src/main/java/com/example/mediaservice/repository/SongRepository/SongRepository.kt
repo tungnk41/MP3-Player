@@ -12,56 +12,64 @@ import javax.inject.Inject
 
 class SongRepository @Inject constructor(@LocalDataSource private val localDataSource: SongDataSource, @RemoteDataSource private val remoteDataSource: SongDataSource) {
 
-    suspend fun findAll(dataSource : Int) : List<MediaMetadataCompat>{
+    suspend fun findAll(dataSource : Int) : List<Song>{
         return withContext(Dispatchers.Default){
             if(dataSource == DataSource.LOCAL) {
                 findAllLocalData()
             } else {
                 findAllRemoteData()
-            }.map { it.toMediaMetadataCompat(dataSource) }
+            }
         }
     }
 
-    suspend fun findAllByAlbumId(albumId: Long, dataSource: Int): List<MediaMetadataCompat> {
+    suspend fun findAllByAlbumId(albumId: Long, dataSource: Int): List<Song> {
         return withContext(Dispatchers.Default){
             if(dataSource == DataSource.LOCAL) {
                 findAllLocalDataByAlbumId(albumId)
             } else {
                 findAllRemoteDataByAlbumId(albumId)
             }
-        }.map { it.toMediaMetadataCompat(dataSource) }
+        }
     }
 
-    suspend fun findAllByArtistId(artistId: Long,dataSource: Int) : List<MediaMetadataCompat> {
+    suspend fun findAllByArtistId(artistId: Long,dataSource: Int) : List<Song> {
         return withContext(Dispatchers.Default){
             if(dataSource == DataSource.LOCAL) {
                 findAllLocalDataByArtistId(artistId)
             } else {
                 findAllRemoteDataByArtistId(artistId)
             }
-        }.map { it.toMediaMetadataCompat(dataSource) }
+        }
     }
 
-    suspend fun findAllByGenreId(genreId: Long,dataSource: Int) : List<MediaMetadataCompat> {
+    suspend fun findAllByGenreId(genreId: Long,dataSource: Int) : List<Song> {
         return withContext(Dispatchers.Default){
             if(dataSource == DataSource.LOCAL) {
                 findAllLocalDataByGenreId(genreId)
             } else {
                 findAllRemoteDataByGenreId(genreId)
             }
-        }.map { it.toMediaMetadataCompat(dataSource) }
+        }
     }
 
-    suspend fun findAllByPlaylistId(playlistId : Long, dataSource: Int) : List<MediaMetadataCompat> {
+    suspend fun findAllByPlaylistId(playlistId : Long, dataSource: Int) : List<Song> {
         return withContext(Dispatchers.Default){
             if(dataSource == DataSource.LOCAL) {
                 findAllLocalDataByPlaylistId(playlistId)
             } else {
                 findAllRemoteDataByPlaylistId(playlistId)
             }
-        }.map { it.toMediaMetadataCompat(dataSource) }
+        }
     }
 
+    suspend fun addSongToPlaylist(playlistId: Long, songId: Long, dataSource: Int) {
+        if(dataSource == DataSource.LOCAL) {
+            localDataSource.addSongToPlaylist(playlistId,songId)
+        }
+        else {
+            remoteDataSource.addSongToPlaylist(playlistId, songId)
+        }
+    }
     private suspend fun findAllRemoteData() : List<Song> = remoteDataSource.findAll()
     private suspend fun findAllLocalData() : List<Song> = localDataSource.findAll()
 

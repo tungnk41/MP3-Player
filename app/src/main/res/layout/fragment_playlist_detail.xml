@@ -8,18 +8,24 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/imgPlaylistBanner"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"/>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imgPlaylistBanner"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvPlaylist"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="10dp"
-        android:orientation="vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnAddSong"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvPlaylist"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
     </androidx.appcompat.widget.LinearLayoutCompat>>
 

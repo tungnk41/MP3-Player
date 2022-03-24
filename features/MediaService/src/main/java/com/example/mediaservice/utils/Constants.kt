@@ -31,9 +31,9 @@ const val DATABASE_NAME = "mediaservice.db"
 
 
 const val CMD_CREATE_PLAYLIST = "com.example.mediaservice.add.playlist"
-const val KEY_PLAYLIST = "playlist"
+const val KEY_PLAYLIST_TITLE = "playlist_title"
 
 const val CMD_CLICK_FAVORITE = "com.example.mediaservice.click.favorite"
-const val KEY_FAVORITE = "favorite"
+const val KEY_MEDIA_ID = "media_id"
 
 

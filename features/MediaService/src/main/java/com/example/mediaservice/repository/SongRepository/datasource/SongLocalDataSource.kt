@@ -7,18 +7,20 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import com.example.mediaservice.database.dao.SongPlaylistDao
 import com.example.mediaservice.module.LocalDataSource
 import com.example.mediaservice.repository.FavoriteRepository.FavoriteDataSource
 import com.example.mediaservice.repository.FavoriteRepository.datasource.FavoriteLocalDataSource
 import com.example.mediaservice.repository.SongRepository.SongDataSource
 import com.example.mediaservice.repository.models.Song
+import com.example.mediaservice.repository.models.entity.SongPlaylist
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber.d
 import javax.inject.Inject
 
-class SongLocalDataSource @Inject constructor(@ApplicationContext val context: Context,@LocalDataSource private val favoriteDataSource: FavoriteDataSource) :
+class SongLocalDataSource @Inject constructor(@ApplicationContext val context: Context,@LocalDataSource private val favoriteDataSource: FavoriteDataSource,private val songPlaylistDao: SongPlaylistDao) :
     SongDataSource {
 
     override suspend fun findAll() : List<Song>  = withContext(Dispatchers.IO){
@@ -78,7 +80,6 @@ class SongLocalDataSource @Inject constructor(@ApplicationContext val context: C
 
     override suspend fun findAllByGenreId(genreId: Long): List<Song> = withContext(Dispatchers.IO){
         val contentResolver: ContentResolver = context.contentResolver
-        d("genreId " + genreId)
         val projection = arrayOf(
             MediaStore.Audio.Media._ID,
             MediaStore.Audio.Media.TITLE,
@@ -94,8 +95,13 @@ class SongLocalDataSource @Inject constructor(@ApplicationContext val context: C
         findAllByCursor(cursor)
     }
 
-    override suspend fun findAllByPlaylistId(playlistID: Long): List<Song> {
-        return emptyList()
+    override suspend fun findAllByPlaylistId(playlistId: Long): List<Song> = withContext(Dispatchers.IO) {
+        val setSongPlaylistId = songPlaylistDao.findAllByPlaylistId(playlistId).map { it.id }.toHashSet()
+        findAll().filter { setSongPlaylistId.contains(it.id) }
+    }
+
+    override suspend fun addSongToPlaylist(playlistId: Long, songId: Long) {
+        songPlaylistDao.insert(SongPlaylist(playlistId = playlistId, songId = songId))
     }
 
     private suspend fun findAllByCursor(cursor: Cursor?) : List<Song> = withContext(Dispatchers.IO) {

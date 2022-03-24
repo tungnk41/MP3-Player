@@ -25,8 +25,12 @@ class SongRemoteDataSource @Inject constructor(private val musicServiceApi: Medi
         musicServiceApi.getAllSong()?.body()?.filter { it.genreId == genreId } ?: listOf()
     }
 
-    override suspend fun findAllByPlaylistId(playlistID: Long): List<Song> {
+    override suspend fun findAllByPlaylistId(playlistId: Long): List<Song> {
        return emptyList()
+    }
+
+    override suspend fun addSongToPlaylist(playlistId: Long, songId: Long) {
+
     }
 
     //#############################################
