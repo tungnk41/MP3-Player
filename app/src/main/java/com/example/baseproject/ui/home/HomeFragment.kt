@@ -18,13 +18,14 @@ import com.example.baseproject.navigation.HomeNavigation
 import com.example.baseproject.ui.bottomController.BottomControllerFragment
 import com.example.core.base.BaseFragment
 import com.example.core.base.BaseFragmentNotRequireViewModel
+import com.example.core.base.BaseViewModel
 import com.example.mediaservice.extensions.EMPTY_MEDIA_METADATA_COMPAT
 import com.example.mediaservice.extensions.EMPTY_PLAYBACK_STATE
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class HomeFragment : BaseFragmentNotRequireViewModel<FragmentHomeBinding>(R.layout.fragment_home) {
+class HomeFragment : BaseFragment<FragmentHomeBinding,HomeViewModel>(R.layout.fragment_home) {
 
     @Inject
     lateinit var appNavigation: AppNavigation
@@ -32,7 +33,8 @@ class HomeFragment : BaseFragmentNotRequireViewModel<FragmentHomeBinding>(R.layo
     lateinit var homeNavigation: HomeNavigation
 
     private val mainViewModel: MainViewModel by activityViewModels()
-
+    private val viewModel by viewModels<HomeViewModel>()
+    override fun getVM(): HomeViewModel = viewModel
 
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
@@ -49,13 +51,21 @@ class HomeFragment : BaseFragmentNotRequireViewModel<FragmentHomeBinding>(R.layo
         super.bindingStateView()
 
         mainViewModel.mediaMetadata.observe(this, Observer { metadata ->
-            if(metadata == EMPTY_MEDIA_METADATA_COMPAT){
-                binding.bottomController.visibility = View.GONE
-            }
-            else {
-                binding.bottomController.visibility = View.VISIBLE
-            }
+            viewModel.setCurrentMetadata(metadata)
         })
+
+        viewModel.mIsShowBottomController.observe(this, Observer {
+            binding.bottomController.visibility = if(it) View.VISIBLE else View.GONE
+        })
+
+        viewModel.mIsShowBottomNav.observe(this, Observer {
+            binding.bottomNav.visibility = if(it) View.VISIBLE else View.GONE
+        })
+
+        viewModel.mIsShowToolbar.observe(this, Observer {
+            binding.tbToolbar.visibility = if(it) View.VISIBLE else View.GONE
+        })
+
     }
 
     private fun setupBottomController() {
@@ -76,11 +86,9 @@ class HomeFragment : BaseFragmentNotRequireViewModel<FragmentHomeBinding>(R.layo
         binding.tbToolbar.setupWithNavController(navController,appBarConfiguration)
 
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
-            if(destination.id == R.id.tabOnlineMusicFragment || destination.id == R.id.tabLocalMusicFragment) {
-                binding.tbToolbar.visibility = View.GONE
-            }else{
-                binding.tbToolbar.visibility = View.VISIBLE
-            }
+            viewModel.handleConditionScreenId(destination.id)
         }
     }
+
+
 }

@@ -55,8 +55,8 @@ class HomeNavigatorImpl @Inject constructor() : BaseNavigatorImpl(), HomeNavigat
         openScreen(R.id.action_localMusicFragment_toCreatePlaylistFragment, bundle)
     }
 
-    override fun openCreatePlaylistScreenToPlaylistDetailScreen(bundle: Bundle?) {
-        openScreen(R.id.action_createPlaylistFragment_toPlaylistDetailFragment, bundle)
+    override fun openCreatePlaylistScreenToAddSongPlaylistScreen(bundle: Bundle?) {
+        openScreen(R.id.action_createPlaylistFragment_toAddSongPlaylistFragment, bundle)
     }
 
     override fun openLocalMusicScreenToPlaylistDetailScreen(bundle: Bundle?) {
@@ -75,7 +75,7 @@ class HomeNavigatorImpl @Inject constructor() : BaseNavigatorImpl(), HomeNavigat
         openScreen(R.id.action_onlineMusicFragment_toAlbumDetailFragment, bundle)
     }
 
-    override fun openPlaylistDetailScreenToAddSongScreen(bundle: Bundle?) {
+    override fun openPlaylistDetailScreenToAddSongPlaylistScreen(bundle: Bundle?) {
         openScreen(R.id.action_playlistDetailFragment_toAddSongFragment, bundle)
     }
 

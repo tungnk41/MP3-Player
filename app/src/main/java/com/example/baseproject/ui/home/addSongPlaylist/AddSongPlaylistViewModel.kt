@@ -1,6 +1,5 @@
-package com.example.baseproject.ui.home.addSong
+package com.example.baseproject.ui.home.addSongPlaylist
 
-import android.support.v4.media.MediaMetadataCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -13,7 +12,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AddSongViewModel @Inject constructor(private val songRepository: SongRepository): BaseViewModel() {
+class AddSongPlaylistViewModel @Inject constructor(private val songRepository: SongRepository): BaseViewModel() {
 
     private var allLocalSong = listOf<Song>()
 

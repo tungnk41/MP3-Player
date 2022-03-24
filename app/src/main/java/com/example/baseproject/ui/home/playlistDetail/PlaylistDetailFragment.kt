@@ -19,11 +19,17 @@ class PlaylistDetailFragment: BaseFragment<FragmentPlaylistDetailBinding,Playlis
 
     private val viewModel by viewModels<PlaylistDetailViewModel>()
     override fun getVM(): PlaylistDetailViewModel = viewModel
+    private  var mediaIdExtra : MediaIdExtra? = null
 
     override fun setArguments(args: Bundle?) {
         super.setArguments(args)
-        val mediaIdExtra = args?.getParcelable<MediaIdExtra>("mediaIdExtra")
+        mediaIdExtra = args?.getParcelable<MediaIdExtra>("mediaIdExtra")
         d("PlaylistDetailFragment " + mediaIdExtra.toString())
+
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         viewModel.startLoadingAllSongInPlaylist(mediaIdExtra?.id ?: -1)
     }
 
@@ -35,7 +41,7 @@ class PlaylistDetailFragment: BaseFragment<FragmentPlaylistDetailBinding,Playlis
         super.setOnClick()
 
         binding.btnAddSong.setOnClickListener {
-            homeNavigation.openPlaylistDetailScreenToAddSongScreen()
+            homeNavigation.openPlaylistDetailScreenToAddSongPlaylistScreen()
         }
     }
 }

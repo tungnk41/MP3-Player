@@ -24,7 +24,7 @@ data class Playlist(
 
     fun toBrowserMediaItem(parentMediaType: Int) : MediaBrowserCompat.MediaItem {
         val mediaDescriptionBuilder = MediaDescriptionCompat.Builder()
-            .setMediaId(MediaIdExtra(id = id,parentMediaType = parentMediaType, mediaType = MediaType.TYPE_SONG, dataSource = DataSource.NONE).toString())
+            .setMediaId(MediaIdExtra(id = id,parentMediaType = parentMediaType, mediaType = MediaType.TYPE_PLAYLIST, dataSource = DataSource.NONE).toString())
             .setTitle(title)
             .setIconUri(Uri.parse(iconUri))
         return MediaBrowserCompat.MediaItem(mediaDescriptionBuilder.build(),

@@ -36,7 +36,7 @@ class CreatePlaylistFragment : BaseFragment<FragmentCreatePlaylistBinding,Create
 
         viewModel.createPlaylistCompleted.observe(this, Observer {
             if(it) {
-                homeNavigation.openCreatePlaylistScreenToPlaylistDetailScreen(Bundle()
+                homeNavigation.openCreatePlaylistScreenToAddSongPlaylistScreen(Bundle()
                     .apply {
                         putString("title",viewModel.playlistTitle)
                         putParcelable("mediaIdExtra",viewModel.mediaIdExtra)

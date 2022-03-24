@@ -24,7 +24,7 @@ data class Album(
 
     fun toBrowserMediaItem(parentMediaType: Int) : MediaBrowserCompat.MediaItem {
         val mediaDescriptionBuilder = MediaDescriptionCompat.Builder()
-            .setMediaId(MediaIdExtra(id = id,parentMediaType = parentMediaType, mediaType = MediaType.TYPE_SONG, dataSource = dataSource).toString())
+            .setMediaId(MediaIdExtra(id = id,parentMediaType = parentMediaType, mediaType = MediaType.TYPE_ALBUM, dataSource = dataSource).toString())
             .setTitle(title)
             .setIconUri(Uri.parse(iconUri))
         return MediaBrowserCompat.MediaItem(mediaDescriptionBuilder.build(),

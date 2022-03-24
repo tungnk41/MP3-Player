@@ -29,7 +29,7 @@ interface HomeNavigation : BaseNavigator {
 
     fun openLocalMusicScreenToCreatePlaylistScreen(bundle: Bundle? = null)
 
-    fun openCreatePlaylistScreenToPlaylistDetailScreen(bundle: Bundle? = null)
+    fun openCreatePlaylistScreenToAddSongPlaylistScreen(bundle: Bundle? = null)
 
     fun openLocalMusicScreenToPlaylistDetailScreen(bundle: Bundle? = null)
 
@@ -39,5 +39,5 @@ interface HomeNavigation : BaseNavigator {
 
     fun openOnlineMusicScreenToAlbumDetailScreen(bundle: Bundle? = null)
 
-    fun openPlaylistDetailScreenToAddSongScreen(bundle: Bundle? = null)
+    fun openPlaylistDetailScreenToAddSongPlaylistScreen(bundle: Bundle? = null)
 }
