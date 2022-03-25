@@ -170,4 +170,10 @@ class OnlineMusicFragment :
             mAdapter.submitList(it)
         })
     }
+
+    override fun onDestroyView() {
+        binding.vpBanner.adapter = null
+        binding.rvListMediaOnlineSection.adapter = null
+        super.onDestroyView()
+    }
 }

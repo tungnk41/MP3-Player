@@ -77,4 +77,9 @@ class AlbumDetailFragment: BaseFragment<FragmentAlbumDetailBinding,AlbumDetailVi
             }
         })
     }
+
+    override fun onDestroyView() {
+        binding.rvListAlbumSong.adapter = null
+        super.onDestroyView()
+    }
 }

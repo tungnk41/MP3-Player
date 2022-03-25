@@ -77,4 +77,9 @@ class AlbumFragment: BaseFragment<FragmentAlbumBinding,AlbumViewModel>(R.layout.
     override fun setOnClick() {
         super.setOnClick()
     }
+
+    override fun onDestroyView() {
+        binding.rvListAlbum.adapter = null
+        super.onDestroyView()
+    }
 }

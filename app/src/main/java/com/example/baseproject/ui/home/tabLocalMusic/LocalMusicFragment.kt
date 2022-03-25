@@ -108,6 +108,11 @@ class LocalMusicFragment :
         binding.btnCreatePlaylist.setOnClickListener {
             homeNavigation.openLocalMusicScreenToCreatePlaylistScreen()
         }
+    }
 
+    override fun onDestroyView() {
+        binding.rvListMediaItem.adapter = null
+        binding.rvPlaylist.adapter = null
+        super.onDestroyView()
     }
 }

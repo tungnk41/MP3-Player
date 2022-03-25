@@ -5,13 +5,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <EditText
             android:id="@+id/edtSearchText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Search"/>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tlTabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vpViewPager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+
 
 
     </androidx.appcompat.widget.LinearLayoutCompat>

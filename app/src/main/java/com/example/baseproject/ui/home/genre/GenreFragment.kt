@@ -73,4 +73,9 @@ class GenreFragment : BaseFragment<FragmentGenreBinding, GenreViewModel>(R.layou
             mAdapter.submitList(it)
         })
     }
+
+    override fun onDestroyView() {
+        binding.rvListGenre.adapter = null
+        super.onDestroyView()
+    }
 }

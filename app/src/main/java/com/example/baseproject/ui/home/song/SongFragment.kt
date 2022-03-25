@@ -67,4 +67,9 @@ class SongFragment: BaseFragment<FragmentSongBinding, SongViewModel>(R.layout.fr
             mAdapter.submitList(it)
         })
     }
+
+    override fun onDestroyView() {
+        binding.rvListAllSong.adapter = null
+        super.onDestroyView()
+    }
 }

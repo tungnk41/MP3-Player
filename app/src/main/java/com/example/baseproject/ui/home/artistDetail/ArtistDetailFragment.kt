@@ -75,4 +75,9 @@ class ArtistDetailFragment: BaseFragment<FragmentArtistDetailBinding,ArtistDetai
             }
         })
     }
+
+    override fun onDestroyView() {
+        binding.rvListArtistSong.adapter = null
+        super.onDestroyView()
+    }
 }

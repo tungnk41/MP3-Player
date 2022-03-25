@@ -73,4 +73,9 @@ class GenreDetailFragment : BaseFragment<FragmentGenreDetailBinding,GenreDetailV
             }
         })
     }
+
+    override fun onDestroyView() {
+        binding.rvListGenreSong.adapter = null
+        super.onDestroyView()
+    }
 }

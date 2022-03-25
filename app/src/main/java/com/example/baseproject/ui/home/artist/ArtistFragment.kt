@@ -72,4 +72,9 @@ class ArtistFragment : BaseFragment<FragmentArtistBinding,ArtistViewModel>(R.lay
             mAdapter.submitList(it)
         })
     }
+
+    override fun onDestroyView() {
+        binding.rvListArtist.adapter = null
+        super.onDestroyView()
+    }
 }
