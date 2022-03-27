@@ -78,12 +78,14 @@ class MediaServiceConnection @Inject constructor(val context: Context, serviceCo
     fun sendCommand(
         command: String,
         parameters: Bundle?,
-        resultCallback: ((Int, Bundle?) -> Unit)
+        resultCallback: ((Int, Bundle?) -> Unit)?
     ) {
         if (mediaBrowser.isConnected) {
             mediaController.sendCommand(command, parameters, object : ResultReceiver(Handler()) {
                 override fun onReceiveResult(resultCode: Int, resultData: Bundle?) {
-                    resultCallback(resultCode, resultData)
+                    resultCallback?.let {
+                        resultCallback(resultCode, resultData)
+                    }
                 }
             })
         }

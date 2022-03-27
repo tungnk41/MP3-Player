@@ -9,11 +9,11 @@ import android.view.LayoutInflater
 import com.example.core.R
 import java.lang.ref.WeakReference
 
-class LoadingDialog private constructor(private val context: Context?) {
+class LoadingDialog private constructor(private val context: WeakReference<Context>) {
     private var isShow = false
     private lateinit var dialog: AlertDialog
     fun show() {
-        if (context != null && !(context as Activity?)!!.isFinishing) {
+        if (context.get() != null && !(context.get() as Activity?)!!.isFinishing) {
             if (!isShow) {
                 isShow = true
                 dialog.show()
@@ -43,17 +43,17 @@ class LoadingDialog private constructor(private val context: Context?) {
             return if (instance != null) {
                 instance
             } else {
-                instance = LoadingDialog(WeakReference(context).get())
+                instance = LoadingDialog(WeakReference(context))
                 instance
             }
         }
     }
 
     init {
-        if (context != null && !isShow) {
+        if (context.get() != null && !isShow) {
             val dialogBuilder =
-                AlertDialog.Builder(context)
-            val li = LayoutInflater.from(context)
+                AlertDialog.Builder(context.get())
+            val li = LayoutInflater.from(context.get())
             val dialogView = li.inflate(R.layout.layout_loading, null)
             dialogBuilder.setView(dialogView)
             dialogBuilder.setCancelable(false)

@@ -26,20 +26,34 @@ class CreatePlaylistViewModel @Inject constructor(private val mediaServiceConnec
     var playlistTitle : String = ""
     var mediaIdExtra : MediaIdExtra? = null
 
+    private var _title: String? = null
+
+    private var resultCallback: ((Int, Bundle?) -> Unit)? = { resultCode, bundle ->
+        if (resultCode == 200) {
+            val playlistId = bundle?.getLong("playListId") ?: -1
+            playlistTitle = _title ?: ""
+            mediaIdExtra = MediaIdExtra(
+                mediaType = MediaType.TYPE_PLAYLIST,
+                id = playlistId,
+                dataSource = DataSource.NONE
+            )
+            isLoading.postValue(false)
+            _createPlaylistCompleted.postValue(true)
+        }
+    }
+
     fun createPlaylist(title: String){
+        _title = title
         viewModelScope.launch {
             isLoading.postValue(true)
             _createPlaylistCompleted.postValue(false)
             mediaServiceConnection.sendCommand(CMD_CREATE_PLAYLIST, Bundle().apply { putString(
-                KEY_PLAYLIST_TITLE,title) }, resultCallback = { resultCode, bundle ->
-                if(resultCode == 200) {
-                    val playlistId = bundle?.getLong("playListId") ?: -1
-                    playlistTitle = title
-                    mediaIdExtra = MediaIdExtra(mediaType = MediaType.TYPE_PLAYLIST,id = playlistId, dataSource = DataSource.NONE)
-                    isLoading.postValue(false)
-                    _createPlaylistCompleted.postValue(true)
-                }
-            })
+                KEY_PLAYLIST_TITLE,_title) }, resultCallback = resultCallback)
         }
+    }
+
+    override fun onCleared() {
+//        resultCallback = null
+        super.onCleared()
     }
 }

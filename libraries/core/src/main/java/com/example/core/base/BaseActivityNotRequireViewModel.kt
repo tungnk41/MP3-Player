@@ -38,6 +38,7 @@ abstract class BaseActivityNotRequireViewModel<BD : ViewDataBinding> : AppCompat
     override fun onDestroy() {
         _binding?.unbind()
         _binding = null
+        LoadingDialog.getInstance(this)?.destroyLoadingDialog()
         super.onDestroy()
     }
 
