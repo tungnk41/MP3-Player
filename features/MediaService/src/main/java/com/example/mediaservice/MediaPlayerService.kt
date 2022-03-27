@@ -364,17 +364,6 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
 
         override fun onCommand(player: Player, command: String, extras: Bundle?, callback: ResultReceiver?): Boolean {
             when(command) {
-                CMD_CREATE_PLAYLIST -> {
-                    val title = extras?.getString(KEY_PLAYLIST_TITLE)
-                    serviceScope.launch {
-                        title?.let {
-                            val playListId = playlistRepository.insert(Playlist(title = title, iconUri = "", userId = userSessionInfo.userId))
-                            val bundle = Bundle()
-                            bundle.putLong("playListId",playListId)
-                            callback?.send(200, bundle)
-                        }
-                    }
-                }
                 CMD_CLICK_FAVORITE -> {
                     val currentSong = currentPlayer.currentItem()
                     currentSong?.let {
