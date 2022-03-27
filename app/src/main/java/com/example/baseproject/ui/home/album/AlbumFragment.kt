@@ -69,7 +69,7 @@ class AlbumFragment: BaseFragment<FragmentAlbumBinding,AlbumViewModel>(R.layout.
     override fun bindingStateView() {
         super.bindingStateView()
 
-        viewModel.mediaItems.observe(this, Observer {
+        viewModel.mediaItems.observe(viewLifecycleOwner, Observer {
             mAdapter.submitList(it)
         })
     }

@@ -93,11 +93,11 @@ class LocalMusicFragment :
     override fun bindingStateView() {
         super.bindingStateView()
 
-        viewModel.mediaItems.observe(this, Observer {
+        viewModel.mediaItems.observe(viewLifecycleOwner, Observer {
             mAdapter.submitList(it)
         })
 
-        viewModel.playlist.observe(this, Observer {
+        viewModel.playlist.observe(viewLifecycleOwner, Observer {
             playlistAdapter.submitList(it)
         })
     }

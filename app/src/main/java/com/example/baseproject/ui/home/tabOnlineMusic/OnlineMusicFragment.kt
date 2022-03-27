@@ -162,11 +162,11 @@ class OnlineMusicFragment :
     override fun bindingStateView() {
         super.bindingStateView()
 
-        viewModel.listBanner.observe(this, Observer {
+        viewModel.listBanner.observe(viewLifecycleOwner, Observer {
             bannerAdapter.submitList(it)
         })
 
-        viewModel.listMediaOnlineSection.observe(this, Observer {
+        viewModel.listMediaOnlineSection.observe(viewLifecycleOwner, Observer {
             mAdapter.submitList(it)
         })
     }

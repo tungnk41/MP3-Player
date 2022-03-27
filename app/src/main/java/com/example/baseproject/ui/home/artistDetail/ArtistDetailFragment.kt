@@ -63,7 +63,7 @@ class ArtistDetailFragment: BaseFragment<FragmentArtistDetailBinding,ArtistDetai
 
     override fun bindingStateView() {
         super.bindingStateView()
-        viewModel.mediaItems.observe(this, Observer {
+        viewModel.mediaItems.observe(viewLifecycleOwner, Observer {
             mAdapter.submitList(it)
 
             if(it.size > 0){

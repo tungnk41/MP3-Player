@@ -63,7 +63,7 @@ class SongFragment: BaseFragment<FragmentSongBinding, SongViewModel>(R.layout.fr
 
     override fun bindingStateView() {
 
-        viewModel.mediaItems.observe(this, Observer {
+        viewModel.mediaItems.observe(viewLifecycleOwner, Observer {
             mAdapter.submitList(it)
         })
     }

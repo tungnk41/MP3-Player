@@ -26,7 +26,7 @@ class CreatePlaylistFragment : BaseFragment<FragmentCreatePlaylistBinding,Create
     override fun bindingAction() {
         super.bindingAction()
 
-        viewModel.isLoading.observe(this, Observer {
+        viewModel.isLoading.observe(viewLifecycleOwner, Observer {
 
         })
     }
@@ -34,7 +34,7 @@ class CreatePlaylistFragment : BaseFragment<FragmentCreatePlaylistBinding,Create
     override fun bindingStateView() {
         super.bindingStateView()
 
-        viewModel.createPlaylistCompleted.observe(this, Observer {
+        viewModel.createPlaylistCompleted.observe(viewLifecycleOwner, Observer {
             if(it) {
                 homeNavigation.openCreatePlaylistScreenToAddSongPlaylistScreen(Bundle()
                     .apply {
