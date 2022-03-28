@@ -17,9 +17,12 @@ class AddSongPlaylistFragment: BaseFragment<FragmentAddSongPlaylistBinding,AddSo
     private val viewModel by viewModels<AddSongPlaylistViewModel>()
     override fun getVM(): AddSongPlaylistViewModel = viewModel
     private lateinit var pagerAdapter: AddSongPagerAdapter
+    private lateinit var tabLayoutMediator: TabLayoutMediator
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        pagerAdapter = AddSongPagerAdapter(childFragmentManager,lifecycle)
+        pagerAdapter = AddSongPagerAdapter(requireContext(), onItemClickListener = { parentPos, childPos ->
+
+        })
     }
 
     override fun bindingStateView() {
@@ -45,13 +48,12 @@ class AddSongPlaylistFragment: BaseFragment<FragmentAddSongPlaylistBinding,AddSo
                 0 -> tab.text = "Online"
                 1 -> tab.text = "Local"
             }
-        }.attach()
+        }.apply { tabLayoutMediator = this }.attach()
     }
 
     override fun onDestroyView() {
         binding.vpViewPager.adapter = null
+        tabLayoutMediator.detach()
         super.onDestroyView()
     }
-
-
 }
