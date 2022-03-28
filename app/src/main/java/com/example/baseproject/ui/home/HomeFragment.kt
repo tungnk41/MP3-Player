@@ -90,5 +90,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding,HomeViewModel>(R.layout.fr
         }
     }
 
+    override fun onDestroyView() {
+        homeNavigation.unbind()
+        super.onDestroyView()
+    }
+
 
 }

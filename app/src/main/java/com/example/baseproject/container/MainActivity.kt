@@ -33,7 +33,6 @@ class MainActivity : BaseActivity<ActivityMainBinding,MainViewModel>() {
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host) as NavHostFragment
         appNavigation.bind(navHostFragment.navController)
-
         checkPermission()
 
     }
@@ -55,6 +54,8 @@ class MainActivity : BaseActivity<ActivityMainBinding,MainViewModel>() {
         }
     }
 
-
-
+    override fun onDestroy() {
+        appNavigation.unbind()
+        super.onDestroy()
+    }
 }
