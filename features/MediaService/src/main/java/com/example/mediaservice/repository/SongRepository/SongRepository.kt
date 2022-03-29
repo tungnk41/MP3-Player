@@ -54,11 +54,10 @@ class SongRepository @Inject constructor(@LocalDataSource private val localDataS
 
     suspend fun findAllByPlaylistId(playlistId : Long, dataSource: Int) : List<Song> {
         return withContext(Dispatchers.Default){
-            if(dataSource == DataSource.LOCAL) {
-                findAllLocalDataByPlaylistId(playlistId)
-            } else {
-                findAllRemoteDataByPlaylistId(playlistId)
-            }
+            val listSong = mutableListOf<List<Song>>()
+                listSong.add(findAllLocalDataByPlaylistId(playlistId))
+                listSong.add(findAllRemoteDataByPlaylistId(playlistId))
+            listSong.flatten()
         }
     }
 

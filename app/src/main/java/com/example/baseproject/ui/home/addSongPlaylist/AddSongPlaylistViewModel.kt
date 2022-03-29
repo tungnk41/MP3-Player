@@ -40,10 +40,24 @@ class AddSongPlaylistViewModel @Inject constructor(private val songRepository: S
 
     private fun loadAllSongLocal() {
         viewModelScope.launch(Dispatchers.Default) {
+            isLoading.postValue(true)
             val allLocalSong = songRepository
                 .findAll(dataSource = DataSource.LOCAL)
                 .map {
-                    val mediaIdExtra = MediaIdExtra(mediaType = MediaType.TYPE_SONG, id = it.id, dataSource = DataSource.LOCAL)
+                    val mediaIdExtra = MediaIdExtra(parentMediaType = MediaType.TYPE_PLAYLIST,mediaType = MediaType.TYPE_SONG, id = it.id, dataSource = DataSource.LOCAL)
+                    val id: Long= it.id
+                    val title: String = it.title
+                    val subTitle: String = it.artist
+                    val iconUri: Uri = Uri.parse(it.iconUri) ?: Uri.EMPTY
+                    val isBrowsable: Boolean = false
+                    val mediaType = MediaType.TYPE_SONG
+                    val dataSource = DataSource.LOCAL
+                    MediaItemUI(mediaIdExtra = mediaIdExtra,id = id, title = title, subTitle = subTitle , iconUri = iconUri, isBrowsable = isBrowsable, dataSource = dataSource, mediaType = mediaType)
+                }
+            val allRemoteSong = songRepository
+                .findAll(dataSource = DataSource.REMOTE)
+                .map {
+                    val mediaIdExtra = MediaIdExtra(parentMediaType = MediaType.TYPE_PLAYLIST,mediaType = MediaType.TYPE_SONG, id = it.id, dataSource = DataSource.LOCAL)
                     val id: Long= it.id
                     val title: String = it.title
                     val subTitle: String = it.artist
@@ -54,6 +68,8 @@ class AddSongPlaylistViewModel @Inject constructor(private val songRepository: S
                     MediaItemUI(mediaIdExtra = mediaIdExtra,id = id, title = title, subTitle = subTitle , iconUri = iconUri, isBrowsable = isBrowsable, dataSource = dataSource, mediaType = mediaType)
                 }
             _searchLocalSong.postValue(allLocalSong)
+            _searchRemoteSong.postValue(allRemoteSong)
+            isLoading.postValue(false)
         }
     }
 
@@ -61,7 +77,7 @@ class AddSongPlaylistViewModel @Inject constructor(private val songRepository: S
         viewModelScope.launch(Dispatchers.Default) {
             val searchLocalSongData = songRepository
                 .searchLocalSong(title)
-                .map { mapToMediaItemUI(it.toBrowserMediaItem(MediaType.TYPE_NONE)) }
+                .map { mapToMediaItemUI(it.toBrowserMediaItem(parentMediaType = MediaType.TYPE_PLAYLIST)) }
             _searchLocalSong.postValue(searchLocalSongData)
         }
     }

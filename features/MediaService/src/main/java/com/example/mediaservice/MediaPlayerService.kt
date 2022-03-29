@@ -118,7 +118,17 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
             }
         })
         mediaSessionConnector.setPlayer(currentPlayer.getExoPlayerInstance())
-
+//        mediaSessionConnector.setEnabledPlaybackActions(
+//                    PlaybackStateCompat.ACTION_PLAY_PAUSE
+//                    or PlaybackStateCompat.ACTION_PLAY
+//                    or PlaybackStateCompat.ACTION_PAUSE
+//                    or PlaybackStateCompat.ACTION_SEEK_TO
+//                    or PlaybackStateCompat.ACTION_FAST_FORWARD
+//                    or PlaybackStateCompat.ACTION_REWIND
+//                    or PlaybackStateCompat.ACTION_STOP
+//                    or PlaybackStateCompat.ACTION_SET_REPEAT_MODE
+//                    or PlaybackStateCompat.ACTION_SET_SHUFFLE_MODE
+//        )
         contentResolver.registerContentObserver(
             MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
             false,

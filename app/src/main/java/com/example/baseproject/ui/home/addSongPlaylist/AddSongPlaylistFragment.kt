@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.example.baseproject.R
 import com.example.baseproject.databinding.FragmentAddSongPlaylistBinding
+import com.example.baseproject.navigation.HomeNavigation
 import com.example.baseproject.ui.adapter.AddSongPagerAdapter
 import com.example.core.base.BaseFragment
 import com.example.core.utils.onTextChange
@@ -18,6 +19,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber.d
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class AddSongPlaylistFragment: BaseFragment<FragmentAddSongPlaylistBinding,AddSongPlaylistViewModel>(R.layout.fragment_add_song_playlist) {
@@ -32,6 +34,9 @@ class AddSongPlaylistFragment: BaseFragment<FragmentAddSongPlaylistBinding,AddSo
     override fun getVM(): AddSongPlaylistViewModel = viewModel
     private lateinit var pagerAdapter: AddSongPagerAdapter
     private lateinit var tbTabLayoutMediator: TabLayoutMediator
+
+    @Inject
+    lateinit var homeNavigation: HomeNavigation
 
     override fun setArguments(args: Bundle?) {
         super.setArguments(args)
@@ -89,6 +94,7 @@ class AddSongPlaylistFragment: BaseFragment<FragmentAddSongPlaylistBinding,AddSo
         }
         binding.btnDone.setOnClickListener {
             viewModel.saveSongToPlaylist()
+            homeNavigation.navController?.popBackStack()
         }
     }
 
