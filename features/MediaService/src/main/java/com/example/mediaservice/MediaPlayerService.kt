@@ -50,7 +50,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
     private lateinit var mediaSessionConnector: MediaSessionConnector
     private val serviceJob = SupervisorJob()
     private val serviceExceptionHandler = CoroutineExceptionHandler{ _, _ ->
-        d("Service exception")
+        d("Service exception ")
     }
     private val serviceScope = CoroutineScope(Dispatchers.Default + serviceJob + serviceExceptionHandler)
 

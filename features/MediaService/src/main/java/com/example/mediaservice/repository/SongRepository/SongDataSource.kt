@@ -13,5 +13,7 @@ interface SongDataSource {
 
     suspend fun findAllByPlaylistId(playlistId : Long) : List<Song>
 
-    suspend fun addSongToPlaylist(playlistId: Long, songId: Long)
+    suspend fun saveSongToPlaylist(playlistId: Long, songId: Long)
+
+    suspend fun searchSongByTitle(title: String) : List<Song>
 }

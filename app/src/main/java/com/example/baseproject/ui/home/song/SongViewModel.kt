@@ -27,7 +27,6 @@ class SongViewModel @Inject constructor(private val mediaServiceConnection: Medi
 
     private val subscriptionCallback = object: MediaBrowserCompat.SubscriptionCallback(){
         override fun onChildrenLoaded(parentId: String, children: MutableList<MediaBrowserCompat.MediaItem>) {
-            d("onChildrenLoaded start")
             viewModelScope.launch(Dispatchers.Default) {
                  listSongMediaItemUI = children.map{
                         val mediaIdExtra = MediaIdExtra.getDataFromString(it.mediaId ?: "")

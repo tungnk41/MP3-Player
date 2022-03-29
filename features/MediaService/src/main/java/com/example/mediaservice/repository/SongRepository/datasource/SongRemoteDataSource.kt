@@ -30,8 +30,12 @@ class SongRemoteDataSource @Inject constructor(private val musicServiceApi: Medi
         emptyList()
     }
 
-    override suspend fun addSongToPlaylist(playlistId: Long, songId: Long) = withContext(Dispatchers.IO) {
+    override suspend fun saveSongToPlaylist(playlistId: Long, songId: Long) = withContext(Dispatchers.IO) {
 
+    }
+
+    override suspend fun searchSongByTitle(title: String): List<Song> = withContext(Dispatchers.IO){
+        emptyList()
     }
 
     //#############################################

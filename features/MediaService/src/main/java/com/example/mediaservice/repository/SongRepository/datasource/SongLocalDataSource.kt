@@ -19,6 +19,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber.d
+import java.util.*
 import javax.inject.Inject
 
 class SongLocalDataSource @Inject constructor(@ApplicationContext val context: Context,@LocalDataSource private val favoriteDataSource: FavoriteDataSource,private val songPlaylistDao: SongPlaylistDao) :
@@ -97,13 +98,35 @@ class SongLocalDataSource @Inject constructor(@ApplicationContext val context: C
     }
 
     override suspend fun findAllByPlaylistId(playlistId: Long): List<Song> = withContext(Dispatchers.IO) {
-        val setSongPlaylistId = songPlaylistDao.findAllByPlaylistId(playlistId).map { it.id }.toHashSet()
-        findAll().filter { setSongPlaylistId.contains(it.id) }
+        val setSongPlaylistId = songPlaylistDao.findAllByPlaylistId(playlistId).map { it.songId }.toHashSet()
+        val listSong = findAll().filter { setSongPlaylistId.contains(it.id) }
+        listSong
     }
 
-    override suspend fun addSongToPlaylist(playlistId: Long, songId: Long) {
+    override suspend fun saveSongToPlaylist(playlistId: Long, songId: Long) {
         songPlaylistDao.insert(SongPlaylist(playlistId = playlistId, songId = songId))
     }
+
+    override suspend fun searchSongByTitle(title: String): List<Song> = withContext(Dispatchers.IO) {
+        val contentResolver: ContentResolver = context.contentResolver
+
+        val projection = arrayOf(
+            MediaStore.Audio.Media._ID,
+            MediaStore.Audio.Media.TITLE,
+            MediaStore.Audio.Media.ALBUM,
+            MediaStore.Audio.Media.ALBUM_ID,
+            MediaStore.Audio.Media.ARTIST,
+            MediaStore.Audio.Media.ARTIST_ID,
+            MediaStore.Audio.Media.DURATION,
+
+            )
+        val selection = "${MediaStore.Audio.Media.IS_MUSIC}=1 AND ${MediaStore.Audio.Media.TITLE} LIKE ?"
+        val selectionArgs = arrayOf("%${title}%")
+        val cursor: Cursor? = contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, selection, selectionArgs, null)
+
+        findAllByCursor(cursor)
+    }
+
 
     private suspend fun findAllByCursor(cursor: Cursor?) : List<Song> = withContext(Dispatchers.IO) {
         val listSong = mutableListOf<Song>()

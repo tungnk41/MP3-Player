@@ -23,7 +23,7 @@ class SongFragment: BaseFragment<FragmentSongBinding, SongViewModel>(R.layout.fr
     private val viewModel: SongViewModel by viewModels()
     override fun getVM(): SongViewModel = viewModel
 
-    private var parentMediaIdExtra: MediaIdExtra? = null
+    private var mediaIdExtra: MediaIdExtra? = null
 
     private val mAdapter: MediaItemVerticalAdapter by lazy {
         MediaItemVerticalAdapter(
@@ -35,13 +35,12 @@ class SongFragment: BaseFragment<FragmentSongBinding, SongViewModel>(R.layout.fr
 
     override fun setArguments(args: Bundle?) {
         super.setArguments(args)
-        parentMediaIdExtra = args?.getParcelable<MediaIdExtra>("mediaIdExtra")
+        mediaIdExtra = args?.getParcelable<MediaIdExtra>("mediaIdExtra")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        parentMediaIdExtra?.let { viewModel.startLoadingData(parentMediaIdExtra!!) }
+        mediaIdExtra?.let { viewModel.startLoadingData(mediaIdExtra!!) }
     }
 
     override fun initView(savedInstanceState: Bundle?) {

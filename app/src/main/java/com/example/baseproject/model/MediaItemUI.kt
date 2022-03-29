@@ -13,5 +13,6 @@ data class MediaItemUI(
     val iconUri: Uri,
     val isBrowsable: Boolean,
     val dataSource: Int,
-    val mediaType: Int
+    val mediaType: Int,
+    var isSelected: Boolean = false
 )

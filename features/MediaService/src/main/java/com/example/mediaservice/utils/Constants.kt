@@ -3,17 +3,18 @@ package com.example.mediaservice.utils
 const val CLIENT_PACKAGE_NAME = "com.example.baseproject"
 
 object MediaType {
-    const val TYPE_MEDIA_ROOT = 0
-    const val TYPE_ALL_SONGS = 1
-    const val TYPE_ALL_ALBUMS = 2
-    const val TYPE_ALL_ARTISTS = 3
-    const val TYPE_ALL_GENRES = 4
-    const val TYPE_ALL_PLAYLISTS = 5
-    const val TYPE_SONG = 6
-    const val TYPE_ALBUM = 7
-    const val TYPE_ARTIST = 8
-    const val TYPE_GENRE = 9
-    const val TYPE_PLAYLIST = 10
+    const val TYPE_NONE = 0
+    const val TYPE_MEDIA_ROOT = 1
+    const val TYPE_ALL_SONGS = 2
+    const val TYPE_ALL_ALBUMS = 3
+    const val TYPE_ALL_ARTISTS = 4
+    const val TYPE_ALL_GENRES = 5
+    const val TYPE_ALL_PLAYLISTS = 6
+    const val TYPE_SONG = 7
+    const val TYPE_ALBUM = 8
+    const val TYPE_ARTIST = 9
+    const val TYPE_GENRE = 10
+    const val TYPE_PLAYLIST = 11
 }
 
 object DataSource {

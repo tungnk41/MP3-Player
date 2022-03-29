@@ -62,14 +62,23 @@ class SongRepository @Inject constructor(@LocalDataSource private val localDataS
         }
     }
 
-    suspend fun addSongToPlaylist(playlistId: Long, songId: Long, dataSource: Int) {
+    suspend fun saveSongToPlaylist(playlistId: Long, songId: Long, dataSource: Int) {
         if(dataSource == DataSource.LOCAL) {
-            localDataSource.addSongToPlaylist(playlistId,songId)
+            localDataSource.saveSongToPlaylist(playlistId,songId)
         }
         else {
-            remoteDataSource.addSongToPlaylist(playlistId, songId)
+            remoteDataSource.saveSongToPlaylist(playlistId, songId)
         }
     }
+
+    suspend fun searchLocalSong(title: String) : List<Song> = withContext(Dispatchers.Default) {
+        localDataSource.searchSongByTitle(title)
+    }
+
+    suspend fun searchRemoteSong(title: String) : List<Song> = withContext(Dispatchers.Default) {
+        remoteDataSource.searchSongByTitle(title)
+    }
+
     private suspend fun findAllRemoteData() : List<Song> = remoteDataSource.findAll()
     private suspend fun findAllLocalData() : List<Song> = localDataSource.findAll()
 

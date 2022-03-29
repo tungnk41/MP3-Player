@@ -87,6 +87,7 @@ class LocalMusicViewModel @Inject constructor(private val mediaServiceConnection
                     val isBrowsable: Boolean = it.flags.equals(MediaBrowserCompat.MediaItem.FLAG_BROWSABLE)
                     val mediaType = mediaIdExtra.mediaType ?: -1
                     val dataSource = mediaIdExtra.dataSource
+                    d("startLoadingPlaylist " + mediaIdExtra.toString())
                     MediaItemUI(mediaIdExtra = mediaIdExtra,id = id, title = title, subTitle = subTitle , iconUri = iconUri, isBrowsable = isBrowsable, dataSource = dataSource, mediaType = mediaType)
                 }
             _playlist.postValue(playlistMediaItem)

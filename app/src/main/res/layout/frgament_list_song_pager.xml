@@ -10,7 +10,9 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvListSongPager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
