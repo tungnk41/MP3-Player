@@ -16,6 +16,7 @@
         <entry key="..\:/Users/TungNK/Documents/MP3-Player/features/Demo/src/main/res/layout/fragment_setting.xml" value="0.14114583333333333" />
         <entry key="..\:/Users/TungNK/Documents/MP3-Player/features/Demo/src/main/res/layout/layout_item_user.xml" value="0.14114583333333333" />
         <entry key="..\:/Users/TungNK/Documents/MP3-Player/features/Login/src/main/res/layout/fragment_login.xml" value="0.25" />
+        <entry key="app/src/main/res/drawable/default_album_art_large.xml" value="0.367" />
         <entry key="app/src/main/res/drawable/ic_repeat_none_24.xml" value="0.189" />
         <entry key="app/src/main/res/drawable/ic_repeat_on_24.xml" value="0.189" />
         <entry key="app/src/main/res/drawable/ic_repeat_one_24.xml" value="0.189" />
@@ -52,6 +53,8 @@
         <entry key="app/src/main/res/layout/fragment_song_screen.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_splash.xml" value="0.5489583333333333" />
         <entry key="app/src/main/res/menu/bottom_nav.xml" value="0.5489583333333333" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.367" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.3285" />
         <entry key="features/Demo/src/main/res/layout/adapter_item_title_setting.xml" value="0.4425925925925926" />
         <entry key="features/Demo/src/main/res/layout/fragment_setting.xml" value="0.5489583333333333" />
         <entry key="features/Demo/src/main/res/layout/layout_item_user.xml" value="0.4425925925925926" />

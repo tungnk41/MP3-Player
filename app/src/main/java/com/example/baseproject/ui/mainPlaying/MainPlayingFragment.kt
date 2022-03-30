@@ -49,6 +49,7 @@ class MainPlayingFragment : BaseFragment<FragmentMainPlayingBinding,MainPlayingV
 
             Glide.with(binding.root)
                 .load(it.description.iconUri)
+                .error(R.drawable.ic_default_art_24)
                 .centerCrop()
                 .into(binding.imgArtworkMainPlaying)
         })
