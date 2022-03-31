@@ -13,4 +13,5 @@ data class SongPlaylist(
     var id: Long? = null,
     val songId: Long,
     val playlistId: Long,
+    val isRemoteData: Boolean
 ): Parcelable

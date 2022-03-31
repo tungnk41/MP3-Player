@@ -57,7 +57,7 @@ class PlaylistDetailFragment: BaseFragment<FragmentPlaylistDetailBinding,Playlis
         viewModel.listSongPlaylist.observe(viewLifecycleOwner, Observer {
             mAdapter.submitList(it)
 
-            if(it.size > 0){
+            if(it.isNotEmpty()){
                 Glide.with(binding.root)
                     .load(it[0].iconUri)
                     .placeholder(R.drawable.ic_default_art_24)

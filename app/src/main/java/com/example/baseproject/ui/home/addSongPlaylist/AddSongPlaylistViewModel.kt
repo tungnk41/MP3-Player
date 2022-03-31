@@ -14,9 +14,7 @@ import com.example.mediaservice.repository.models.Song
 import com.example.mediaservice.utils.DataSource
 import com.example.mediaservice.utils.MediaType
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import timber.log.Timber.d
 import javax.inject.Inject
 
@@ -34,14 +32,20 @@ class AddSongPlaylistViewModel @Inject constructor(private val songRepository: S
     private var _listSelectedSong : MutableLiveData<MutableList<Pair<Long,Int>>> = MutableLiveData(mutableListOf()) // SongId, datasource
     val listSelectedSong : LiveData<MutableList<Pair<Long,Int>>> = _listSelectedSong
 
+    private var debounceJob: Job? = null
+    private val debounceScope = CoroutineScope(Dispatchers.Main)
+
+    private var allLocalSong: List<MediaItemUI>? = null
+    private var allRemoteSong: List<MediaItemUI>? = null
+
     init {
-        loadAllSongLocal()
+        loadAllSong()
     }
 
-    private fun loadAllSongLocal() {
+    private fun loadAllSong() {
         viewModelScope.launch(Dispatchers.Default) {
             isLoading.postValue(true)
-            val allLocalSong = songRepository
+            allLocalSong = songRepository
                 .findAll(dataSource = DataSource.LOCAL)
                 .map {
                     val mediaIdExtra = MediaIdExtra(parentMediaType = MediaType.TYPE_PLAYLIST,mediaType = MediaType.TYPE_SONG, id = it.id, dataSource = DataSource.LOCAL)
@@ -54,17 +58,17 @@ class AddSongPlaylistViewModel @Inject constructor(private val songRepository: S
                     val dataSource = DataSource.LOCAL
                     MediaItemUI(mediaIdExtra = mediaIdExtra,id = id, title = title, subTitle = subTitle , iconUri = iconUri, isBrowsable = isBrowsable, dataSource = dataSource, mediaType = mediaType)
                 }
-            val allRemoteSong = songRepository
+            allRemoteSong = songRepository
                 .findAll(dataSource = DataSource.REMOTE)
                 .map {
-                    val mediaIdExtra = MediaIdExtra(parentMediaType = MediaType.TYPE_PLAYLIST,mediaType = MediaType.TYPE_SONG, id = it.id, dataSource = DataSource.LOCAL)
+                    val mediaIdExtra = MediaIdExtra(parentMediaType = MediaType.TYPE_PLAYLIST,mediaType = MediaType.TYPE_SONG, id = it.id, dataSource = DataSource.REMOTE)
                     val id: Long= it.id
                     val title: String = it.title
                     val subTitle: String = it.artist
                     val iconUri: Uri = Uri.parse(it.iconUri) ?: Uri.EMPTY
                     val isBrowsable: Boolean = false
                     val mediaType = MediaType.TYPE_SONG
-                    val dataSource = DataSource.LOCAL
+                    val dataSource = DataSource.REMOTE
                     MediaItemUI(mediaIdExtra = mediaIdExtra,id = id, title = title, subTitle = subTitle , iconUri = iconUri, isBrowsable = isBrowsable, dataSource = dataSource, mediaType = mediaType)
                 }
             _searchLocalSong.postValue(allLocalSong)
@@ -74,11 +78,32 @@ class AddSongPlaylistViewModel @Inject constructor(private val songRepository: S
     }
 
     fun searchSong(title: String) {
-        viewModelScope.launch(Dispatchers.Default) {
-            val searchLocalSongData = songRepository
-                .searchLocalSong(title)
-                .map { mapToMediaItemUI(it.toBrowserMediaItem(parentMediaType = MediaType.TYPE_PLAYLIST)) }
-            _searchLocalSong.postValue(searchLocalSongData)
+        viewModelScope.launch {
+                debounceJob?.cancel()
+                debounceJob = debounceScope.launch {
+                    if (title.isNotEmpty()) {
+                        delay(500)
+                        isLoading.postValue(true)
+                        val searchLocalSongData = async {
+                            songRepository
+                                .searchLocalSong(title)
+                                .map { mapToMediaItemUI(it.toBrowserMediaItem(parentMediaType = MediaType.TYPE_PLAYLIST)) }
+                        }
+                        val searchRemoteSongData = async {
+                            songRepository
+                                .searchRemoteSong(title)
+                                .map { mapToMediaItemUI(it.toBrowserMediaItem(parentMediaType = MediaType.TYPE_PLAYLIST)) }
+                        }
+                        awaitAll(searchLocalSongData,searchRemoteSongData)
+                        _searchLocalSong.postValue(searchLocalSongData.await())
+                        _searchRemoteSong.postValue(searchRemoteSongData.await())
+                        isLoading.postValue(false)
+                    }
+                    else {
+                        _searchLocalSong.postValue(allLocalSong)
+                        _searchRemoteSong.postValue(allRemoteSong)
+                    }
+                }
         }
     }
 
@@ -109,6 +134,7 @@ class AddSongPlaylistViewModel @Inject constructor(private val songRepository: S
         viewModelScope.launch {
             val playlistId = mediaIdExtra?.id ?: -1
             _listSelectedSong.value?.forEach {
+                d("saveSongToPlaylist " + it.toString())
                 songRepository.saveSongToPlaylist(playlistId,it.first,it.second)
             }
             withContext(Dispatchers.Main){
@@ -117,7 +143,7 @@ class AddSongPlaylistViewModel @Inject constructor(private val songRepository: S
         }
     }
 
-    fun mapToMediaItemUI(browserMediaItem: MediaBrowserCompat.MediaItem) : MediaItemUI{
+    private fun mapToMediaItemUI(browserMediaItem: MediaBrowserCompat.MediaItem) : MediaItemUI{
         val mediaIdExtra = MediaIdExtra.getDataFromString(browserMediaItem.mediaId ?: "")
         val id: Long= mediaIdExtra.id ?: -1
         val title: String = browserMediaItem.description.title.toString()
@@ -128,4 +154,20 @@ class AddSongPlaylistViewModel @Inject constructor(private val songRepository: S
         val dataSource = mediaIdExtra.dataSource
         return MediaItemUI(mediaIdExtra = mediaIdExtra,id = id, title = title, subTitle = subTitle , iconUri = iconUri, isBrowsable = isBrowsable, dataSource = dataSource, mediaType = mediaType)
     }
+
+    private fun <T> debounce(
+        waitMs: Long = 300L,
+        coroutineScope: CoroutineScope,
+        destinationFunction: (T) -> Unit
+    ): (T) -> Unit {
+        var debounceJob: Job? = null
+        return { param: T ->
+            debounceJob?.cancel()
+            debounceJob = coroutineScope.launch {
+                delay(waitMs)
+                destinationFunction(param)
+            }
+        }
+    }
+
 }

@@ -98,13 +98,13 @@ class SongLocalDataSource @Inject constructor(@ApplicationContext val context: C
     }
 
     override suspend fun findAllByPlaylistId(playlistId: Long): List<Song> = withContext(Dispatchers.IO) {
-        val setSongPlaylistId = songPlaylistDao.findAllByPlaylistId(playlistId).map { it.songId }.toHashSet()
+        val setSongPlaylistId = songPlaylistDao.findAllByPlaylistId(playlistId).filter { !it.isRemoteData }.map{ it.songId }.toHashSet()
         val listSong = findAll().filter { setSongPlaylistId.contains(it.id) }
         listSong
     }
 
     override suspend fun saveSongToPlaylist(playlistId: Long, songId: Long) {
-        songPlaylistDao.insert(SongPlaylist(playlistId = playlistId, songId = songId))
+        songPlaylistDao.insert(SongPlaylist(playlistId = playlistId, songId = songId, isRemoteData = false))
     }
 
     override suspend fun searchSongByTitle(title: String): List<Song> = withContext(Dispatchers.IO) {
